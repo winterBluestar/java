@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.model.xd.demo.mapper.DemoMapper">
+    <insert id="insertOrUpdateDemoInfo" parameterType="com.model.xd.common.dto.req.DemoInfoReq">
+        insert into demo.demo_baseinfo (demo_id, demo_code, demo_name, entry_time, update_time)
+        values (#{req.demoId,jdbcType=VARCHAR},#{req.demoCode,jdbcType=VARCHAR},#{req.demoName,jdbcType=VARCHAR},now(),now());
+    </insert>
+
+    <delete id="deleteDemoInfoById" parameterType="java.lang.String">
+        delete from demo.demo_baseinfo where demo_id = #{demoId}
+    </delete>
+
+    <select id="queryDemoInfo" resultType="com.model.xd.common.dto.resp.DemoInfoResp"
+            parameterType="java.lang.String">
+        select demo_id demoId, demo_code demoCode, demo_name demoName from demo.demo_baseinfo where demo_id = #{demoId}
+    </select>
+
+    <select id="queryDemoPageInfo" resultType="com.model.xd.common.dto.resp.DemoInfoResp"
+            parameterType="com.model.xd.common.dto.req.DemoQueryReq">
+        select demo_id demoId, demo_code demoCode, demo_name demoName from demo.demo_baseinfo
+        <trim prefix="where" prefixOverrides="and">
+            <if test="req.demoId != null and req.demoInfo != ''">
+                demo_id = #{req.demoId}
+            </if>
+        </trim>
+    </select>
+</mapper>
