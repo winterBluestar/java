@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.model.xd.demo.mapper.ArticleCommentMapper">
+
+    <!--新增评论-->
+    <insert id="articleCommentReply" parameterType="com.model.xd.common.dto.req.ArticleCommentReq">
+        insert into demo.demo_article_comment (comment_id, article_id, content_id, reply_id, user_name, content, entry_time, update_time, reply_user)
+        values (#{commentId,jdbcType=VARCHAR},#{articleId,jdbcType=VARCHAR},#{contentId,jdbcType=VARCHAR},#{replyId,jdbcType=VARCHAR},
+            #{userName,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},now(),now(),#{replyUser,jdbcType=VARCHAR})
+    </insert>
+
+    <!--查询文章下所有一级评论-->
+    <select id="queryAllCommentInfo" resultType="com.model.xd.common.dto.resp.ArticleAllCommentResp"
+            parameterType="com.model.xd.common.dto.req.ArticleQueryReq">
+        select comment_id commentId, article_id articleId, content_id contentId, reply_id replyId, user_name userName, content, update_time commentTime, reply_user replyUser
+        from demo.demo_article_comment where article_id = #{req.articleId} and reply_id is null
+    </select>
+
+    <!--查询文章下所有二级评论-->
+    <select id="querySecondComment" resultType="com.model.xd.common.dto.resp.ArticleCommentInfo"
+            parameterType="com.model.xd.common.dto.req.ArticleQueryReq">
+        select comment_id commentId, article_id articleId, content_id contentId, reply_id replyId, user_name userName, content, update_time commentTime, reply_user replyUser
+        from demo.demo_article_comment where article_id = #{req.articleId} and reply_id is not null
+    </select>
+</mapper>
