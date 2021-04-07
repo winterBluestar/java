@@ -51,7 +51,7 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
 
     /**
      * 查询文章评论
-     *
+     * 未做分页
      * @param req
      * @return
      */
