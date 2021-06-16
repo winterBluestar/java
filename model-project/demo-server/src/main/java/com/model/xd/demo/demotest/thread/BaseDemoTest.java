@@ -1,4 +1,4 @@
-package com.model.xd.demo.demotest;
+package com.model.xd.demo.demotest.thread;
 
 /**
  * @Author winterBluestar
