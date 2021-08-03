@@ -9,6 +9,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -47,11 +48,13 @@ public class FileServiceImpl implements FileService {
 
         String filePath;
 
-        filePath = FileServiceImpl.class.getClassLoader().getResource("").getPath().concat("templates/测试替换字符串文档.docx");
-
-        HashMap<String, String> paraMap = getParamMap();
+//        filePath = FileServiceImpl.class.getClassLoader().getResource("").getPath().concat("templates/测试替换字符串文档.docx");
 
         try {
+            filePath = ResourceUtils.getFile("classpath: templates/测试替换字符串文档.docx").getAbsolutePath();
+
+            HashMap<String, String> paraMap = getParamMap();
+
             XWPFDocument wordFile = new XWPFDocument(POIXMLDocument.openPackage(filePath));
 
             Iterator<XWPFParagraph> paragraphsIterator = wordFile.getParagraphsIterator();
