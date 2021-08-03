@@ -66,6 +66,19 @@
             <version>2.1.2</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>cn.afterturn</groupId>-->
+<!--            <artifactId>easypoi-web</artifactId>-->
+<!--            <version>4.3.0</version>-->
+<!--        </dependency>-->
+
+        <!--导出Word文档-->
+        <dependency>
+            <groupId>cn.afterturn</groupId>
+            <artifactId>easypoi-base</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+
         <!--lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
