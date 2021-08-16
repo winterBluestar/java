@@ -1,5 +1,6 @@
 package com.model.xd.common.util;
 
+import com.model.xd.common.exception.message.CodeMessage;
 import com.model.xd.common.response.ResponseResult;
 
 public class ResponseResultUtil {
@@ -18,5 +19,9 @@ public class ResponseResultUtil {
 
     public static ResponseResult fail(Integer code, String message) {
         return new ResponseResult().fail(code, message);
+    }
+
+    public static ResponseResult fail(CodeMessage codeMessage) {
+        return new ResponseResult().fail(codeMessage.getCode(), codeMessage.getMessage());
     }
 }
