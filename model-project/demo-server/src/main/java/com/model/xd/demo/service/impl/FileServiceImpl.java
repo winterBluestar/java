@@ -8,13 +8,18 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -75,7 +80,7 @@ public class FileServiceImpl implements FileService {
 
                             positionString = positionString.replace(entry.getKey(), entry.getValue());
 
-                        } else if ("{".equals(positionString) || "}".equals(positionString)){
+                        } else if ("{".equals(positionString) || "}".equals(positionString)) {
 
                             positionString = "";
                         }
@@ -107,6 +112,31 @@ public class FileServiceImpl implements FileService {
         }
 
         return null;
+    }
+
+    /**
+     * document转换成输入流inputStream
+     * @param wordFile
+     * @throws IOException
+     */
+    private void docTransfer2InputStream(XWPFDocument wordFile) throws IOException {
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        wordFile.write(bos);
+
+        InputStream bis = new ByteArrayInputStream(bos.toByteArray());
+    }
+
+    /**
+     * 将inputStream转换成multipartFile
+     * @param inputStream
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
+    private static MultipartFile transferMultipartFile(InputStream inputStream, String fileName) throws IOException {
+        return new MockMultipartFile("file", fileName, "application/octet-stream", inputStream);
     }
 
     private HashMap<String, String> getParamMap() {
