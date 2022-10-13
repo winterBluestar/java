@@ -8,7 +8,7 @@ import java.util.Scanner;
  */
 public class SumN {
     // n! ， sum=n!+(n+1)!+(n+2)!+...+m!,n,m 值由键盘输入 , 要求调用函数。
-
+    //
     public static void main(String[] args) {
         Scanner scn = new Scanner(System.in);
         System.out.println("输入n:");
