@@ -10,6 +10,7 @@
         <module>demo-server</module>
         <module>common-server</module>
         <module>gateway-server</module>
+        <module>async-program-server</module>
     </modules>
     <groupId>org.example</groupId>
     <artifactId>model-project</artifactId>
