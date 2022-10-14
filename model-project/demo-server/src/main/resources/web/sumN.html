@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>n! ， sum=n!+(n+1)!+(n+2)!+...+m!</title>
+    <script type="text/javascript">
+        function sum() {
+            var n = parseInt(document.getElementById("n").value);
+            var m = parseInt(document.getElementById("m").value);
+            var sum = Math.imul(n, m);
+            var c = n - m;
+            if (c > 0) {
+                document.getElementById("sum").value = "m值不能比n小!";
+            } else {
+                var sum = 0;
+                if (n == m) {
+                    var sumI = 1;
+                    for (var i = 1; i <= n; i++) {
+                        sumI = sumI * i;
+                    }
+                    sum = (sum + sumI) * 2;
+                } else {
+                    for (var i = n; i <= m; i++) {
+                        var sumJ = 1;
+                        for (var j = 1; j <= i; j++) {
+                            sumJ = sumJ * j;
+                        }
+                        sum = sum + sumJ;
+                    }
+                }
+            }
+            document.getElementById("sum").value = sum;
+        }
+    </script>
+</head>
+<body>
+求sum=n!+(n+1)!+(n+2)!+...+m!,n,m 值由键盘输入! <br>
+n &nbsp;<input placeholder="输入n" type="text" id="n"> <br>
+m &nbsp;<input placeholder="输入m" type="text" id="m"> <br>
+阶乘之和&nbsp;<input type="text" id="sum">
+<input type="button" value="计算" onclick="sum()">
+</body>
+</html>
