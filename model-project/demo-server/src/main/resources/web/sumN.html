@@ -5,24 +5,24 @@
     <title>n! ， sum=n!+(n+1)!+(n+2)!+...+m!</title>
     <script type="text/javascript">
         function sum() {
-            var n = parseInt(document.getElementById("n").value);
-            var m = parseInt(document.getElementById("m").value);
+            let n = parseInt(document.getElementById("n").value);
+            let m = parseInt(document.getElementById("m").value);
             var sum = Math.imul(n, m);
-            var c = n - m;
+            let c = n - m;
             if (c > 0) {
                 document.getElementById("sum").value = "m值不能比n小!";
             } else {
-                var sum = 0;
+                let sum = 0;
                 if (n == m) {
-                    var sumI = 1;
-                    for (var i = 1; i <= n; i++) {
+                    let sumI = 1;
+                    for (let i = 1; i <= n; i++) {
                         sumI = sumI * i;
                     }
                     sum = (sum + sumI) * 2;
                 } else {
-                    for (var i = n; i <= m; i++) {
-                        var sumJ = 1;
-                        for (var j = 1; j <= i; j++) {
+                    for (let i = n; i <= m; i++) {
+                        let sumJ = 1;
+                        for (let j = 1; j <= i; j++) {
                             sumJ = sumJ * j;
                         }
                         sum = sum + sumJ;
