@@ -18,10 +18,10 @@ function process(input) {
             if (storage.docStatusCode !== 'NEW') {
                 H0.ExceptionHelper.throwCommonException("委外出入库订单" + value.docNum + "状态不为新建，请确认后重试！");
             }
-            if (storage.syncFlag === '1') {
+            if (storage.invType !== 'SCC') {
                 //todo 将订单状态更新为 已推送, 并将出入库指令推送给旺店通
                 storage.docStatusCode = 'PUSHED'
-            } else if (storage.syncFlag === '0') {
+            } else if (storage.invType === 'SCC') {
                 // 更新状态为已完成, 更新行执行数量 = 数量, 调用杂入杂出接口
                 storage.docStatusCode = 'COMPLETED'
                 const storageLineList = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {

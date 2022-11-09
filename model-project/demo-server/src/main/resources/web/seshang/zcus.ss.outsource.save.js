@@ -1,7 +1,7 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 76;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 76;
     const stockModeler = 'zinv_stock';
     const locatorModeler = 'zpfm_locator';
     const storageModeler = 'zcus_ss_outsource_storage';
@@ -27,13 +27,13 @@ function process(input) {
     // 判断是否为保存并提交
     if (input.isSubmit === 'true') {
         // 推送旺店通
-        if (!isEmptyStr(input.syncFlag) && input.syncFlag === 'true') {
+        if (!isEmptyStr(input.invType) && input.invType !== 'SCC') {
             input.docStatusCode = 'PUSHED'
             H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
             //TODO 将出入库指令推送给外部系统旺店通
         }
         // 不推送旺店通
-        if (isEmptyStr(input.syncFlag) || (!isEmptyStr(input.syncFlag) && input.syncFlag === 'false')) {
+        if (isEmptyStr(input.invType) || (!isEmptyStr(input.invType) && input.invType === 'SCC')) {
             input.docStatusCode = 'COMPLETED';
             if (input.outsourceLineList != null && input.outsourceLineList.length > 0) {
                 input.outsourceLineList.forEach(function (value, index) {
