@@ -2,7 +2,7 @@ function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
     const serviceId = "zosc-inv";
     //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 55;
+    const tenantId = 76;
     const itemModeler = 'zpdt_item';
     const itemSkuModeler = 'zpdt_item_sku';
     const fileModeler = 'zcus_ss_transaction_file';
@@ -10,7 +10,7 @@ function process(input) {
     const itemMap = new Map();
     const itemSkuMap = new Map();
     const organizationMap = new Map();
-    let sql = "SELECT zst.tenant_id,zst.organization_id,zst.item_id,zst.item_sku_id,zst.inv_tx_type_id,ztt.tx_type_name as invTxTypeName, zst.lot_id,zst.tx_qty,zst.stock_qty,zst.inv_tx_time,zst.source_dc_category,'采购订单' source_dc_category_name,zst.source_dc_type_id,zst.source_dc_id,zst.source_dc_num,zst.inv_dc_type,zst.inv_dc_id,zst.inv_dc_num,zst.stock_tx_id,zst.attribute_string1,zst.attribute_datetime1,zl.lot_num,ztt.tx_type_name,zp.supplier_id,zs.supplier_name from zinv_stock_tx zst left join zinv_lot zl on zst.lot_id = zl.lot_id left join zinv_tx_type ztt on zst.inv_tx_type_id = ztt.tx_type_id left join zwip_mo_type zmt on zmt.mo_type_id = zst.source_dc_type_id left join zopo_po_type_rule zptr on zptr.po_type_rule_id = zst.source_dc_type_id left join zopo_po zp on zp.po_id = zst.source_dc_id left join zopo_supplier zs on zp.supplier_id = zs.supplier_id where zst.tenant_id = #{tenantId} and zst.SOURCE_DC_CATEGORY = 'PURCHASING_ORDER' and ztt.tx_type_code = 'PO_ACCEPT'";
+    let sql = "SELECT zst.tenant_id,zst.organization_id,zst.item_id,zst.item_sku_id,zst.inv_tx_type_id,ztt.tx_type_name as invTxTypeName, zst.lot_id,zst.tx_qty,zst.stock_qty,zst.inv_tx_time,zst.source_dc_category,'采购订单' source_dc_category_name,zst.source_dc_type_id,zst.source_dc_id,zst.source_dc_num,zst.inv_dc_type,zst.inv_dc_id,zst.inv_dc_num,zst.stock_tx_id,case when zst.attribute_string1 is null then 0 else zst.attribute_string1 end attribute_string1,zst.attribute_datetime1,zl.lot_num,ztt.tx_type_name,zp.supplier_id,zs.supplier_name from zinv_stock_tx zst left join zinv_lot zl on zst.lot_id = zl.lot_id left join zinv_tx_type ztt on zst.inv_tx_type_id = ztt.tx_type_id left join zwip_mo_type zmt on zmt.mo_type_id = zst.source_dc_type_id left join zopo_po_type_rule zptr on zptr.po_type_rule_id = zst.source_dc_type_id left join zopo_po zp on zp.po_id = zst.source_dc_id left join zopo_supplier zs on zp.supplier_id = zs.supplier_id where zst.tenant_id = #{tenantId} and zst.SOURCE_DC_CATEGORY = 'PURCHASING_ORDER' and ztt.tx_type_code = 'PO_ACCEPT'";
     const queryParamMap = {
         tenantId: tenantId
     };
@@ -63,6 +63,8 @@ function process(input) {
                     .itemCode
                 value.itemDesc = itemMap.get(value.itemId)
                     .itemDesc
+                value.skuEnabledFlag = itemMap.get(value.itemId)
+                    .skuEnabledFlag
             } else {
                 const item = H0.ModelerHelper.selectOne(itemModeler, tenantId, {
                     "itemId": value.itemId
@@ -70,26 +72,29 @@ function process(input) {
                 if (item != null && item.itemId != null) {
                     value.itemCode = item.itemCode
                     value.itemDesc = item.itemDesc
+                    value.skuEnabledFlag = item.skuEnabledFlag
                     itemMap.set(item.itemId, item)
                 }
             }
-            if (itemSkuMap.has(value.itemSkuId)) {
-                value.itemSkuCode = itemSkuMap.get(value.itemSkuId)
-                    .itemSkuCode
-                value.itemSkuDesc = itemSkuMap.get(value.itemSkuId)
-                    .itemSkuDesc
-            } else {
-                const itemSku = H0.ModelerHelper.selectOne(itemSkuModeler, tenantId, {
-                    "itemSkuId": value.itemSkuId
-                });
-                if (itemSku != null && itemSku.itemSkuId != null) {
-                    value.itemSkuCode = itemSku.itemSkuCode
-                    value.itemSkuDesc = itemSku.itemSkuDesc
-                    itemMap.set(itemSku.itemSkuId, itemSku)
+            if (itemMap.get(value.itemId).skuEnabledFlag === '1') {
+                if (itemSkuMap.has(value.itemSkuId)) {
+                    value.itemSkuCode = itemSkuMap.get(value.itemSkuId)
+                        .itemSkuCode
+                    value.itemSkuDesc = itemSkuMap.get(value.itemSkuId)
+                        .itemSkuDesc
+                } else {
+                    const itemSku = H0.ModelerHelper.selectOne(itemSkuModeler, tenantId, {
+                        "itemSkuId": value.itemSkuId
+                    });
+                    if (itemSku != null && itemSku.itemSkuId != null) {
+                        value.itemSkuCode = itemSku.itemSkuCode
+                        value.itemSkuDesc = itemSku.itemSkuDesc
+                        itemSkuMap.set(itemSku.itemSkuId, itemSku)
+                    }
                 }
             }
             if (organizationMap.has(value.organizationId)) {
-                value.organizationName = organizationMap.get(value.organizationId)
+                value.organizationName = organizationMap.get(value.organizationId).organizationName
             } else {
                 const organization = H0.ModelerHelper.selectOne(organizationModeler, tenantId, {
                     "organizationId": value.organizationId
