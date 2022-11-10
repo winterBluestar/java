@@ -53,7 +53,10 @@ function process(input) {
             organizationCode: input.organizationCode
         }
         docList.push(param)
-        H0.ScriptHelper.execute (tenantId, scriptCode, docList);
+        const docParam = {
+            "docList": docList
+        }
+        H0.ScriptHelper.execute (tenantId, scriptCode, docParam);
     }
     return resHead;
 }
