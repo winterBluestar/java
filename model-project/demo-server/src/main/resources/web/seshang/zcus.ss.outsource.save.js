@@ -11,15 +11,13 @@ function process(input) {
         if (input.outsourceLineList != null && input.outsourceLineList.length > 0) {
             input.outsourceLineList.forEach(function (value, index) {
                 const stockRes = H0.ModelerHelper.selectOne(stockModeler, tenantId, {
-                    "warehouseId": input.warehouseId,
+                    "warehouseId": value.warehouseId,
                     "organizationId": input.organizationId,
-                    "itemId": input.itemId,
-                    "itemSkuId": input.itemSkuId
+                    "itemId": value.itemId,
+                    "itemSkuId": value.itemSkuId
                 });
-                if (stockRes != null || stockRes !== "{}") {
-                    if (value.quantity > stockRes.quantity) {
-                        H0.ExceptionHelper.throwCommonException(value.lineNumber + "当前仓库库存数量小于执行数量！请确认后重新提交！");
-                    }
+                if (stockRes == null || (value.quantity > stockRes.quantity)) {
+                    H0.ExceptionHelper.throwCommonException(value.lineNumber + "行当前仓库库存数量小于执行数量！请确认后重新提交！");
                 }
             })
         }
@@ -36,6 +34,7 @@ function process(input) {
         input.outsourceLineList.forEach(function (value, index) {
             value.docId = resHead.docId
             value.docNum = resHead.docNum
+            value.docTypeCode = resHead.docTypeCode
             if (value._status === 'create') {
                 H0.ModelerHelper.insert(storageLineModeler, tenantId, value, true);
             } else if (value._status === 'update') {
@@ -56,7 +55,7 @@ function process(input) {
         docList.push(param)
         H0.ScriptHelper.execute (tenantId, scriptCode, docList);
     }
-    return input;
+    return resHead;
 }
 
 /**
