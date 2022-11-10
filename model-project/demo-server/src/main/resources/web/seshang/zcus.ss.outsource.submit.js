@@ -44,7 +44,8 @@ function process(input) {
                         itemSkuCode: value.itemSkuCode,
                         uomName: value.uomName,
                         miscInQty: value.quantity,
-                        executeTime: new Date()
+                        executeTime: new Date(),
+                        remark: value.docNum
                     }
                     paramList.push(param)
                 })
