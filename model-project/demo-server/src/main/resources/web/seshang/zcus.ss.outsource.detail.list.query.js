@@ -1,7 +1,7 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    const tenantId = CORE.CurrentContext.getTenantId();
-    //const tenantId = 76;
+    //const tenantId = CORE.CurrentContext.getTenantId();
+    const tenantId = 76;
     const serviceId = 'zosc-second-service';
     const itemModeler = 'zpdt_item';
     const categoryModeler = 'zpdt_item_category';
@@ -11,6 +11,7 @@ function process(input) {
     const storageModeler = 'zcus_ss_outsource_storage';
     const stockModeler = 'zinv_stock';
     const wareModeler = 'zpfm_warehouse';
+    const codeValueModeler = 'zpfm_business_code_value';
     const syncStatusMap = new Map();
     const locatorMap = new Map();
     const itemMap = new Map();
@@ -18,6 +19,7 @@ function process(input) {
     const uomMap = new Map();
     const categoryMap = new Map();
     const warehouseMap = new Map();
+    const codeValueMap = new Map();
     let sql = "SELECT zsosl.CREATED_BY,zsosl.CREATION_DATE,zsosl.LAST_UPDATED_BY,zsosl.LAST_UPDATE_DATE,zsosl.object_version_number,zsosl.tenant_id," +
         "zsosl.line_id,zsosl.doc_id,zsosl.doc_num,zsosl.line_number,zsosl.item_id,zsosl.specification_model,zsosl.item_sku_id,zsosl.warehouse_id," +
         "zsosl.QUANTITY,zsosl.EXECUTE_QTY,zsosl.lot_num,zsosl.EXPIRATION_DATE,zsosl.DOC_TYPE_CODE,zsosl.REMARK,zsos.INV_TYPE FROM zcus_ss_outsource_storage_line zsosl " +
@@ -34,7 +36,7 @@ function process(input) {
         queryParamMap.docId = input.docId
     }
     if (input.docNum != null && input.docNum.length > 0) {
-        sql = sql + " and zsosl.doc_num = #{docNum}"
+        sql = sql + " and zsosl.doc_num like concat('%',#{docNum},'%')"
         queryParamMap.docNum = input.docNum
     }
     if (input.docTypeCode != null && input.docTypeCode.length > 0) {
@@ -57,6 +59,7 @@ function process(input) {
         sql = sql + " and zsosl.specification_model like concat('%',#{specificationModel},'%')"
         queryParamMap.specificationModel = input.specificationModel
     }
+    sql = sql + " ORDER BY zsosl.CREATION_DATE DESC";
     let linePage = H0.SqlHelper.selectPage(serviceId, sql, queryParamMap, pageRequestObject);
     if (linePage !== null && linePage.content !== null && linePage.content.length > 0) {
         linePage.content.forEach(function (value, index) {
@@ -115,7 +118,7 @@ function process(input) {
                     if (itemSku != null && itemSku.itemSkuId != null) {
                         value.itemSkuCode = itemSku.itemSkuCode
                         value.itemSkuDesc = itemSku.itemSkuDesc
-                        itemMap.set(itemSku.itemSkuId, itemSku)
+                        itemSkuMap.set(itemSku.itemSkuId, itemSku)
                     }
                 }
             }
@@ -153,6 +156,8 @@ function process(input) {
             if (warehouseMap.has(value.warehouseId)) {
                 value.warehouseName = warehouseMap.get(value.warehouseId).warehouseName
                 value.warehouseCode = warehouseMap.get(value.warehouseId).warehouseCode
+                value.organizationName = warehouseMap.get(value.warehouseId).organizationName
+                value.organizationId = warehouseMap.get(value.warehouseId).organizationId
             } else {
                 const warehouse = H0.ModelerHelper.selectOne(wareModeler, tenantId, {
                     "warehouseId": value.warehouseId
@@ -160,8 +165,22 @@ function process(input) {
                 if (warehouse != null && warehouse.warehouseId != null) {
                     value.warehouseName = warehouse.warehouseName
                     value.warehouseCode = warehouse.warehouseCode
+                    value.organizationName = warehouse.organizationName
+                    value.organizationId = warehouse.organizationId
                     warehouseMap.set(warehouse.warehouseId, warehouse)
                 }
+            }
+            const itemTypeId = itemMap.get(value.itemId).itemTypeId;
+            if (codeValueMap.has(itemTypeId)) {
+                value.itemTypeMeaning = codeValueMap.get(itemTypeId).valueDesc
+                value.itemTypeId = itemTypeId
+            } else {
+                const codeValue = H0.ModelerHelper.selectOne(codeValueModeler, tenantId, {
+                    "businessCodeValueId": itemTypeId
+                });
+                value.itemTypeMeaning = codeValue.valueDesc
+                value.itemTypeId = itemTypeId
+                codeValueMap.set(itemTypeId,codeValue)
             }
         })
     }
