@@ -1,7 +1,7 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 76;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 76;
     const serviceId = 'zosc-second-service';
     const itemModeler = 'zpdt_item';
     const categoryModeler = 'zpdt_item_category';
@@ -10,12 +10,14 @@ function process(input) {
     const locatorModeler = 'zpfm_locator';
     const storageModeler = 'zcus_ss_outsource_storage';
     const stockModeler = 'zinv_stock';
+    const wareModeler = 'zpfm_warehouse';
     const syncStatusMap = new Map();
     const locatorMap = new Map();
     const itemMap = new Map();
     const itemSkuMap = new Map();
     const uomMap = new Map();
     const categoryMap = new Map();
+    const warehouseMap = new Map();
     let sql = "SELECT zsosl.CREATED_BY,zsosl.CREATION_DATE,zsosl.LAST_UPDATED_BY,zsosl.LAST_UPDATE_DATE,zsosl.object_version_number,zsosl.tenant_id," +
         "zsosl.line_id,zsosl.doc_id,zsosl.doc_num,zsosl.line_number,zsosl.item_id,zsosl.specification_model,zsosl.item_sku_id,zsosl.warehouse_id," +
         "zsosl.QUANTITY,zsosl.EXECUTE_QTY,zsosl.lot_num,zsosl.EXPIRATION_DATE,zsosl.DOC_TYPE_CODE,zsosl.REMARK,zsos.INV_TYPE FROM zcus_ss_outsource_storage_line zsosl " +
@@ -85,6 +87,8 @@ function process(input) {
                     .uomId
                 value.itemCategoryId = itemMap.get(value.itemId)
                     .itemCategoryId
+                value.skuEnabledFlag = itemMap.get(value.itemId)
+                    .skuEnabledFlag
             } else {
                 const item = H0.ModelerHelper.selectOne(itemModeler, tenantId, {
                     "itemId": value.itemId
@@ -94,6 +98,7 @@ function process(input) {
                     value.itemDesc = item.itemDesc
                     value.uomId = item.uomId
                     value.itemCategoryId = item.itemCategoryId
+                    value.skuEnabledFlag = item.skuEnabledFlag
                     itemMap.set(item.itemId, item)
                 }
             }
@@ -144,6 +149,19 @@ function process(input) {
             });
             if (stockRes != null) {
                 value.stockQuantity = stockRes.quantity
+            }
+            if (warehouseMap.has(value.warehouseId)) {
+                value.warehouseName = warehouseMap.get(value.warehouseId).warehouseName
+                value.warehouseCode = warehouseMap.get(value.warehouseId).warehouseCode
+            } else {
+                const warehouse = H0.ModelerHelper.selectOne(wareModeler, tenantId, {
+                    "warehouseId": value.warehouseId
+                });
+                if (warehouse != null && warehouse.warehouseId != null) {
+                    value.warehouseName = warehouse.warehouseName
+                    value.warehouseCode = warehouse.warehouseCode
+                    warehouseMap.set(warehouse.warehouseId, warehouse)
+                }
             }
         })
     }

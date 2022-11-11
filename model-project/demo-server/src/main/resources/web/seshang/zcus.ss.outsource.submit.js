@@ -1,14 +1,14 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    const tenantId = CORE.CurrentContext.getTenantId();
-    //const tenantId = 76;
+    //const tenantId = CORE.CurrentContext.getTenantId();
+    const tenantId = 76;
     const locatorModeler = 'zpfm_locator';
     const storageModeler = 'zcus_ss_outsource_storage';
     const storageLineModeler = 'zcus_ss_outsource_storage_line';
-
     // 根据id查询委外出入库头数据
     if (input != null && input.docList != null && input.docList.length > 0) {
-        input.docList.forEach(function (value, key) {
+        for (let i = 0; i < input.docList.length; i++) {
+            const value = input.docList[i]
             const storage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
                 "docId": value.docId
             });
@@ -37,14 +37,14 @@ function process(input) {
                         "locatorId": value.locatorId
                     });
                     const param = {
-                        organizationCode: input.organizationCode,
-                        warehouseCode: value.warehouseCode,
+                        organizationCode: value.organizationCode,
+                        warehouseName: value.warehouseName,
                         locatorCode: locator.locatorCode,
                         itemCode: value.itemCode,
                         itemSkuCode: value.itemSkuCode,
                         uomName: value.uomName,
                         miscInQty: value.quantity,
-                        executeTime: new Date(),
+                        executeTime: getDateTimeStr(),
                         remark: value.docNum
                     }
                     paramList.push(param)
@@ -53,22 +53,31 @@ function process(input) {
                 H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineList, true)
                 // 拼接杂入杂出的路径
                 let invokePath;
-                if (input.docTypeCode === 'IN') {
+                if (storage.docTypeCode === 'IN') {
                     invokePath = "/v1/" + tenantId + "/stocks/misc-in";
-                } else if (input.docTypeCode === 'OUT') {
+                } else if (storage.docTypeCode === 'OUT') {
                     invokePath = "/v1/" + tenantId + "/stocks/misc-out"
                 }
+                //return paramList
                 const miscRes = H0.FeignClient.selectClient('zosc-open-api').doPost(invokePath, paramList);
+                const miscObj = CORE.JSON.parse(miscRes);
+                return miscObj
                 if (miscRes == null) {
                     H0.ExceptionHelper.throwCommonException("调用杂项出入库接口无返回信息！");
                 } else {
-                    if (miscRes.result !== 'true') {
-                        H0.ExceptionHelper.throwCommonException(miscRes.message);
+                    if (miscObj.failed) {
+                        H0.ExceptionHelper.throwCommonException(miscObj.message);
                     }
                 }
             }
             H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
-        })
+        }
     }
     return input;
+}
+
+function getDateTimeStr() {
+    let dateString = new Date().toLocaleDateString();
+    let timeString = new Date().toLocaleTimeString();
+    return dateString + " " + timeString
 }

@@ -1,10 +1,10 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 76;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 76;
     const serviceId = 'zosc-second-service';
     const storageModeler = 'zcus_ss_outsource_storage';
-    if (input.docIdList === null || input.docIdList.length === 0) {
+    if (input.docList === null || input.docList.length === 0) {
         H0.ExceptionHelper.throwCommonException("未勾选为委外出入库订单，请确认后重试！");
     }
     let sql = "select tenant_id, doc_id, doc_status_code, object_version_number from zosc_second_service.zcus_ss_outsource_storage where tenant_id = #{tenantId} ";
@@ -12,10 +12,10 @@ function process(input) {
         tenantId: tenantId
     }
     let ids = '';
-    input.docIdList.forEach(function (value, index) {
-        if (index < input.docIdList.length - 1) {
+    input.docList.forEach(function (value, index) {
+        if (index < input.docList.length - 1) {
             ids = ids + value + ','
-        } else if (index === input.docIdList.length - 1) {
+        } else if (index === input.docList.length - 1) {
             ids = ids + value
         }
     })
