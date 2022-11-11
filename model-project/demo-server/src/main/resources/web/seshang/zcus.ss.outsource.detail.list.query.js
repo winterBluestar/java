@@ -59,7 +59,7 @@ function process(input) {
         sql = sql + " and zsosl.specification_model like concat('%',#{specificationModel},'%')"
         queryParamMap.specificationModel = input.specificationModel
     }
-    sql = sql + " ORDER BY zsosl.CREATION_DATE DESC";
+    sql = sql + " order by zsosl.doc_num desc";
     let linePage = H0.SqlHelper.selectPage(serviceId, sql, queryParamMap, pageRequestObject);
     if (linePage !== null && linePage.content !== null && linePage.content.length > 0) {
         linePage.content.forEach(function (value, index) {
