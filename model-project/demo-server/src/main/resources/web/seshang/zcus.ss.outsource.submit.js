@@ -1,12 +1,13 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 76;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 76;
     const regionModeler = 'zpfm_region';
     const locatorModeler = 'zpfm_locator';
     const storageModeler = 'zcus_ss_outsource_storage';
     const storageLineModeler = 'zcus_ss_outsource_storage_line';
     const secondServerId = "zosc-second-service";
+    const serverId = "hzero-interface";
     const path = "/v2/rest/invoke?namespace=" + CORE.CurrentContext.getTenantNum() + "&serverCode=ZCUS.SS.WDT_INTERFACE&interfaceCode=vipWmsStockinoutOrderPush";
     const bulidParamsPath = "/v1/" + tenantId + "/ss-wdt/bulid-wdt-params";
     // 根据id查询委外出入库头数据
@@ -33,7 +34,7 @@ function process(input) {
                     const stockin_info = {};
                     stockin_info.api_outer_no = storage.docNum;
                     stockin_info.warehouse_no= storage.warehouseCode;
-                    stockin_info.order_type= storage.docTypeCode === 'OUT' ? "1" : "2";
+                    stockin_info.order_type= storage.docTypeCode === 'OUT' ? '1' : '2';
                     stockin_info.province= province.regionName;
                     stockin_info.city= city.regionName;
                     stockin_info.district= district.regionName;
@@ -56,10 +57,10 @@ function process(input) {
                         goods.remark = storageLine.remark;
                         goods_list.push(goods);
                     }
-                    stockin_info.set("goods_list", goods_list);
+                    stockin_info.goods_list = goods_list;
                     // 调用zosc-second-service公共方法
                     let wdtParam = {}
-                    wdtParam.purchase_info = CORE.JSON.stringify(stockin_info)
+                    wdtParam.stockin_info = CORE.JSON.stringify(stockin_info)
                     BASE.Logger.debug("-------wdtParam-------{}", wdtParam)
                     // 组装参数
                     let paramsRes = BASE.FeignClient.selectClient(secondServerId)
@@ -76,11 +77,12 @@ function process(input) {
                         BASE.Logger.debug("-------WDT RES-------{}", resObj)
                         const wdtRes = CORE.JSON.parse(resObj.payload);
                         if (wdtRes.code != 0) {
-                            BASE.Logger.error('创建委外出入库订单[{}]失败:{}', storage.docNum, wdtRes.message)
+                            BASE.Logger.error('创建委外出入库订单[{}]失败:{}', storage.docNum,)
+                            H0.ExceptionHelper.throwCommonException("旺店通创建委外出入库订单["+storage.docNum+"]失败："+ wdtRes.message)
                         } else {
                             storage.syncStatus = wdtRes.code
                             storage.syncMsg = wdtRes.message
-                            storage.wdtDocNum = wdtRes.stockout_no
+                            storage.wdtDocNum = wdtRes.data.stockout_no
                         }
                     }
                 }
