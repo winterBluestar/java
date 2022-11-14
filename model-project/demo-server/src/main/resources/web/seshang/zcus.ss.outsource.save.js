@@ -23,6 +23,18 @@ function process(input) {
             }
         }
     }
+    if (input.outsourceLineList != null && input.outsourceLineList.length > 1) {
+        for (let i = 0; i < input.outsourceLineList.length; i++) {
+            const compareLine = input.outsourceLineList[i];
+            for (let j = 0; j < input.outsourceLineList.length; j++) {
+                const compareToLine = input.outsourceLineList[j];
+                if (i !== j && compareLine.itemId === compareToLine.itemId
+                    && compareLine.itemSkuId === compareToLine.itemSkuId) {
+                    H0.ExceptionHelper.throwCommonException("委外出入库订单物料SKU不能重复");
+                }
+            }
+        }
+    }
     // 保存头数据
     let resHead;
     if (input._status === 'create') {
@@ -57,7 +69,7 @@ function process(input) {
         const docParam = {
             "docList": docList
         }
-        H0.ScriptHelper.execute (tenantId, scriptCode, docParam);
+        H0.ScriptHelper.execute(tenantId, scriptCode, docParam);
     }
     return resHead;
 }
