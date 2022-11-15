@@ -1,12 +1,13 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
     const serviceId = "zosc-inv";
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 76;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 76;
     const itemModeler = 'zpdt_item';
     const itemSkuModeler = 'zpdt_item_sku';
     const fileModeler = 'zcus_ss_transaction_file';
     const organizationModeler = 'zpfm_organization';
+    const stockModeler = 'zinv_stock_tx';
     const itemMap = new Map();
     const itemSkuMap = new Map();
     const organizationMap = new Map();
@@ -57,7 +58,8 @@ function process(input) {
     }
     var res = H0.SqlHelper.selectPage(serviceId, sql, queryParamMap, pageRequestObject);
     if (res != null && res.content != null && res.content.length > 0) {
-        res.content.forEach(function (value, index) {
+        for (let i = 0; i < res.content.length; i++) {
+            const value = res.content[i]
             if (itemMap.has(value.itemId)) {
                 value.itemCode = itemMap.get(value.itemId)
                     .itemCode
@@ -105,9 +107,22 @@ function process(input) {
             const queryFileMap = {
                 "stockTxId": value.stockTxId
             }
-            let res = H0.ModelerHelper.selectPage(fileModeler, tenantId, queryFileMap, {});
-            value.stockTxAttachList = res;
-        })
+            let fileRes = H0.ModelerHelper.selectPage(fileModeler, tenantId, queryFileMap, {});
+            value.stockTxAttachList = fileRes;
+            const refer = H0.ModelerHelper.selectOne(stockModeler, tenantId, {
+                "sourceDcCategory": 'PURCHASING_ORDER',
+                "referTxId": value.stockTxId
+            });
+            if (refer != null) {
+                if (Math.abs(refer.txQty) ==  value.txQty) {
+                    value.stockStatusMeaning = '已撤销'
+                } else {
+                    value.stockStatusMeaning = '已入库'
+                }
+            } else {
+                value.stockStatusMeaning = '已入库'
+            }
+        }
     }
     return res;
 }
