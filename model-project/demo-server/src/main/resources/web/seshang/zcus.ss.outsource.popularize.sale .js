@@ -19,10 +19,10 @@ function process(input) {
     const storageLineList = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {
         "docId": input.docId
     });
-    if (storage.wdtPoFlag == 1) {
+    if (storage.wdtDocNum == null) {
         const poHead = {
             provider_no: "NBGYS",
-            warehouse_no: input.targetWarehouseCode,
+            warehouse_no: input.warehouseCode,
             outer_no: input.docNum,
             is_use_outer_no: 1,
             is_check: 1,
@@ -46,8 +46,9 @@ function process(input) {
         }
         poHead.details_list = detailsList
         const createPoParam = {
-            purchase_info: poHead
+
         }
+        createPoParam.purchase_info = CORE.JSON.stringify(poHead)
         // 调用zosc-second-service获取参数
         BASE.Logger.debug('-------createPoParam-------{}', createPoParam)
         let createPoParamRes = BASE.FeignClient.selectClient(secondServiceId)
@@ -59,6 +60,7 @@ function process(input) {
                 bodyParamMap: createPoParamRes
             }
             // 调用旺店通创建采购单接口
+            BASE.Logger.debug('-------调用旺店通创建采购订单接口参数-------{}', param)
             let createWdtRes = BASE.FeignClient.selectClient(serverId)
                 .doPost(createPoPath, param);
             createWdtRes = CORE.JSON.parse(createWdtRes);
@@ -67,9 +69,12 @@ function process(input) {
             if (payloadRes.code == 0) {
                 // 更新创建采购单状态
                 storage.wdtPoFlag = 1
+                storage.wdtDocNum = storage.docNum
+                storage.syncStatus = null
+                storage.syncMsg = null
                 H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
             } else {
-                storage.syncStatus = payloadRes.code
+                storage.syncStatus = '失败'
                 storage.syncMsg = payloadRes.message
                 H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
                 return payloadRes.message
@@ -77,13 +82,17 @@ function process(input) {
         }
     }
     // 创建采购入库单
-    if (storage.wdtStockinOrder == '11null') {
+    storage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
+        "docId": input.docId
+    });
+    const firstSplit = storage.wdtDocNum.split(';')
+    if (firstSplit.length == 1 && firstSplit[0] == storage.docNum) {
         const purchaseInfo = {
             purchase_no: storage.docNum,
             outer_no: storage.docNum,
             is_create_batch: 0,
             is_check: 0,
-            warehouse_no: input.targetWarehouseCode,
+            warehouse_no: input.warehouseCode,
             remark: storage.remark
         }
         const detailsList = []
@@ -96,18 +105,23 @@ function process(input) {
                     batch_no: storageLine.lotNum,
                     remark: storageLine.remark
                 }
-                const lot = H0.ModelerHelper.selectOne(lotModeler, tenantId, {
-                    lotId: storageLine.lotId,
-                    organizationId: storage.organizationId
-                });
-                detail.production_date = lot.activeTime
+                if (storageLine.lotId != null && storageLine.lotId.length > 0) {
+                    const lot = H0.ModelerHelper.selectOne(lotModeler, tenantId, {
+                        lotId: storageLine.lotId,
+                        organizationId: storage.organizationId
+                    });
+                    if (lot != null) {
+                        detail.production_date = lot.activeTime
+                    }
+                }
                 detailsList.push(detail)
             }
         }
         purchaseInfo.details_list = detailsList
         const createStockInParam = {
-            purchase_info: purchaseInfo
+
         }
+        createStockInParam.purchase_info = CORE.JSON.stringify(purchaseInfo)
         // 调用zosc-second-service获取参数
         BASE.Logger.debug('-------createStockInParam-------{}', createStockInParam)
         let createStockInParamRes = BASE.FeignClient.selectClient(secondServiceId)
@@ -124,68 +138,77 @@ function process(input) {
             createWdtStockInRes = CORE.JSON.parse(createWdtStockInRes);
             BASE.Logger.debug("-------CREATE WDT STOCK IN RES-------{}", createWdtStockInRes)
             const payloadRes = CORE.JSON.parse(createWdtStockInRes.payload)
-            storage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
-                "docId": input.docId
-            });
             if (payloadRes.code == 0) {
                 // 更新创建采购入库单号
                 storage.wdtStockinOrder = payloadRes.stockin_no
+                storage.syncStatus = null
+                storage.syncMsg = null
                 H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
             } else {
-                storage.syncStatus = payloadRes.code
+                storage.syncStatus = '失败'
                 storage.syncMsg = payloadRes.message
+                storage.docStatusCode = 'PUSH_FAIL'
                 H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
                 return payloadRes.message
             }
         }
     }
     // 调取标准接口【直接转移】生成库存事务
-    const transferPath = "/v1/" + tenantId + "/stocks/direct-transfer"
-    if (codeValueMap.get(storage.invBusinessReasonId) == null) {
-        const codeValue = H0.ModelerHelper.selectOne(codeValueModeler, tenantId, {
-            "businessCodeValueId": storage.invBusinessReasonId
-        });
-        codeValueMap.set(codeValue.businessCodeValueId, codeValue)
-    }
-    const transferParamList = []
-    if (storageLineList != null && storageLineList.length > 0) {
-        for (let k = 0; k < storageLineList.length; k++) {
-            const storageLine = storageLineList[k];
-            const transferParam = {
-                organizationCode: input.organizationCode,
-                toOrganizationCode: input.organizationCode,
-                itemCode: storageLine.itemCode,
-                itemSkuCode: storageLine.itemSkuCode,
-                txUomQty: storageLine.quantity,
-                txUomName: storageLine.uomName,
-                warehouseCode: input.warehouseCode,
-                toWarehouseCode: input.targetWarehouseCode,
-                lotNumber: storageLine.lotNum,
-                remark: storageLine.remark,
-                executeTime: getDateTimeStr(),
-                qcRaesonCode: codeValueMap.get(storage.invBusinessReasonId).valueCode,
-                qcRaesonDesc: codeValueMap.get(storage.invBusinessReasonId).valueDesc
-            }
-            transferParamList.push(transferParam)
-        }
-    }
-    let transferRes = H0.FeignClient.selectClient('zosc-open-api').doPost(transferPath, transferParamList);
-    transferRes = CORE.JSON.parse(transferRes);
     storage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
         "docId": input.docId
     });
-    if (transferRes.failed) {
-        BASE.Logger.error("直接转移失败[" + transferRes.message + "]")
-        storage.syncStatus = '失败'
-        storage.syncMsg = transferRes.message
-        H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
-        return transferRes.message;
-    } else {
-        // 更新委外单据状态为 已完成
-        storage.docStatusCode = 'COMPLETED'
-        storage.syncStatus = '成功'
-        storage.syncMsg = 'ok'
-        H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
+    const secondSplit = storage.wdtDocNum.split(';')
+    if (secondSplit.length == 2) {
+        const transferPath = "/v1/" + tenantId + "/stocks/direct-transfer"
+        if (codeValueMap.get(storage.invBusinessReasonId) == null) {
+            const codeValue = H0.ModelerHelper.selectOne(codeValueModeler, tenantId, {
+                "businessCodeValueId": storage.invBusinessReasonId
+            });
+            codeValueMap.set(codeValue.businessCodeValueId, codeValue)
+        }
+        const transferParamList = []
+        if (storageLineList != null && storageLineList.length > 0) {
+            for (let k = 0; k < storageLineList.length; k++) {
+                const storageLine = storageLineList[k];
+                const transferParam = {
+                    organizationCode: input.organizationCode,
+                    toOrganizationCode: input.organizationCode,
+                    itemCode: storageLine.itemCode,
+                    itemSkuCode: storageLine.itemSkuCode,
+                    txUomQty: storageLine.quantity,
+                    txUomName: storageLine.uomName,
+                    warehouseCode: input.targetWarehouseCode,
+                    toWarehouseCode: input.warehouseCode,
+                    lotNumber: storageLine.lotNum,
+                    remark: storageLine.remark,
+                    executeTime: getDateTimeStr(),
+                    qcRaesonCode: codeValueMap.get(storage.invBusinessReasonId).valueCode,
+                    qcRaesonDesc: codeValueMap.get(storage.invBusinessReasonId).valueDesc
+                }
+                transferParamList.push(transferParam)
+                storageLine.executeQty = storageLine.quantity
+            }
+        }
+        if (transferParamList.length > 0) {
+            let transferRes = H0.FeignClient.selectClient('zosc-open-api').doPost(transferPath, transferParamList);
+            transferRes = CORE.JSON.parse(transferRes);
+            if (transferRes.failed) {
+                BASE.Logger.error("直接转移失败[" + transferRes.message + "]")
+                storage.syncStatus = '失败'
+                storage.docStatusCode = 'EXECUTE_FAIL'
+                storage.syncMsg = transferRes.message
+                H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
+                return transferRes.message;
+            } else {
+                // 更新委外单据状态为 已完成
+                storage.docStatusCode = 'PUSH_SUCCESS'
+                storage.syncStatus = null
+                storage.syncMsg = null
+                H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
+                // 更新执行数量
+                H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineList)
+            }
+        }
     }
 }
 
