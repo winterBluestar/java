@@ -18,7 +18,7 @@ function process(input) {
     }
     const res = H0.SqlHelper.selectList(secondServiceId, sql, queryParamMap);
     if (res != null && res.length > 0) {
-        const storageArr = []
+        //const storageArr = []
         const storageLineArr = []
         for (let i = 0; i < res.length; i++) {
             const storage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
@@ -56,10 +56,6 @@ function process(input) {
                     const head = wdtObjRes.order_list[0];
                     BASE.Logger.error('委外查询出入库订单信息[{}]', head)
                     if (head.status == 70 || head.status == 75 || head.status == 80) {
-                        // 修改头状态为已完成
-                        storage.docStatusCode = 'COMPLETED'
-                        storage.storageDocNum = head.wms_outer_no
-                        storageArr.push(storage)
                         // 计算scc委外出入库订单行执行数量回写
                         const storageLineList = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {
                             "docId": storage.docId
@@ -124,29 +120,34 @@ function process(input) {
                                 invokePath = "/v1/" + tenantId + "/stocks/misc-in";
                             } else {
                                 BASE.Logger.error("单据类别不为委外出入库类型[" + head.order_type + "]")
-                                H0.ExceptionHelper.throwCommonException("单据类别不为委外出入库类型[" + head.order_type + "]")
                             }
                             const miscRes = H0.FeignClient.selectClient('zosc-open-api').doPost(invokePath, paramList);
                             const miscObj = CORE.JSON.parse(miscRes);
                             if (miscRes == null) {
-                                H0.ExceptionHelper.throwCommonException("调用杂项出入库接口无返回信息！");
+                                BASE.Logger.error("调用杂项出入库接口无返回信息！");
+                                storage.docStatusCode = 'EXECUTE_FAIL'
+                                storage.syncStatus = '失败'
+                                storage.syncMsg = '调用杂项出入库接口无返回信息'
                             } else {
                                 if (miscObj.failed) {
                                     BASE.Logger.error("杂入杂出操作失败[" + miscObj.message + "]")
-                                    H0.ExceptionHelper.throwCommonException(miscObj.message);
+                                    storage.docStatusCode = 'EXECUTE_FAIL'
+                                    storage.syncStatus = '失败'
+                                    storage.syncMsg = miscObj.message
+                                } else {
+                                    // 更新头状态, 仓储单号, 行数量
+                                    storage.docStatusCode = 'EXECUTE_SUCCESS'
+                                    storage.storageDocNum = head.wms_outer_no
+                                    if (storageLineArr.length > 0) {
+                                        H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineArr)
+                                    }
                                 }
                             }
+                            H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
                         }
                     }
                 }
             }
-        }
-        // 更新头状态, 仓储单号, 行数量
-        if (storageArr != null && storageArr.length > 0) {
-            H0.ModelerHelper.batchUpdateByPrimaryKey(storageModeler, tenantId, storageArr)
-        }
-        if (storageLineArr != null && storageLineArr.length > 0) {
-            H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineArr)
         }
     }
 }
