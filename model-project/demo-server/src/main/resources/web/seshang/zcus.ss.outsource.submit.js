@@ -18,35 +18,38 @@ function process(input) {
                 "docId": value.docId
             });
             if (storage == null) {
-                H0.ExceptionHelper.throwCommonException("委外出入库订单" + value.docNum + "不存在，请确认后重试！");
+                return "委外出入库订单" + value.docNum + "不存在，请确认后重试！";
             }
-            if (storage.docStatusCode !== 'NEW') {
-                H0.ExceptionHelper.throwCommonException("委外出入库订单" + value.docNum + "状态不为新建，请确认后重试！");
+            if (storage.docStatusCode != 'NEW' && storage.docStatusCode != 'PUSH_FAIL' && storage.docStatusCode != 'EXECUTE_FAIL') {
+                return "委外出入库订单" + value.docNum + "状态不为新建，请确认后重试！";
             }
             if (storage.invType !== 'SCC') {
-                // 将订单状态更新为 已推送, 并将出入库指令推送给旺店通
-                storage.docStatusCode = 'PUSHED'
-                if (storage.invType === 'ASCP') {
+                if (storage.invType === 'WDT' && storage.targetWarehouseCode != null) {
+                    // 推广售卖
+                    BASE.Logger.debug('-------推广售卖入参storage-------{}', storage)
+                    return H0.ScriptHelper.execute(tenantId, 'zcus.ss.outsource.popularize.sale', storage);
+                } else {
+                    // 将订单状态更新为 已推送, 并将出入库指令推送给旺店通
                     //storage = ascpToWdt(storage,storageLineModeler,regionModeler, tenantId);
                     const province = H0.ModelerHelper.selectOne(regionModeler, 0, {"regionId": storage.provinceRegionId});
                     const city = H0.ModelerHelper.selectOne(regionModeler, 0, {"regionId": storage.cityRegionId});
                     const district = H0.ModelerHelper.selectOne(regionModeler, 0, {"regionId": storage.districtRegionId});
                     const stockin_info = {};
                     stockin_info.api_outer_no = storage.docNum;
-                    stockin_info.warehouse_no= storage.warehouseCode;
-                    stockin_info.order_type= storage.docTypeCode === 'OUT' ? '1' : '2';
-                    stockin_info.province= province.regionName;
-                    stockin_info.city= city.regionName;
-                    stockin_info.district= district.regionName;
-                    stockin_info.address= storage.addressDetail;
-                    stockin_info.contact= storage.contacts;
-                    stockin_info.mobile= storage.phone;
-                    stockin_info.auto_check= "1";
-                    stockin_info.remark= storage.remark;
+                    stockin_info.warehouse_no = storage.warehouseCode;
+                    stockin_info.order_type = storage.docTypeCode === 'OUT' ? '1' : '2';
+                    stockin_info.province = province.regionName;
+                    stockin_info.city = city.regionName;
+                    stockin_info.district = district.regionName;
+                    stockin_info.address = storage.addressDetail;
+                    stockin_info.contact = storage.contacts;
+                    stockin_info.mobile = storage.phone;
+                    stockin_info.auto_check = "1";
+                    stockin_info.remark = storage.remark;
                     const storageLineList = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {
                         "docId": storage.docId
                     });
-                    const goods_list =[]
+                    const goods_list = []
                     for (let j = 0; j < storageLineList.length; j++) {
                         const goods = {};
                         const storageLine = storageLineList[j];
@@ -78,22 +81,20 @@ function process(input) {
                         const wdtRes = CORE.JSON.parse(resObj.payload);
                         if (wdtRes.code != 0) {
                             BASE.Logger.error('创建委外出入库订单[{}]失败:{}', storage.docNum,)
-                            H0.ExceptionHelper.throwCommonException("旺店通创建委外出入库订单["+storage.docNum+"]失败："+ wdtRes.message)
+                            return "旺店通创建委外出入库订单[" + storage.docNum + "]失败：" + wdtRes.message
                         } else {
-                            storage.syncStatus = wdtRes.code
-                            storage.syncMsg = wdtRes.message
+                            storage.docStatusCode = 'PUSH_SUCCESS'
                             storage.wdtDocNum = wdtRes.data.stockout_no
                         }
                     }
                 }
             } else if (storage.invType === 'SCC') {
                 // 更新状态为已完成, 更新行执行数量 = 数量, 调用杂入杂出接口
-                storage.docStatusCode = 'COMPLETED'
                 const storageLineList = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {
                     "docId": value.docId
                 });
                 if (storageLineList == null || storageLineList.length <= 0) {
-                    H0.ExceptionHelper.throwCommonException("委外出入库订单" + value.docNum + "不存在行数据，请确认后重试！");
+                    return "委外出入库订单" + value.docNum + "不存在行数据，请确认后重试！";
                 }
                 const paramList = [];
                 storageLineList.forEach(function (value, index) {
@@ -126,12 +127,13 @@ function process(input) {
                 const miscRes = H0.FeignClient.selectClient('zosc-open-api').doPost(invokePath, paramList);
                 const miscObj = CORE.JSON.parse(miscRes);
                 if (miscRes == null) {
-                    H0.ExceptionHelper.throwCommonException("调用杂项出入库接口无返回信息！");
+                    return "调用杂项出入库接口无返回信息！";
                 } else {
                     if (miscObj.failed) {
-                        H0.ExceptionHelper.throwCommonException(miscObj.message);
+                        return miscObj.message;
                     }
                 }
+                storage.docStatusCode = 'EXECUTE_SUCCESS'
             }
             H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
         }
