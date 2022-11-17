@@ -11,6 +11,8 @@ function process(input) {
     const storageModeler = 'zcus_ss_outsource_storage';
     const stockModeler = 'zinv_stock';
     const wareModeler = 'zpfm_warehouse';
+    const lotModeler = 'zinv_lot';
+    const lotOrganizationModeler = 'zpdt_item_organization';
     const codeValueModeler = 'zpfm_business_code_value';
     const syncStatusMap = new Map();
     const locatorMap = new Map();
@@ -22,7 +24,7 @@ function process(input) {
     const codeValueMap = new Map();
     let sql = "SELECT zsosl.CREATED_BY,zsosl.CREATION_DATE,zsosl.LAST_UPDATED_BY,zsosl.LAST_UPDATE_DATE,zsosl.object_version_number,zsosl.tenant_id," +
         "zsosl.line_id,zsosl.doc_id,zsosl.doc_num,zsosl.line_number,zsosl.item_id,zsosl.specification_model,zsosl.item_sku_id,zsosl.warehouse_id," +
-        "zsosl.QUANTITY,zsosl.EXECUTE_QTY,zsosl.lot_num,zsosl.EXPIRATION_DATE,zsosl.DOC_TYPE_CODE,zsosl.REMARK,zsos.INV_TYPE FROM zcus_ss_outsource_storage_line zsosl " +
+        "zsosl.QUANTITY,zsosl.EXECUTE_QTY,zsosl.lot_num,zsosl.EXPIRATION_DATE,zsosl.DOC_TYPE_CODE,zsosl.REMARK,zsosl.lot_id,zsos.INV_TYPE FROM zcus_ss_outsource_storage_line zsosl " +
         "LEFT JOIN zcus_ss_outsource_storage zsos ON zsosl.tenant_id = zsos.tenant_id AND zsosl.doc_id = zsos.doc_id WHERE zsosl.tenant_id = #{tenantId}";
     const queryParamMap = {
         tenantId: tenantId
@@ -181,6 +183,20 @@ function process(input) {
                 value.itemTypeMeaning = codeValue.valueDesc
                 value.itemTypeId = itemTypeId
                 codeValueMap.set(itemTypeId,codeValue)
+            }
+            if(value.lotId != null){
+                const lotInfo = H0.ModelerHelper.selectOne(lotModeler, tenantId, {
+                    "lotId": value.lotId
+                });
+                if(lotInfo != null) {
+                    value.activeTime = lotInfo.activeTime
+                    value.expireTime = lotInfo.expireTime
+                }
+                const lotOrganization = H0.ModelerHelper.selectOne(lotOrganizationModeler, tenantId, {
+                    "lotId": value.lotId,
+                    "organizationId": value.organizationId
+                });
+                value.lotEnableFlag = Number(lotOrganization.lotEnableFlag)
             }
         })
     }
