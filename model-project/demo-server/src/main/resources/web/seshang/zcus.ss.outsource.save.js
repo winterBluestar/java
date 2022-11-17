@@ -1,7 +1,7 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 76;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 76;
     const stockModeler = 'zinv_stock';
     const storageModeler = 'zcus_ss_outsource_storage';
     const storageLineModeler = 'zcus_ss_outsource_storage_line';
@@ -18,7 +18,7 @@ function process(input) {
                     "itemSkuId": value.itemSkuId
                 });
                 if (stockRes == null || (value.quantity > stockRes.quantity)) {
-                    H0.ExceptionHelper.throwCommonException(value.lineNumber + "行当前仓库库存数量小于执行数量！请确认后重新提交！");
+                    return value.lineNumber + "行当前仓库库存数量小于执行数量！请确认后重新提交！";
                 }
             }
         }
@@ -26,11 +26,13 @@ function process(input) {
     if (input.outsourceLineList != null && input.outsourceLineList.length > 1) {
         for (let i = 0; i < input.outsourceLineList.length; i++) {
             const compareLine = input.outsourceLineList[i];
-            for (let j = 0; j < input.outsourceLineList.length; j++) {
-                const compareToLine = input.outsourceLineList[j];
-                if (i !== j && compareLine.itemId === compareToLine.itemId
-                    && compareLine.itemSkuId === compareToLine.itemSkuId) {
-                    H0.ExceptionHelper.throwCommonException("委外出入库订单物料SKU不能重复");
+            if (compareLine._status != 'delete') {
+                for (let j = 0; j < input.outsourceLineList.length; j++) {
+                    const compareToLine = input.outsourceLineList[j];
+                    if (i !== j && compareToLine._status != 'delete' && compareLine.itemId === compareToLine.itemId
+                        && compareLine.itemSkuId === compareToLine.itemSkuId) {
+                        return "委外出入库订单物料SKU不能重复";
+                    }
                 }
             }
         }
@@ -69,7 +71,7 @@ function process(input) {
         const docParam = {
             "docList": docList
         }
-        H0.ScriptHelper.execute(tenantId, scriptCode, docParam);
+        return H0.ScriptHelper.execute(tenantId, scriptCode, docParam);
     }
     return resHead;
 }
