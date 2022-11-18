@@ -45,9 +45,7 @@ function process(input) {
             }
         }
         poHead.details_list = detailsList
-        const createPoParam = {
-
-        }
+        const createPoParam = {}
         createPoParam.purchase_info = CORE.JSON.stringify(poHead)
         // 调用zosc-second-service获取参数
         BASE.Logger.debug('-------createPoParam-------{}', createPoParam)
@@ -118,9 +116,7 @@ function process(input) {
             }
         }
         purchaseInfo.details_list = detailsList
-        const createStockInParam = {
-
-        }
+        const createStockInParam = {}
         createStockInParam.purchase_info = CORE.JSON.stringify(purchaseInfo)
         // 调用zosc-second-service获取参数
         BASE.Logger.debug('-------createStockInParam-------{}', createStockInParam)
@@ -140,7 +136,7 @@ function process(input) {
             const payloadRes = CORE.JSON.parse(createWdtStockInRes.payload)
             if (payloadRes.code == 0) {
                 // 更新创建采购入库单号
-                storage.wdtStockinOrder = payloadRes.stockin_no
+                storage.wdtDocNum = storage.wdtDocNum + ';' + payloadRes.stockin_no
                 storage.syncStatus = null
                 storage.syncMsg = null
                 H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)

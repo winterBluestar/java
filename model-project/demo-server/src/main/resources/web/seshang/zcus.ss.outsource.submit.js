@@ -113,6 +113,9 @@ function process(input) {
                         executeTime: getDateTimeStr(),
                         remark: value.docNum
                     }
+                    if (value.lotNum != null) {
+                        param.lotNumber = value.lotNum
+                    }
                     paramList.push(param)
                 })
                 // 更新行执行数量
@@ -126,6 +129,7 @@ function process(input) {
                 }
                 const miscRes = H0.FeignClient.selectClient('zosc-open-api').doPost(invokePath, paramList);
                 const miscObj = CORE.JSON.parse(miscRes);
+                BASE.Logger.debug('-------执行库存事务返回消息---------{}', miscObj)
                 if (miscRes == null) {
                     return "调用杂项出入库接口无返回信息！";
                 } else {
@@ -138,7 +142,6 @@ function process(input) {
             H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
         }
     }
-    return input;
 }
 
 /**

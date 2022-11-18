@@ -12,7 +12,7 @@ function process(input) {
     const buildParamsPath = "/v1/" + tenantId + "/ss-wdt/bulid-wdt-params";
     const path = "/v2/rest/invoke?namespace=" + CORE.CurrentContext.getTenantNum() + "&serverCode=ZCUS.SS.WDT_INTERFACE&interfaceCode=vipStockOutsideWmsQuery";
     // 查询状态为已推送的委外出入库订单
-    let sql = "select doc_id, doc_num, wdt_doc_num from zcus_ss_outsource_storage where tenant_id = #{tenantId} and doc_status_code = 'PUSHED' and INV_TYPE = 'ASCP' and wdt_doc_num is not null  order by creation_date limit 50";
+    let sql = "select doc_id, doc_num, wdt_doc_num from zcus_ss_outsource_storage where tenant_id = #{tenantId} and doc_status_code = 'PUSH_SUCCESS' and INV_TYPE = 'ASCP' and wdt_doc_num is not null  order by creation_date limit 50";
     const queryParamMap = {
         tenantId: tenantId
     }
@@ -27,11 +27,13 @@ function process(input) {
             const locator = H0.ModelerHelper.selectOne(locatorModeler, tenantId, {
                 "locatorId": storage.defaultLocatorId
             });
-            if (codeValueMap.get(storage.invBusinessReasonId) == null) {
-                const codeValue = H0.ModelerHelper.selectOne(codeValueModeler, tenantId, {
-                    "businessCodeValueId": storage.invBusinessReasonId
-                });
-                codeValueMap.set(codeValue.businessCodeValueId, codeValue)
+            if (storage.invBusinessReasonId != null) {
+                if (codeValueMap.get(storage.invBusinessReasonId) == null) {
+                    const codeValue = H0.ModelerHelper.selectOne(codeValueModeler, tenantId, {
+                        "businessCodeValueId": storage.invBusinessReasonId
+                    });
+                    codeValueMap.set(codeValue.businessCodeValueId, codeValue)
+                }
             }
             // 调用zosc-second-service组装参数
             const wmsQueryParam = {
@@ -97,9 +99,11 @@ function process(input) {
                                         itemSkuCode: LineDetail.spec_no,
                                         miscInQty: LineDetail.inout_num,
                                         executeTime: getDateTimeStr(),
-                                        remark: storage.docNum,
-                                        businessReasonCode: codeValueMap.get(storage.invBusinessReasonId).valueCode,
-                                        businessReasonDesc: codeValueMap.get(storage.invBusinessReasonId).valueDesc
+                                        remark: storage.docNum
+                                    }
+                                    if (storage.invBusinessReasonId != null) {
+                                        param.businessReasonCode = codeValueMap.get(storage.invBusinessReasonId).valueCode
+                                        param.businessReasonDesc = codeValueMap.get(storage.invBusinessReasonId).valueDesc
                                     }
                                     if (LineDetail.batch_no != null) {
                                         param.lotNumber = LineDetail.batch_no
