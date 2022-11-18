@@ -27,8 +27,12 @@ function process(input) {
                 }
                 stockRes = H0.ModelerHelper.selectOne(stockModeler, tenantId, stockParam);
                 if (stockRes == null || (value.quantity > stockRes.quantity)) {
-                    errorContent.msg = value.lineNumber + "行当前仓库库存数量小于执行数量！请确认后重新提交！"
-                    return errorContent;
+                    if (input.isSubmit != null && input.isSubmit) {
+                        errorContent.msg = value.lineNumber + "行当前仓库库存数量小于执行数量！请确认后重新提交！"
+                        return errorContent;
+                    } else {
+                        H0.ExceptionHelper.throwCommonException(value.lineNumber + "行当前仓库库存数量小于执行数量！请确认后重新提交！")
+                    }
                 }
             }
         }
@@ -41,8 +45,12 @@ function process(input) {
                     const compareToLine = input.outsourceLineList[j];
                     if (i !== j && compareToLine._status != 'delete' && compareLine.itemId === compareToLine.itemId
                         && compareLine.itemSkuId === compareToLine.itemSkuId) {
-                        errorContent.msg = "委外出入库订单物料SKU不能重复"
-                        return errorContent;
+                        if (input.isSubmit != null && input.isSubmit) {
+                            errorContent.msg = "委外出入库订单物料SKU不能重复"
+                            return errorContent;
+                        } else {
+                            H0.ExceptionHelper.throwCommonException("委外出入库订单物料SKU不能重复")
+                        }
                     }
                 }
             }
@@ -55,8 +63,12 @@ function process(input) {
             "docNum": input.docNum
         });
         if (exitStorage != null) {
-            errorContent.msg = '委外出入库订单号：'+input.docNum+ '已存在'
-            return errorContent;
+            if (input.isSubmit != null && input.isSubmit) {
+                errorContent.msg = '委外出入库订单号：'+input.docNum+ '已存在'
+                return errorContent;
+            } else {
+                H0.ExceptionHelper.throwCommonException('委外出入库订单号：'+input.docNum+ '已存在')
+            }
         }
         resHead = H0.ModelerHelper.insert(storageModeler, tenantId, input, true);
     } else if (input._status == 'update') {
