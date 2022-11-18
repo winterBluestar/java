@@ -4,6 +4,7 @@ function process(input) {
     //const tenantId = 76;
     const regionModeler = 'zpfm_region';
     const locatorModeler = 'zpfm_locator';
+    const lotModeler = 'zinv_lot';
     const storageModeler = 'zcus_ss_outsource_storage';
     const storageLineModeler = 'zcus_ss_outsource_storage_line';
     const secondServerId = "zosc-second-service";
@@ -118,8 +119,6 @@ function process(input) {
                     }
                     paramList.push(param)
                 })
-                // 更新行执行数量
-                H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineList, true)
                 // 拼接杂入杂出的路径
                 let invokePath;
                 if (storage.docTypeCode === 'IN') {
@@ -138,6 +137,22 @@ function process(input) {
                     }
                 }
                 storage.docStatusCode = 'EXECUTE_SUCCESS'
+                // 更新行执行数量, 批次id
+                for (let k = 0; k < storageLineList.length; k++) {
+                    const storageLine = storageLineList[k]
+                    if (storageLine.lotNum != null) {
+                        const lotInfo = H0.ModelerHelper.selectOne(lotModeler, tenantId, {
+                            organizationId: storage.organizationId,
+                            itemId: storageLine.itemId,
+                            itemSkuId: storageLine.itemSkuId,
+                            lotNum: storageLine.lotNum
+                        });
+                        if (lotInfo != null && lotInfo.lotId != null) {
+                            storageLine.lotId = lotInfo.lotId
+                        }
+                    }
+                }
+                H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineList, true)
             }
             H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
         }
