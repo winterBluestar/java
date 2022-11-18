@@ -22,9 +22,10 @@ function process(input) {
     const categoryMap = new Map();
     const warehouseMap = new Map();
     const codeValueMap = new Map();
+    const targetWarehouseMap = new Map();
     let sql = "SELECT zsosl.CREATED_BY,zsosl.CREATION_DATE,zsosl.LAST_UPDATED_BY,zsosl.LAST_UPDATE_DATE,zsosl.object_version_number,zsosl.tenant_id," +
         "zsosl.line_id,zsosl.doc_id,zsosl.doc_num,zsosl.line_number,zsosl.item_id,zsosl.specification_model,zsosl.item_sku_id,zsosl.warehouse_id," +
-        "zsosl.QUANTITY,zsosl.EXECUTE_QTY,zsosl.lot_num,zsosl.EXPIRATION_DATE,zsosl.DOC_TYPE_CODE,zsosl.REMARK,zsosl.lot_id,zsos.INV_TYPE FROM zcus_ss_outsource_storage_line zsosl " +
+        "zsosl.QUANTITY,zsosl.EXECUTE_QTY,zsosl.lot_num,zsosl.EXPIRATION_DATE,zsosl.DOC_TYPE_CODE,zsosl.REMARK,zsosl.lot_id,zsos.INV_TYPE,zsosl.ACTIVE_TIME,zsosl.EXPIRE_TIME,zsos.TARGET_WAREHOUSE_ID FROM zcus_ss_outsource_storage_line zsosl " +
         "LEFT JOIN zcus_ss_outsource_storage zsos ON zsosl.tenant_id = zsos.tenant_id AND zsosl.doc_id = zsos.doc_id WHERE zsosl.tenant_id = #{tenantId}";
     const queryParamMap = {
         tenantId: tenantId
@@ -147,14 +148,14 @@ function process(input) {
                     uomMap.set(uom.uomId, uom)
                 }
             }
-            const stockRes = H0.ModelerHelper.selectOne(stockModeler, tenantId, {
-                "warehouseId": value.warehouseId,
-                "itemId": value.itemId,
-                "itemSkuId": value.itemSkuId
-            });
-            if (stockRes != null) {
-                value.stockQuantity = stockRes.quantity
-            }
+            //const stockRes = H0.ModelerHelper.selectOne(stockModeler, tenantId, {
+            //    "warehouseId": value.warehouseId,
+            //    "itemId": value.itemId,
+            //    "itemSkuId": value.itemSkuId
+            //});
+            //if (stockRes != null) {
+            //    value.stockQuantity = stockRes.quantity
+            //}
             if (warehouseMap.has(value.warehouseId)) {
                 value.warehouseName = warehouseMap.get(value.warehouseId).warehouseName
                 value.warehouseCode = warehouseMap.get(value.warehouseId).warehouseCode
@@ -189,14 +190,29 @@ function process(input) {
                     "lotId": value.lotId
                 });
                 if(lotInfo != null) {
-                    value.activeTime = lotInfo.activeTime
-                    value.expireTime = lotInfo.expireTime
+                    //value.activeTime = lotInfo.activeTime
+                    //value.expireTime = lotInfo.expireTime
+                    const lotOrganization = H0.ModelerHelper.selectOne(lotOrganizationModeler, tenantId, {
+                        "itemId": value.itemId,
+                        "organizationId": lotInfo.organizationId
+                    });
+                    value.lotEnableFlag = Number(lotOrganization.lotEnableFlag)
                 }
-                const lotOrganization = H0.ModelerHelper.selectOne(lotOrganizationModeler, tenantId, {
-                    "lotId": value.lotId,
-                    "organizationId": value.organizationId
-                });
-                value.lotEnableFlag = Number(lotOrganization.lotEnableFlag)
+            }
+            if (value.targetWarehouseId != null) {
+                if (targetWarehouseMap.has(value.targetWarehouseId)) {
+                    value.targetWarehouseName = targetWarehouseMap.get(value.targetWarehouseId).warehouseName
+                    value.targetWarehouseCode = targetWarehouseMap.get(value.targetWarehouseId).warehouseCode
+                } else {
+                    const targetWarehouse = H0.ModelerHelper.selectOne(wareModeler, tenantId, {
+                        "warehouseId": value.targetWarehouseId
+                    });
+                    if (targetWarehouse != null && targetWarehouse.warehouseId != null) {
+                        value.targetWarehouseName = targetWarehouse.warehouseName
+                        value.targetWarehouseCode = targetWarehouse.warehouseCode
+                        targetWarehouseMap.set(targetWarehouse.warehouseId, targetWarehouse)
+                    }
+                }
             }
         })
     }
