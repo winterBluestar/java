@@ -110,12 +110,16 @@ function process(input) {
                                     }
                                 }
                                 storage.docStatusCode = 'PUSH_SUCCESS'
+                                storage.syncStatus = null
+                                storage.syncMsg = null
                             } else {
                                 BASE.Logger.error('创建委外出入库订单[{}]失败:{}', storage.docNum,)
                                 return "旺店通创建委外出入库订单[" + storage.docNum + "]失败：" + wdtRes.message
                             }
                         } else {
                             storage.docStatusCode = 'PUSH_SUCCESS'
+                            storage.syncStatus = null
+                            storage.syncMsg = null
                             storage.wdtDocNum = wdtRes.data.stockout_no
                         }
                     }
@@ -180,6 +184,8 @@ function process(input) {
                     }
                 }
                 storage.docStatusCode = 'EXECUTE_SUCCESS'
+                storage.syncStatus = null
+                storage.syncMsg = null
                 // 更新行执行数量, 批次id
                 for (let k = 0; k < storageLineList.length; k++) {
                     const storageLine = storageLineList[k]
