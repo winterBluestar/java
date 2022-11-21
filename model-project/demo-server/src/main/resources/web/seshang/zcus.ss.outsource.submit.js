@@ -89,8 +89,8 @@ function process(input) {
                                     api_outer_no: storage.docNum
                                 }
                                 BASE.Logger.debug("-------queryOutsourceOrderParam-------{}", queryOutsourceOrderParam)
-                                let queryOutsourceOrderRes = BASE.FeignClient.selectClient(secondServiceId)
-                                    .doPost(buildParamsPath, queryOutsourceOrderParam);
+                                let queryOutsourceOrderRes = BASE.FeignClient.selectClient(secondServerId)
+                                    .doPost(bulidParamsPath, queryOutsourceOrderParam);
                                 BASE.Logger.debug("-------queryOutsourceOrderRes-------{}", queryOutsourceOrderRes)
                                 queryOutsourceOrderRes = CORE.JSON.parse(queryOutsourceOrderRes);
                                 if (queryOutsourceOrderRes.sign != null) {
