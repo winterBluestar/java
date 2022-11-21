@@ -106,7 +106,7 @@ function process(input) {
                                         param.lotNumber = LineDetail.batch_no
                                     }
                                     if (LineDetail.goods_unit != null) {
-                                        param.uomName = goods_unit
+                                        param.uomName = LineDetail.goods_unit
                                     } else {
                                         param.uomName = '件'
                                     }
@@ -139,6 +139,8 @@ function process(input) {
                                     // 更新头状态, 仓储单号, 行数量
                                     storage.docStatusCode = 'EXECUTE_SUCCESS'
                                     storage.storageDocNum = head.wms_outer_no
+                                    storage.syncStatus = null
+                                    storage.syncMsg = null
                                     if (storageLineList.length > 0) {
                                         H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineList)
                                     }
