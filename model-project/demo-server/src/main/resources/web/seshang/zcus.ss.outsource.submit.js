@@ -151,9 +151,11 @@ function process(input) {
                         uomName: value.uomName,
                         miscInQty: value.quantity,
                         executeTime: getDateTimeStr(),
-                        businessReasonCode: codeValueMap.get(storage.invBusinessReasonId).valueCode,
-                        businessReasonDesc: codeValueMap.get(storage.invBusinessReasonId).valueDesc,
                         remark: value.docNum
+                    }
+                    if (codeValueMap.size > 0) {
+                        param.businessReasonCode = codeValueMap.get(storage.invBusinessReasonId).valueCode
+                        param.businessReasonDesc = codeValueMap.get(storage.invBusinessReasonId).valueDesc
                     }
                     if (value.lotNum != null) {
                         param.lotNumber = value.lotNum

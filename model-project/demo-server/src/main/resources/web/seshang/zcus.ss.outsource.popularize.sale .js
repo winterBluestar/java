@@ -13,6 +13,7 @@ function process(input) {
     const buildParamsPath = "/v1/" + tenantId + "/ss-wdt/bulid-wdt-params";
     const createPoPath = "/v2/rest/invoke?namespace=" + CORE.CurrentContext.getTenantNum() + "&serverCode=ZCUS.SS.WDT_INTERFACE&interfaceCode=purchaseOrderPush";
     const createPoStockInPath = "/v2/rest/invoke?namespace=" + CORE.CurrentContext.getTenantNum() + "&serverCode=ZCUS.SS.WDT_INTERFACE&interfaceCode=stockinPurchasePush";
+    const queryPoStockInPath = "/v2/rest/invoke?namespace=" + CORE.CurrentContext.getTenantNum() + "&serverCode=ZCUS.SS.WDT_INTERFACE&interfaceCode=stockinOrderQueryPurchase";
     // 创建采购单
     let storage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
         "docId": input.docId
@@ -22,6 +23,7 @@ function process(input) {
     });
     let sourcelocator = H0.ModelerHelper.selectOne(locatorModeler, tenantId, {locatorId: storage.targetDefaultLocatorId});
     let locator = H0.ModelerHelper.selectOne(locatorModeler, tenantId, {locatorId: storage.defaultLocatorId});
+    BASE.Logger.debug('-------第一次查询storage-------{}', storage)
     if (storage.wdtDocNum == null) {
         const poHead = {
             provider_no: "NBGYS",
@@ -76,10 +78,18 @@ function process(input) {
                 storage.syncMsg = null
                 H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
             } else {
-                storage.syncStatus = '失败'
-                storage.syncMsg = payloadRes.message
-                H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
-                return payloadRes.message
+                if (payloadRes.code == 7010) {
+                    // 已经存在采购入库单, 采购单号为外部单号, 更新采购单状态
+                    storage.wdtDocNum = storage.docNum
+                    storage.syncStatus = null
+                    storage.syncMsg = null
+                    H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
+                } else {
+                    storage.syncStatus = '失败'
+                    storage.syncMsg = payloadRes.message
+                    H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
+                    return payloadRes.message
+                }
             }
         }
     }
@@ -93,7 +103,7 @@ function process(input) {
             purchase_no: storage.docNum,
             outer_no: storage.docNum,
             is_create_batch: 0,
-            is_check: 0,
+            is_check: 1,
             warehouse_no: input.warehouseCode,
             remark: storage.remark
         }
@@ -147,11 +157,40 @@ function process(input) {
                 storage.syncMsg = null
                 H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
             } else {
-                storage.syncStatus = '失败'
-                storage.syncMsg = payloadRes.message
-                storage.docStatusCode = 'PUSH_FAIL'
-                H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
-                return payloadRes.message
+                if(payloadRes.code == 2470) {
+                    // 采购入库单已经存在, 查询采购入库单, 并更新信息
+                    const queryPOStockInParam = {
+                        stockin_outer_no: storage.docNum
+                    }
+                    BASE.Logger.debug('-------queryPOStockInParam-------{}', queryPOStockInParam)
+                    let queryPOStockInRes = BASE.FeignClient.selectClient(secondServiceId)
+                        .doPost(buildParamsPath, queryPOStockInParam);
+                    BASE.Logger.debug('-------queryPOStockInRes-------{}', queryPOStockInRes)
+                    queryPOStockInRes = CORE.JSON.parse(queryPOStockInRes)
+                    if (createStockInParamRes.sign != null) {
+                        const queryParam = {
+                            bodyParamMap: queryPOStockInRes
+                        }
+                        let queryStockInRes = BASE.FeignClient.selectClient(serverId)
+                            .doPost(queryPoStockInPath, queryParam);
+                        queryStockInRes = CORE.JSON.parse(queryStockInRes);
+                        BASE.Logger.debug("-------queryStockInRes-------{}", queryStockInRes)
+                        const poStockInPayloadRes = CORE.JSON.parse(queryStockInRes.payload)
+                        if (poStockInPayloadRes.code == 0) {
+                            const stockIn = poStockInPayloadRes.stockin_list[0];
+                            storage.wdtDocNum = storage.wdtDocNum + ';' + stockIn.stockin_no
+                            storage.syncStatus = null
+                            storage.syncMsg = null
+                            H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
+                        }
+                    }
+                } else {
+                    storage.syncStatus = '失败'
+                    storage.syncMsg = payloadRes.message
+                    storage.docStatusCode = 'PUSH_FAIL'
+                    H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
+                    return payloadRes.message
+                }
             }
         }
     }
@@ -182,7 +221,7 @@ function process(input) {
                     warehouseCode: input.targetWarehouseCode,
                     toWarehouseCode: input.warehouseCode,
                     lotNumber: storageLine.lotNum,
-                    remark: storageLine.remark,
+                    remark: storage.docNum,
                     locatorCode: sourcelocator.locatorCode,
                     toLocatorCode: locator.locatorCode,
                     executeTime: getDateTimeStr(),
