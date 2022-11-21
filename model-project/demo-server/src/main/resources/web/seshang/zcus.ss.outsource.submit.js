@@ -7,6 +7,8 @@ function process(input) {
     const lotModeler = 'zinv_lot';
     const storageModeler = 'zcus_ss_outsource_storage';
     const storageLineModeler = 'zcus_ss_outsource_storage_line';
+    const codeValueModeler = 'zpfm_business_code_value';
+    const codeValueMap = new Map();
     const secondServerId = "zosc-second-service";
     const serverId = "hzero-interface";
     const path = "/v2/rest/invoke?namespace=" + CORE.CurrentContext.getTenantNum() + "&serverCode=ZCUS.SS.WDT_INTERFACE&interfaceCode=vipWmsStockinoutOrderPush";
@@ -80,8 +82,38 @@ function process(input) {
                         BASE.Logger.debug("-------WDT RES-------{}", resObj)
                         const wdtRes = CORE.JSON.parse(resObj.payload);
                         if (wdtRes.code != 0) {
-                            BASE.Logger.error('创建委外出入库订单[{}]失败:{}', storage.docNum,)
-                            return "旺店通创建委外出入库订单[" + storage.docNum + "]失败：" + wdtRes.message
+                            if (wdtRes.code == 2470) {
+                                // 通过外部单号查询委外入库单
+                                // 1. 组装参数
+                                const queryOutsourceOrderParam = {
+                                    api_outer_no: storage.docNum
+                                }
+                                BASE.Logger.debug("-------queryOutsourceOrderParam-------{}", queryOutsourceOrderParam)
+                                let queryOutsourceOrderRes = BASE.FeignClient.selectClient(secondServiceId)
+                                    .doPost(buildParamsPath, queryOutsourceOrderParam);
+                                BASE.Logger.debug("-------queryOutsourceOrderRes-------{}", queryOutsourceOrderRes)
+                                queryOutsourceOrderRes = CORE.JSON.parse(queryOutsourceOrderRes);
+                                if (queryOutsourceOrderRes.sign != null) {
+                                    const queryParam = {
+                                        bodyParamMap: queryOutsourceOrderRes
+                                    }
+                                    // 调用旺店通接口获取数据
+                                    let queryParamRes = BASE.FeignClient.selectClient(serverId)
+                                        .doPost(path, queryParam);
+                                    queryParamRes = CORE.JSON.parse(queryParamRes);
+                                    BASE.Logger.debug("-------WDT queryParamRes-------{}", queryParamRes)
+                                    const wdtObjRes = CORE.JSON.parse(queryParamRes.payload);
+                                    if (wdtObjRes.code == 0) {
+                                        const head = wdtObjRes.order_list[0];
+                                        BASE.Logger.error('委外查询出入库订单信息[{}]', head)
+                                        storage.wdtDocNum = head.wms_outer_no
+                                    }
+                                }
+                                storage.docStatusCode = 'PUSH_SUCCESS'
+                            } else {
+                                BASE.Logger.error('创建委外出入库订单[{}]失败:{}', storage.docNum,)
+                                return "旺店通创建委外出入库订单[" + storage.docNum + "]失败：" + wdtRes.message
+                            }
                         } else {
                             storage.docStatusCode = 'PUSH_SUCCESS'
                             storage.wdtDocNum = wdtRes.data.stockout_no
@@ -95,6 +127,14 @@ function process(input) {
                 });
                 if (storageLineList == null || storageLineList.length <= 0) {
                     return "委外出入库订单" + value.docNum + "不存在行数据，请确认后重试！";
+                }
+                if (storage.invBusinessReasonId != null) {
+                    if (codeValueMap.get(storage.invBusinessReasonId) == null) {
+                        const codeValue = H0.ModelerHelper.selectOne(codeValueModeler, tenantId, {
+                            "businessCodeValueId": storage.invBusinessReasonId
+                        });
+                        codeValueMap.set(codeValue.businessCodeValueId, codeValue)
+                    }
                 }
                 const paramList = [];
                 storageLineList.forEach(function (value, index) {
@@ -111,6 +151,8 @@ function process(input) {
                         uomName: value.uomName,
                         miscInQty: value.quantity,
                         executeTime: getDateTimeStr(),
+                        businessReasonCode: codeValueMap.get(storage.invBusinessReasonId).valueCode,
+                        businessReasonDesc: codeValueMap.get(storage.invBusinessReasonId).valueDesc,
                         remark: value.docNum
                     }
                     if (value.lotNum != null) {
