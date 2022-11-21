@@ -18,8 +18,6 @@ function process(input) {
     }
     const res = H0.SqlHelper.selectList(secondServiceId, sql, queryParamMap);
     if (res != null && res.length > 0) {
-        //const storageArr = []
-        const storageLineArr = []
         for (let i = 0; i < res.length; i++) {
             const storage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
                 "docId": res[i].docId
@@ -80,7 +78,6 @@ function process(input) {
                                 if (executeQty !== 0) {
                                     storageLine.executeQty = executeQty
                                 }
-                                storageLineArr.push(storageLine)
                             }
                         }
                         // 库存事务(杂入杂出)
@@ -142,8 +139,8 @@ function process(input) {
                                     // 更新头状态, 仓储单号, 行数量
                                     storage.docStatusCode = 'EXECUTE_SUCCESS'
                                     storage.storageDocNum = head.wms_outer_no
-                                    if (storageLineArr.length > 0) {
-                                        H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineArr)
+                                    if (storageLineList.length > 0) {
+                                        H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineList)
                                     }
                                 }
                             }

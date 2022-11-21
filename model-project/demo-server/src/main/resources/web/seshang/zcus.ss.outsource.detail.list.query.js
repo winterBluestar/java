@@ -185,20 +185,11 @@ function process(input) {
                 value.itemTypeId = itemTypeId
                 codeValueMap.set(itemTypeId,codeValue)
             }
-            if(value.lotId != null){
-                const lotInfo = H0.ModelerHelper.selectOne(lotModeler, tenantId, {
-                    "lotId": value.lotId
-                });
-                if(lotInfo != null) {
-                    //value.activeTime = lotInfo.activeTime
-                    //value.expireTime = lotInfo.expireTime
-                    const lotOrganization = H0.ModelerHelper.selectOne(lotOrganizationModeler, tenantId, {
-                        "itemId": value.itemId,
-                        "organizationId": lotInfo.organizationId
-                    });
-                    value.lotEnableFlag = Number(lotOrganization.lotEnableFlag)
-                }
-            }
+            const lotOrganization = H0.ModelerHelper.selectOne(lotOrganizationModeler, tenantId, {
+                "itemId": value.itemId,
+                "organizationId": value.organizationId
+            });
+            value.lotEnableFlag = Number(lotOrganization.lotEnableFlag)
             if (value.targetWarehouseId != null) {
                 if (targetWarehouseMap.has(value.targetWarehouseId)) {
                     value.targetWarehouseName = targetWarehouseMap.get(value.targetWarehouseId).warehouseName
