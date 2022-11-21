@@ -11,8 +11,9 @@ function process(input) {
     const codeValueMap = new Map();
     const secondServerId = "zosc-second-service";
     const serverId = "hzero-interface";
-    const path = "/v2/rest/invoke?namespace=" + CORE.CurrentContext.getTenantNum() + "&serverCode=ZCUS.SS.WDT_INTERFACE&interfaceCode=vipWmsStockinoutOrderPush";
+    const path = "/v2/rest/invoke?namespace=" + CORE.CurrentContext.getTenantNum() + "&serverCode=ZCUS.SS.WDT_INTERFACE&interfaceCode=vipStockOutsideWmsQuery";
     const bulidParamsPath = "/v1/" + tenantId + "/ss-wdt/bulid-wdt-params";
+    const createStockInOutPath = "/v1/" + tenantId + "/ss-wdt/wdt-interface-invoke/VIP_WMS_STOCKINOUT_ORDER_PUSH";
     // 根据id查询委外出入库头数据
     if (input != null && input.docList != null && input.docList.length > 0) {
         for (let i = 0; i < input.docList.length; i++) {
@@ -66,63 +67,66 @@ function process(input) {
                     // 调用zosc-second-service公共方法
                     let wdtParam = {}
                     wdtParam.stockin_info = CORE.JSON.stringify(stockin_info)
+                    wdtParam.keyCode = storage.docNum
                     BASE.Logger.debug("-------wdtParam-------{}", wdtParam)
-                    // 组装参数
-                    let paramsRes = BASE.FeignClient.selectClient(secondServerId)
-                        .doPost(bulidParamsPath, wdtParam);
-                    BASE.Logger.debug("-------paramsRes-------{}", paramsRes)
-                    paramsRes = CORE.JSON.parse(paramsRes);
-                    if (paramsRes.sign != null) {
-                        const param = {
-                            bodyParamMap: paramsRes
-                        }
-                        const resStr = BASE.FeignClient.selectClient(serverId)
-                            .doPost(path, param);
-                        resObj = CORE.JSON.parse(resStr);
-                        BASE.Logger.debug("-------WDT RES-------{}", resObj)
-                        const wdtRes = CORE.JSON.parse(resObj.payload);
-                        if (wdtRes.code != 0) {
-                            if (wdtRes.code == 2470) {
-                                // 通过外部单号查询委外入库单
-                                // 1. 组装参数
-                                const queryOutsourceOrderParam = {
-                                    api_outer_no: storage.docNum
-                                }
-                                BASE.Logger.debug("-------queryOutsourceOrderParam-------{}", queryOutsourceOrderParam)
-                                let queryOutsourceOrderRes = BASE.FeignClient.selectClient(secondServerId)
-                                    .doPost(bulidParamsPath, queryOutsourceOrderParam);
-                                BASE.Logger.debug("-------queryOutsourceOrderRes-------{}", queryOutsourceOrderRes)
-                                queryOutsourceOrderRes = CORE.JSON.parse(queryOutsourceOrderRes);
-                                if (queryOutsourceOrderRes.sign != null) {
-                                    const queryParam = {
-                                        bodyParamMap: queryOutsourceOrderRes
-                                    }
-                                    // 调用旺店通接口获取数据
-                                    let queryParamRes = BASE.FeignClient.selectClient(serverId)
-                                        .doPost(path, queryParam);
-                                    queryParamRes = CORE.JSON.parse(queryParamRes);
-                                    BASE.Logger.debug("-------WDT queryParamRes-------{}", queryParamRes)
-                                    const wdtObjRes = CORE.JSON.parse(queryParamRes.payload);
-                                    if (wdtObjRes.code == 0) {
-                                        const head = wdtObjRes.order_list[0];
-                                        BASE.Logger.error('委外查询出入库订单信息[{}]', head)
-                                        storage.wdtDocNum = head.wms_outer_no
-                                    }
-                                }
-                                storage.docStatusCode = 'PUSH_SUCCESS'
-                                storage.syncStatus = null
-                                storage.syncMsg = null
-                            } else {
-                                BASE.Logger.error('创建委外出入库订单[{}]失败:{}', storage.docNum,)
-                                return "旺店通创建委外出入库订单[" + storage.docNum + "]失败：" + wdtRes.message
+                    //// 组装参数
+                    //let paramsRes = BASE.FeignClient.selectClient(secondServerId)
+                    //    .doPost(bulidParamsPath, wdtParam);
+                    //BASE.Logger.debug("-------paramsRes-------{}", paramsRes)
+                    //paramsRes = CORE.JSON.parse(paramsRes);
+                    //if (paramsRes.sign != null) {
+                    //    const param = {
+                    //        bodyParamMap: paramsRes
+                    //    }
+                    //const resStr = BASE.FeignClient.selectClient(serverId)
+                    //    .doPost(path, param);
+                    const resStr = BASE.FeignClient.selectClient(secondServerId)
+                        .doPost(createStockInOutPath, wdtParam);
+                    resObj = CORE.JSON.parse(resStr);
+                    BASE.Logger.debug("-------WDT RES-------{}", resObj)
+                    const wdtRes = CORE.JSON.parse(resObj.message);
+                    if (wdtRes.code != 0) {
+                        if (wdtRes.code == 2470) {
+                            // 通过外部单号查询委外入库单
+                            // 1. 组装参数
+                            const queryOutsourceOrderParam = {
+                                api_outer_no: storage.docNum
                             }
-                        } else {
+                            BASE.Logger.debug("-------queryOutsourceOrderParam-------{}", queryOutsourceOrderParam)
+                            let queryOutsourceOrderRes = BASE.FeignClient.selectClient(secondServerId)
+                                .doPost(bulidParamsPath, queryOutsourceOrderParam);
+                            BASE.Logger.debug("-------queryOutsourceOrderRes-------{}", queryOutsourceOrderRes)
+                            queryOutsourceOrderRes = CORE.JSON.parse(queryOutsourceOrderRes);
+                            if (queryOutsourceOrderRes.sign != null) {
+                                const queryParam = {
+                                    bodyParamMap: queryOutsourceOrderRes
+                                }
+                                // 调用旺店通接口获取数据
+                                let queryParamRes = BASE.FeignClient.selectClient(serverId)
+                                    .doPost(path, queryParam);
+                                queryParamRes = CORE.JSON.parse(queryParamRes);
+                                BASE.Logger.debug("-------WDT queryParamRes-------{}", queryParamRes)
+                                const wdtObjRes = CORE.JSON.parse(queryParamRes.payload);
+                                if (wdtObjRes.code == 0) {
+                                    const head = wdtObjRes.order_list[0];
+                                    BASE.Logger.error('委外查询出入库订单信息[{}]', head)
+                                    storage.wdtDocNum = head.wms_outer_no
+                                }
+                            }
                             storage.docStatusCode = 'PUSH_SUCCESS'
                             storage.syncStatus = null
                             storage.syncMsg = null
-                            storage.wdtDocNum = wdtRes.data.stockout_no
+                        } else {
+                            BASE.Logger.error('创建委外出入库订单[{}]失败:{}', storage.docNum,)
+                            return "旺店通创建委外出入库订单[" + storage.docNum + "]失败：" + wdtRes.message
                         }
+                    } else {
+                        storage.docStatusCode = 'PUSH_SUCCESS'
+                        storage.syncStatus = null
+                        storage.syncMsg = null
+                        storage.wdtDocNum = wdtRes.data.stockout_no
                     }
+                    //}
                 }
             } else if (storage.invType === 'SCC') {
                 // 更新状态为已完成, 更新行执行数量 = 数量, 调用杂入杂出接口
