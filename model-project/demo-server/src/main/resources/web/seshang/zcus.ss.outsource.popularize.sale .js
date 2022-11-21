@@ -8,6 +8,7 @@ function process(input) {
     const storageLineModeler = 'zcus_ss_outsource_storage_line';
     const lotModeler = 'zinv_lot';
     const codeValueModeler = 'zpfm_business_code_value';
+    const locatorModeler = 'zpfm_locator';
     const codeValueMap = new Map();
     const buildParamsPath = "/v1/" + tenantId + "/ss-wdt/bulid-wdt-params";
     const createPoPath = "/v2/rest/invoke?namespace=" + CORE.CurrentContext.getTenantNum() + "&serverCode=ZCUS.SS.WDT_INTERFACE&interfaceCode=purchaseOrderPush";
@@ -19,6 +20,8 @@ function process(input) {
     const storageLineList = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {
         "docId": input.docId
     });
+    let sourcelocator = H0.ModelerHelper.selectOne(locatorModeler, tenantId, {locatorId: storage.targetDefaultLocatorId});
+    let locator = H0.ModelerHelper.selectOne(locatorModeler, tenantId, {locatorId: storage.defaultLocatorId});
     if (storage.wdtDocNum == null) {
         const poHead = {
             provider_no: "NBGYS",
@@ -45,7 +48,9 @@ function process(input) {
             }
         }
         poHead.details_list = detailsList
-        const createPoParam = {}
+        const createPoParam = {
+
+        }
         createPoParam.purchase_info = CORE.JSON.stringify(poHead)
         // 调用zosc-second-service获取参数
         BASE.Logger.debug('-------createPoParam-------{}', createPoParam)
@@ -66,7 +71,6 @@ function process(input) {
             const payloadRes = CORE.JSON.parse(createWdtRes.payload);
             if (payloadRes.code == 0) {
                 // 更新创建采购单状态
-                storage.wdtPoFlag = 1
                 storage.wdtDocNum = storage.docNum
                 storage.syncStatus = null
                 storage.syncMsg = null
@@ -116,7 +120,9 @@ function process(input) {
             }
         }
         purchaseInfo.details_list = detailsList
-        const createStockInParam = {}
+        const createStockInParam = {
+
+        }
         createStockInParam.purchase_info = CORE.JSON.stringify(purchaseInfo)
         // 调用zosc-second-service获取参数
         BASE.Logger.debug('-------createStockInParam-------{}', createStockInParam)
@@ -177,6 +183,8 @@ function process(input) {
                     toWarehouseCode: input.warehouseCode,
                     lotNumber: storageLine.lotNum,
                     remark: storageLine.remark,
+                    locatorCode: sourcelocator.locatorCode,
+                    toLocatorCode: locator.locatorCode,
                     executeTime: getDateTimeStr(),
                     qcRaesonCode: codeValueMap.get(storage.invBusinessReasonId).valueCode,
                     qcRaesonDesc: codeValueMap.get(storage.invBusinessReasonId).valueDesc

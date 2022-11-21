@@ -1,7 +1,7 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    const tenantId = CORE.CurrentContext.getTenantId();
-    //const tenantId = 76;
+    //const tenantId = CORE.CurrentContext.getTenantId();
+    const tenantId = 76;
     const regionModeler = 'zpfm_region';
     const locatorModeler = 'zpfm_locator';
     const lotModeler = 'zinv_lot';
@@ -57,7 +57,6 @@ function process(input) {
                         goods.spec_no = storageLine.itemSkuCode;
                         goods.num = storageLine.quantity;
                         goods.price = 0;
-                        goods.batch_no = storageLine.lotNum;
                         goods.remark = storageLine.remark;
                         goods_list.push(goods);
                     }
