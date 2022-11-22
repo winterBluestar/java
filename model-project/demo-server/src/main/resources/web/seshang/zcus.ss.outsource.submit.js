@@ -167,6 +167,8 @@ function process(input) {
                     }
                     if (value.lotNum != null) {
                         param.lotNumber = value.lotNum
+                        param.lotActiveDate = value.activeTime
+                        param.lotExpireDate = value.expireTime
                     }
                     paramList.push(param)
                 })
