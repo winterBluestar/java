@@ -105,6 +105,9 @@ function process(input) {
                                     if (LineDetail.batch_no != null) {
                                         param.lotNumber = LineDetail.batch_no
                                     }
+                                    if (LineDetail.expire_date != null) {
+                                        param.lotExpireDate = LineDetail.expire_date
+                                    }
                                     if (LineDetail.goods_unit != null) {
                                         param.uomName = LineDetail.goods_unit
                                     } else {
