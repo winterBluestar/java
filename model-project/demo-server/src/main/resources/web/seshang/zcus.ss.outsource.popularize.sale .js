@@ -171,7 +171,7 @@ function process(input) {
                     .doPost(buildParamsPath, queryPOStockInParam);
                 BASE.Logger.debug('-------queryPOStockInRes-------{}', queryPOStockInRes)
                 queryPOStockInRes = CORE.JSON.parse(queryPOStockInRes)
-                if (createStockInParamRes.sign != null) {
+                if (queryPOStockInRes.sign != null) {
                     const queryParam = {
                         bodyParamMap: queryPOStockInRes
                     }
