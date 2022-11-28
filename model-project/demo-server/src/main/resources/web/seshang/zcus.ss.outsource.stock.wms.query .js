@@ -12,7 +12,7 @@ function process(input) {
     const queryWmsInPath = "/v1/" + tenantId + "/ss-wdt/wdt-interface-invoke/STOCKIN_ORDER_QUERY";
     const queryWmsOutPath = "/v1/" + tenantId + "/ss-wdt/wdt-interface-invoke/STOCKOUT_ORDER_QUERY";
     // 查询状态为已推送的委外出入库订单
-    let sql = "select doc_id, doc_num, wdt_doc_num from zcus_ss_outsource_storage where tenant_id = #{tenantId} and doc_status_code in ('PUSH_SUCCESS','EXECUTE_FAIL') and INV_TYPE = 'ASCP' and wdt_doc_num is not null  order by creation_date limit 50";
+    let sql = "select doc_id, doc_num, wdt_doc_num from zcus_ss_outsource_storage where tenant_id = #{tenantId} and doc_status_code in ('PUSH_SUCCESS','EXECUTE_FAIL') and INV_TYPE = 'ASCP' and wdt_doc_num is not null order by creation_date limit 50";
     const queryParamMap = {
         tenantId: tenantId
     }
@@ -39,11 +39,6 @@ function process(input) {
                 src_order_no: res[i].wdtDocNum,
                 keyCode: res[i].docNum
             }
-            if (storage.docTypeCode == 'IN') {
-                wmsQueryParam.status = 80
-            } else {
-                wmsQueryParam.status = 110
-            }
             BASE.Logger.debug("-------wmsQueryParam-------{}", wmsQueryParam)
             let wdtRes;
             if (storage.docTypeCode == 'IN') {
@@ -59,18 +54,24 @@ function process(input) {
                 BASE.Logger.debug("-------WDT RES-------{}", wdtRes)
                 const wdtObjRes = CORE.JSON.parse(wdtRes.message);
                 if (wdtObjRes.code == 0) {
-                    for (let b = 0; b < wdtObjRes.stockin_list.length; b++) {
-                        const head = wdtObjRes.stockin_list[b];
-                        BASE.Logger.error('委外查询出入库订单信息[{}]', head)
+                    let wdtResList = null;
+                    if (storage.docTypeCode == 'IN') {
+                        wdtResList = wdtObjRes.stockin_list
+                    } else {
+                        wdtResList = wdtObjRes.stockout_list
+                    }
+                    for (let b = 0; b < wdtResList.length; b++) {
+                        const head = wdtResList[b];
+                        BASE.Logger.debug('委外查询出入库订单信息[{}]', head)
                         if (head.status == 80 || head.status == 110) {
                             // 计算scc委外出入库订单行执行数量回写
-                            storage = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {
-                                "docId": storage.docId
+                            storage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
+                                "docId": res[i].docId
                             });
                             const storageLineList = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {
-                                "docId": storage.docId
+                                "docId": res[i].docId
                             });
-                            BASE.Logger.error('委外查询出入库SCC行信息信息[{}]', storageLineList)
+                            //BASE.Logger.debug('委外查询出入库SCC行信息信息[{}]', storageLineList)
                             if (storageLineList != null && storageLineList.length > 0) {
                                 for (let k = 0; k < storageLineList.length; k++) {
                                     const storageLine = storageLineList[k]
@@ -122,12 +123,12 @@ function process(input) {
                                         }
                                         if (lineDetail.batch_no != null) {
                                             param.lotNumber = lineDetail.batch_no
-                                        }
-                                        if (lineDetail.production_date != null && storage.docTypeCode == 'IN') {
-                                            param.lotActiveDate = lineDetail.production_date
-                                        }
-                                        if (lineDetail.expire_date != null && storage.docTypeCode == 'IN') {
-                                            param.lotExpireDate = lineDetail.expire_date
+                                            if (lineDetail.production_date != null && storage.docTypeCode == 'IN') {
+                                                param.lotActiveDate = lineDetail.production_date
+                                            }
+                                            if (lineDetail.expire_date != null && storage.docTypeCode == 'IN') {
+                                                param.lotExpireDate = lineDetail.expire_date
+                                            }
                                         }
                                         if (lineDetail.goods_unit != null) {
                                             param.uomName = lineDetail.goods_unit
@@ -144,23 +145,23 @@ function process(input) {
                                 } else if (head.order_type == 12) {
                                     invokePath = "/v1/" + tenantId + "/stocks/misc-in";
                                 } else {
-                                    BASE.Logger.error("单据类别不为委外出入库类型[" + head.order_type + "]")
+                                    BASE.Logger.debug("单据类别不为委外出入库类型[" + head.order_type + "]")
                                 }
-                                BASE.Logger.error("调用杂项出入库接口参数------{}-------------", paramList)
+                                BASE.Logger.debug("调用杂项出入库接口参数------{}-------------", paramList)
                                 let miscRes = null;
                                 if (paramList != null && paramList.length > 0) {
                                     miscRes = H0.FeignClient.selectClient('zosc-open-api').doPost(invokePath, paramList);
                                 }
                                 const miscObj = CORE.JSON.parse(miscRes);
-                                BASE.Logger.error("调用杂项出入库接口返回参数------{}-------------", miscObj)
+                                BASE.Logger.debug("调用杂项出入库接口返回参数------{}-------------", miscObj)
                                 if (miscRes == null) {
-                                    BASE.Logger.error("调用杂项出入库接口无返回信息！");
+                                    BASE.Logger.debug("调用杂项出入库接口无返回信息！");
                                     storage.docStatusCode = 'EXECUTE_FAIL'
                                     storage.syncStatus = '失败'
                                     storage.syncMsg = '调用杂项出入库接口无返回信息'
                                 } else {
                                     if (miscObj.failed) {
-                                        BASE.Logger.error("杂入杂出操作失败[" + miscObj.message + "]")
+                                        BASE.Logger.debug("杂入杂出操作失败[" + miscObj.message + "]")
                                         storage.docStatusCode = 'EXECUTE_FAIL'
                                         storage.syncStatus = '失败'
                                         storage.syncMsg = miscObj.message
@@ -171,6 +172,7 @@ function process(input) {
                                         storage.syncStatus = null
                                         storage.syncMsg = null
                                         if (storageLineList.length > 0) {
+                                            BASE.Logger.debug("开始更新委外订单行执行数量----------{}------------", storageLineList)
                                             H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineList)
                                         }
                                     }
