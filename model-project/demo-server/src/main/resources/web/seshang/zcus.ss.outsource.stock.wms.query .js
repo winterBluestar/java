@@ -9,7 +9,8 @@ function process(input) {
     const locatorModeler = 'zpfm_locator';
     const codeValueModeler = 'zpfm_business_code_value';
     const codeValueMap = new Map();
-    const queryWmsPath = "/v1/" + tenantId + "/ss-wdt/wdt-interface-invoke/STOCKIN_ORDER_QUERY";
+    const queryWmsInPath = "/v1/" + tenantId + "/ss-wdt/wdt-interface-invoke/STOCKIN_ORDER_QUERY";
+    const queryWmsOutPath = "/v1/" + tenantId + "/ss-wdt/wdt-interface-invoke/STOCKOUT_ORDER_QUERY";
     // 查询状态为已推送的委外出入库订单
     let sql = "select doc_id, doc_num, wdt_doc_num from zcus_ss_outsource_storage where tenant_id = #{tenantId} and doc_status_code in ('PUSH_SUCCESS','EXECUTE_FAIL') and INV_TYPE = 'ASCP' and wdt_doc_num is not null  order by creation_date limit 50";
     const queryParamMap = {
@@ -19,7 +20,7 @@ function process(input) {
     BASE.Logger.debug('-------需要同步的单据-------{}', res)
     if (res != null && res.length > 0) {
         for (let i = 0; i < res.length; i++) {
-            const storage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
+            let storage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
                 "docId": res[i].docId
             });
             const locator = H0.ModelerHelper.selectOne(locatorModeler, tenantId, {
@@ -38,127 +39,148 @@ function process(input) {
                 src_order_no: res[i].wdtDocNum,
                 keyCode: res[i].docNum
             }
+            if (storage.docTypeCode == 'IN') {
+                wmsQueryParam.status = 80
+            } else {
+                wmsQueryParam.status = 110
+            }
             BASE.Logger.debug("-------wmsQueryParam-------{}", wmsQueryParam)
-            let wdtRes = BASE.FeignClient.selectClient(secondServiceId)
-                .doPost(queryWmsPath, wmsQueryParam);
-            //BASE.Logger.debug("-------paramsRes-------{}", paramsRes)
-            //paramsRes = CORE.JSON.parse(paramsRes);
-            //if (paramsRes.sign != null) {
-            //    const param = {
-            //        bodyParamMap: paramsRes
-            //    }
-            //    // 调用旺店通接口获取数据
-            //    let wdtRes = BASE.FeignClient.selectClient(serverId)
-            //        .doPost(path, param);
-            wdtRes = CORE.JSON.parse(wdtRes);
-            BASE.Logger.debug("-------WDT RES-------{}", wdtRes)
-            const wdtObjRes = CORE.JSON.parse(wdtRes.message);
-            if (wdtObjRes.code == 0) {
-                for (let b = 0; b < wdtObjRes.stockin_list.length; b++) {
-                    const head = wdtObjRes.stockin_list[b];
-                    BASE.Logger.error('委外查询出入库订单信息[{}]', head)
-                    if (head.status == 70 || head.status == 75 || head.status == 80) {
-                        // 计算scc委外出入库订单行执行数量回写
-                        const storageLineList = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {
-                            "docId": storage.docId
-                        });
-                        BASE.Logger.error('委外查询出入库SCC行信息信息[{}]', storageLineList)
-                        if (storageLineList != null && storageLineList.length > 0) {
-                            for (let k = 0; k < storageLineList.length; k++) {
-                                const storageLine = storageLineList[k]
-                                let executeQty = 0;
-                                for (let l = 0; l < head.details_list.length; l++) {
-                                    const lineQtyDetail = head.details_list[l]
-                                    if (lineQtyDetail.right_num > 0) {
-                                        const storageLineStr = storageLine.itemCode + '_' + storageLine.itemSkuCode
-                                        const lineDetailStr = lineQtyDetail.goods_no + '_' + lineQtyDetail.spec_no
-                                        if (storageLineStr === lineDetailStr) {
-                                            executeQty = executeQty + Number(lineQtyDetail.right_num)
+            let wdtRes;
+            if (storage.docTypeCode == 'IN') {
+                wdtRes = BASE.FeignClient.selectClient(secondServiceId)
+                    .doPost(queryWmsInPath, wmsQueryParam);
+            } else if (storage.docTypeCode == 'OUT') {
+                wdtRes = BASE.FeignClient.selectClient(secondServiceId)
+                    .doPost(queryWmsOutPath, wmsQueryParam);
+            }
+            BASE.Logger.debug("-------解析之前的 WDT RES-------{}", wdtRes)
+            if (wdtRes != null) {
+                wdtRes = CORE.JSON.parse(wdtRes);
+                BASE.Logger.debug("-------WDT RES-------{}", wdtRes)
+                const wdtObjRes = CORE.JSON.parse(wdtRes.message);
+                if (wdtObjRes.code == 0) {
+                    for (let b = 0; b < wdtObjRes.stockin_list.length; b++) {
+                        const head = wdtObjRes.stockin_list[b];
+                        BASE.Logger.error('委外查询出入库订单信息[{}]', head)
+                        if (head.status == 80 || head.status == 110) {
+                            // 计算scc委外出入库订单行执行数量回写
+                            storage = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {
+                                "docId": storage.docId
+                            });
+                            const storageLineList = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {
+                                "docId": storage.docId
+                            });
+                            BASE.Logger.error('委外查询出入库SCC行信息信息[{}]', storageLineList)
+                            if (storageLineList != null && storageLineList.length > 0) {
+                                for (let k = 0; k < storageLineList.length; k++) {
+                                    const storageLine = storageLineList[k]
+                                    let executeQty = 0;
+                                    for (let l = 0; l < head.details_list.length; l++) {
+                                        const lineQtyDetail = head.details_list[l]
+                                        if (lineQtyDetail.right_num > 0 || lineQtyDetail.goods_count > 0) {
+                                            const storageLineStr = storageLine.itemCode + '_' + storageLine.itemSkuCode
+                                            const lineDetailStr = lineQtyDetail.goods_no + '_' + lineQtyDetail.spec_no
+                                            if (storageLineStr === lineDetailStr) {
+                                                if (storage.docTypeCode == 'IN') {
+                                                    executeQty = executeQty + Number(lineQtyDetail.right_num)
+                                                } else {
+                                                    executeQty = executeQty + Number(lineQtyDetail.goods_count)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (executeQty !== 0) {
+                                        storageLine.executeQty = (storageLine.executeQty == null ? 0 : storageLine.executeQty) + executeQty
+                                    }
+                                }
+                            }
+                            // 库存事务(杂入杂出)
+                            if (head.details_list != null && head.details_list.length > 0) {
+                                const paramList = []
+                                for (let j = 0; j < head.details_list.length; j++) {
+                                    const lineDetail = head.details_list[j]
+                                    // 当执行数量>0进行杂入杂出操作
+                                    if (lineDetail.right_num > 0 || lineDetail.goods_count > 0) {
+                                        // 组装库存事务参数
+                                        const param = {
+                                            organizationCode: storage.organizationCode,
+                                            warehouseCode: storage.warehouseCode,
+                                            locatorCode: locator.locatorCode,
+                                            itemCode: lineDetail.goods_no,
+                                            itemSkuCode: lineDetail.spec_no,
+                                            executeTime: getDateTimeStr(),
+                                            remark: storage.docNum
+                                        }
+                                        if (storage.docTypeCode == 'IN') {
+                                            param.miscInQty = lineDetail.right_num
+                                        } else {
+                                            param.miscInQty = lineDetail.goods_count
+                                        }
+                                        if (storage.invBusinessReasonId != null) {
+                                            param.businessReasonCode = codeValueMap.get(storage.invBusinessReasonId).valueCode
+                                            param.businessReasonDesc = codeValueMap.get(storage.invBusinessReasonId).valueDesc
+                                        }
+                                        if (lineDetail.batch_no != null) {
+                                            param.lotNumber = lineDetail.batch_no
+                                        }
+                                        if (lineDetail.production_date != null && storage.docTypeCode == 'IN') {
+                                            param.lotActiveDate = lineDetail.production_date
+                                        }
+                                        if (lineDetail.expire_date != null && storage.docTypeCode == 'IN') {
+                                            param.lotExpireDate = lineDetail.expire_date
+                                        }
+                                        if (lineDetail.goods_unit != null) {
+                                            param.uomName = lineDetail.goods_unit
+                                        } else {
+                                            param.uomName = '件'
+                                        }
+                                        paramList.push(param)
+                                    }
+                                }
+                                // 创建杂入杂出库存事务
+                                let invokePath;
+                                if (head.order_type == 13) {
+                                    invokePath = "/v1/" + tenantId + "/stocks/misc-out"
+                                } else if (head.order_type == 12) {
+                                    invokePath = "/v1/" + tenantId + "/stocks/misc-in";
+                                } else {
+                                    BASE.Logger.error("单据类别不为委外出入库类型[" + head.order_type + "]")
+                                }
+                                BASE.Logger.error("调用杂项出入库接口参数------{}-------------", paramList)
+                                let miscRes = null;
+                                if (paramList != null && paramList.length > 0) {
+                                    miscRes = H0.FeignClient.selectClient('zosc-open-api').doPost(invokePath, paramList);
+                                }
+                                const miscObj = CORE.JSON.parse(miscRes);
+                                BASE.Logger.error("调用杂项出入库接口返回参数------{}-------------", miscObj)
+                                if (miscRes == null) {
+                                    BASE.Logger.error("调用杂项出入库接口无返回信息！");
+                                    storage.docStatusCode = 'EXECUTE_FAIL'
+                                    storage.syncStatus = '失败'
+                                    storage.syncMsg = '调用杂项出入库接口无返回信息'
+                                } else {
+                                    if (miscObj.failed) {
+                                        BASE.Logger.error("杂入杂出操作失败[" + miscObj.message + "]")
+                                        storage.docStatusCode = 'EXECUTE_FAIL'
+                                        storage.syncStatus = '失败'
+                                        storage.syncMsg = miscObj.message
+                                    } else {
+                                        // 更新头状态, 仓储单号, 行数量
+                                        storage.docStatusCode = 'EXECUTE_SUCCESS'
+                                        storage.storageDocNum = head.wms_outer_no
+                                        storage.syncStatus = null
+                                        storage.syncMsg = null
+                                        if (storageLineList.length > 0) {
+                                            H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineList)
                                         }
                                     }
                                 }
-                                if (executeQty !== 0) {
-                                    storageLine.executeQty = (storageLine.executeQty == null ? 0 : storageLine.executeQty) + executeQty
-                                }
+                                H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
                             }
-                        }
-                        // 库存事务(杂入杂出)
-                        if (head.details_list != null && head.details_list.length > 0) {
-                            const paramList = []
-                            for (let j = 0; j < head.details_list.length; j++) {
-                                const LineDetail = head.details_list[j]
-                                // 当执行数量>0进行杂入杂出操作
-                                if (LineDetail.right_num > 0) {
-                                    // 组装库存事务参数
-                                    const param = {
-                                        organizationCode: storage.organizationCode,
-                                        warehouseCode: storage.warehouseCode,
-                                        locatorCode: locator.locatorCode,
-                                        itemCode: LineDetail.goods_no,
-                                        itemSkuCode: LineDetail.spec_no,
-                                        miscInQty: LineDetail.right_num,
-                                        executeTime: getDateTimeStr(),
-                                        remark: storage.docNum
-                                    }
-                                    if (storage.invBusinessReasonId != null) {
-                                        param.businessReasonCode = codeValueMap.get(storage.invBusinessReasonId).valueCode
-                                        param.businessReasonDesc = codeValueMap.get(storage.invBusinessReasonId).valueDesc
-                                    }
-                                    if (LineDetail.batch_no != null) {
-                                        param.lotNumber = LineDetail.batch_no
-                                    }
-                                    if (LineDetail.expire_date != null) {
-                                        param.lotExpireDate = LineDetail.expire_date
-                                    }
-                                    if (LineDetail.goods_unit != null) {
-                                        param.uomName = LineDetail.goods_unit
-                                    } else {
-                                        param.uomName = '件'
-                                    }
-                                    paramList.push(param)
-                                }
-                            }
-                            // 创建杂入杂出库存事务
-                            let invokePath;
-                            if (head.order_type == 13) {
-                                invokePath = "/v1/" + tenantId + "/stocks/misc-out"
-                            } else if (head.order_type == 12) {
-                                invokePath = "/v1/" + tenantId + "/stocks/misc-in";
-                            } else {
-                                BASE.Logger.error("单据类别不为委外出入库类型[" + head.order_type + "]")
-                            }
-                            BASE.Logger.error("调用杂项出入库接口参数------{}-------------", paramList)
-                            const miscRes = H0.FeignClient.selectClient('zosc-open-api').doPost(invokePath, paramList);
-                            const miscObj = CORE.JSON.parse(miscRes);
-                            BASE.Logger.error("调用杂项出入库接口返回参数------{}-------------", miscObj)
-                            if (miscRes == null) {
-                                BASE.Logger.error("调用杂项出入库接口无返回信息！");
-                                storage.docStatusCode = 'EXECUTE_FAIL'
-                                storage.syncStatus = '失败'
-                                storage.syncMsg = '调用杂项出入库接口无返回信息'
-                            } else {
-                                if (miscObj.failed) {
-                                    BASE.Logger.error("杂入杂出操作失败[" + miscObj.message + "]")
-                                    storage.docStatusCode = 'EXECUTE_FAIL'
-                                    storage.syncStatus = '失败'
-                                    storage.syncMsg = miscObj.message
-                                } else {
-                                    // 更新头状态, 仓储单号, 行数量
-                                    storage.docStatusCode = 'EXECUTE_SUCCESS'
-                                    storage.storageDocNum = head.wms_outer_no
-                                    storage.syncStatus = null
-                                    storage.syncMsg = null
-                                    if (storageLineList.length > 0) {
-                                        H0.ModelerHelper.batchUpdateByPrimaryKey(storageLineModeler, tenantId, storageLineList)
-                                    }
-                                }
-                            }
-                            H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
                         }
                     }
                 }
             }
-            //}
         }
     }
 }
