@@ -11,11 +11,12 @@ function process(input) {
     const codeValueMap = new Map();
     const queryWmsPath = "/v1/" + tenantId + "/ss-wdt/wdt-interface-invoke/STOCKIN_ORDER_QUERY";
     // 查询状态为已推送的委外出入库订单
-    let sql = "select doc_id, doc_num, wdt_doc_num from zcus_ss_outsource_storage where tenant_id = #{tenantId} and doc_status_code = 'PUSH_SUCCESS' and INV_TYPE = 'ASCP' and wdt_doc_num is not null  order by creation_date limit 50";
+    let sql = "select doc_id, doc_num, wdt_doc_num from zcus_ss_outsource_storage where tenant_id = #{tenantId} and doc_status_code in ('PUSH_SUCCESS','EXECUTE_FAIL') and INV_TYPE = 'ASCP' and wdt_doc_num is not null  order by creation_date limit 50";
     const queryParamMap = {
         tenantId: tenantId
     }
     const res = H0.SqlHelper.selectList(secondServiceId, sql, queryParamMap);
+    BASE.Logger.debug('-------需要同步的单据-------{}', res)
     if (res != null && res.length > 0) {
         for (let i = 0; i < res.length; i++) {
             const storage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
@@ -34,7 +35,7 @@ function process(input) {
             }
             // 调用zosc-second-service
             const wmsQueryParam = {
-                order_no: res[i].wdtDocNum,
+                src_order_no: res[i].wdtDocNum,
                 keyCode: res[i].docNum
             }
             BASE.Logger.debug("-------wmsQueryParam-------{}", wmsQueryParam)
@@ -119,15 +120,17 @@ function process(input) {
                             }
                             // 创建杂入杂出库存事务
                             let invokePath;
-                            if (head.order_type == 1) {
+                            if (head.order_type == 13) {
                                 invokePath = "/v1/" + tenantId + "/stocks/misc-out"
-                            } else if (head.order_type == 2) {
+                            } else if (head.order_type == 12) {
                                 invokePath = "/v1/" + tenantId + "/stocks/misc-in";
                             } else {
                                 BASE.Logger.error("单据类别不为委外出入库类型[" + head.order_type + "]")
                             }
+                            BASE.Logger.error("调用杂项出入库接口参数------{}-------------", paramList)
                             const miscRes = H0.FeignClient.selectClient('zosc-open-api').doPost(invokePath, paramList);
                             const miscObj = CORE.JSON.parse(miscRes);
+                            BASE.Logger.error("调用杂项出入库接口返回参数------{}-------------", miscObj)
                             if (miscRes == null) {
                                 BASE.Logger.error("调用杂项出入库接口无返回信息！");
                                 storage.docStatusCode = 'EXECUTE_FAIL'

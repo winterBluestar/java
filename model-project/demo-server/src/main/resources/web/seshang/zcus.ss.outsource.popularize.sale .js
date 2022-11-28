@@ -52,7 +52,9 @@ function process(input) {
             }
         }
         poHead.details_list = detailsList
-        const createPoParam = {}
+        const createPoParam = {
+
+        }
         createPoParam.purchase_info = CORE.JSON.stringify(poHead)
         createPoParam.keyCode = storage.docNum
         // 调用zosc-second-service获取参数
@@ -77,6 +79,7 @@ function process(input) {
         if (payloadRes.code == 0) {
             // 更新创建采购单状态
             storage.wdtDocNum = storage.docNum
+            storage.docStatusCode = 'PUSH_FAIL'
             storage.syncStatus = null
             storage.syncMsg = null
             H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
@@ -105,7 +108,7 @@ function process(input) {
         const purchaseInfo = {
             purchase_no: storage.docNum,
             outer_no: storage.docNum,
-            is_create_batch: 0,
+            is_create_batch: 1,
             is_check: 1,
             warehouse_no: input.warehouseCode,
             remark: storage.remark
@@ -133,7 +136,9 @@ function process(input) {
             }
         }
         purchaseInfo.details_list = detailsList
-        const createStockInParam = {}
+        const createStockInParam = {
+
+        }
         createStockInParam.purchase_info = CORE.JSON.stringify(purchaseInfo)
         createStockInParam.keyCode = storage.docNum
         // 调用zosc-second-service获取参数
@@ -161,7 +166,7 @@ function process(input) {
             storage.syncMsg = null
             H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)
         } else {
-            if (payloadRes.code == 2470) {
+            if(payloadRes.code == 2470) {
                 // 采购入库单已经存在, 查询采购入库单, 并更新信息
                 const queryPOStockInParam = {
                     stockin_outer_no: storage.docNum
