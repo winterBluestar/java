@@ -9,8 +9,7 @@ function process(input) {
     const locatorModeler = 'zpfm_locator';
     const codeValueModeler = 'zpfm_business_code_value';
     const codeValueMap = new Map();
-    const buildParamsPath = "/v1/" + tenantId + "/ss-wdt/bulid-wdt-params";
-    const path = "/v2/rest/invoke?namespace=" + CORE.CurrentContext.getTenantNum() + "&serverCode=ZCUS.SS.WDT_INTERFACE&interfaceCode=vipStockOutsideWmsQuery";
+    const queryWmsPath = "/v1/" + tenantId + "/ss-wdt/wdt-interface-invoke/STOCKIN_ORDER_QUERY";
     // 查询状态为已推送的委外出入库订单
     let sql = "select doc_id, doc_num, wdt_doc_num from zcus_ss_outsource_storage where tenant_id = #{tenantId} and doc_status_code = 'PUSH_SUCCESS' and INV_TYPE = 'ASCP' and wdt_doc_num is not null  order by creation_date limit 50";
     const queryParamMap = {
@@ -33,27 +32,29 @@ function process(input) {
                     codeValueMap.set(codeValue.businessCodeValueId, codeValue)
                 }
             }
-            // 调用zosc-second-service组装参数
+            // 调用zosc-second-service
             const wmsQueryParam = {
-                order_no: res[i].wdtDocNum
+                order_no: res[i].wdtDocNum,
+                keyCode: res[i].docNum
             }
             BASE.Logger.debug("-------wmsQueryParam-------{}", wmsQueryParam)
-            let paramsRes = BASE.FeignClient.selectClient(secondServiceId)
-                .doPost(buildParamsPath, wmsQueryParam);
-            BASE.Logger.debug("-------paramsRes-------{}", paramsRes)
-            paramsRes = CORE.JSON.parse(paramsRes);
-            if (paramsRes.sign != null) {
-                const param = {
-                    bodyParamMap: paramsRes
-                }
-                // 调用旺店通接口获取数据
-                let wdtRes = BASE.FeignClient.selectClient(serverId)
-                    .doPost(path, param);
-                wdtRes = CORE.JSON.parse(wdtRes);
-                BASE.Logger.debug("-------WDT RES-------{}", wdtRes)
-                const wdtObjRes = CORE.JSON.parse(wdtRes.payload);
-                if (wdtObjRes.code == 0) {
-                    const head = wdtObjRes.order_list[0];
+            let wdtRes = BASE.FeignClient.selectClient(secondServiceId)
+                .doPost(queryWmsPath, wmsQueryParam);
+            //BASE.Logger.debug("-------paramsRes-------{}", paramsRes)
+            //paramsRes = CORE.JSON.parse(paramsRes);
+            //if (paramsRes.sign != null) {
+            //    const param = {
+            //        bodyParamMap: paramsRes
+            //    }
+            //    // 调用旺店通接口获取数据
+            //    let wdtRes = BASE.FeignClient.selectClient(serverId)
+            //        .doPost(path, param);
+            wdtRes = CORE.JSON.parse(wdtRes);
+            BASE.Logger.debug("-------WDT RES-------{}", wdtRes)
+            const wdtObjRes = CORE.JSON.parse(wdtRes.message);
+            if (wdtObjRes.code == 0) {
+                for (let b = 0; b < wdtObjRes.stockin_list.length; b++) {
+                    const head = wdtObjRes.stockin_list[b];
                     BASE.Logger.error('委外查询出入库订单信息[{}]', head)
                     if (head.status == 70 || head.status == 75 || head.status == 80) {
                         // 计算scc委外出入库订单行执行数量回写
@@ -67,16 +68,16 @@ function process(input) {
                                 let executeQty = 0;
                                 for (let l = 0; l < head.details_list.length; l++) {
                                     const lineQtyDetail = head.details_list[l]
-                                    if (lineQtyDetail.inout_num > 0) {
+                                    if (lineQtyDetail.right_num > 0) {
                                         const storageLineStr = storageLine.itemCode + '_' + storageLine.itemSkuCode
                                         const lineDetailStr = lineQtyDetail.goods_no + '_' + lineQtyDetail.spec_no
                                         if (storageLineStr === lineDetailStr) {
-                                            executeQty = executeQty + Number(lineQtyDetail.inout_num)
+                                            executeQty = executeQty + Number(lineQtyDetail.right_num)
                                         }
                                     }
                                 }
                                 if (executeQty !== 0) {
-                                    storageLine.executeQty = executeQty
+                                    storageLine.executeQty = (storageLine.executeQty == null ? 0 : storageLine.executeQty) + executeQty
                                 }
                             }
                         }
@@ -86,7 +87,7 @@ function process(input) {
                             for (let j = 0; j < head.details_list.length; j++) {
                                 const LineDetail = head.details_list[j]
                                 // 当执行数量>0进行杂入杂出操作
-                                if (LineDetail.inout_num > 0) {
+                                if (LineDetail.right_num > 0) {
                                     // 组装库存事务参数
                                     const param = {
                                         organizationCode: storage.organizationCode,
@@ -94,7 +95,7 @@ function process(input) {
                                         locatorCode: locator.locatorCode,
                                         itemCode: LineDetail.goods_no,
                                         itemSkuCode: LineDetail.spec_no,
-                                        miscInQty: LineDetail.inout_num,
+                                        miscInQty: LineDetail.right_num,
                                         executeTime: getDateTimeStr(),
                                         remark: storage.docNum
                                     }
@@ -154,6 +155,7 @@ function process(input) {
                     }
                 }
             }
+            //}
         }
     }
 }
