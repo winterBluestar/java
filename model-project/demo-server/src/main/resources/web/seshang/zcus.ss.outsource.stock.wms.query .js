@@ -12,7 +12,7 @@ function process(input) {
     const queryWmsInPath = "/v1/" + tenantId + "/ss-wdt/wdt-interface-invoke/STOCKIN_ORDER_QUERY";
     const queryWmsOutPath = "/v1/" + tenantId + "/ss-wdt/wdt-interface-invoke/STOCKOUT_ORDER_QUERY";
     // 查询状态为已推送的委外出入库订单
-    let sql = "select doc_id, doc_num, wdt_doc_num from zcus_ss_outsource_storage where tenant_id = #{tenantId} and doc_status_code in ('PUSH_SUCCESS','EXECUTE_FAIL') and INV_TYPE = 'ASCP' and wdt_doc_num is not null order by creation_date limit 50";
+    let sql = "select doc_id, doc_num, wdt_doc_num from zcus_ss_outsource_storage where tenant_id = #{tenantId} and doc_status_code in ('PUSH_SUCCESS','EXECUTE_FAIL') and INV_TYPE = 'ASCP' and wdt_doc_num is not null order by creation_date desc limit 20";
     const queryParamMap = {
         tenantId: tenantId
     }
@@ -121,7 +121,7 @@ function process(input) {
                                             param.businessReasonCode = codeValueMap.get(storage.invBusinessReasonId).valueCode
                                             param.businessReasonDesc = codeValueMap.get(storage.invBusinessReasonId).valueDesc
                                         }
-                                        if (lineDetail.batch_no != null) {
+                                        if (lineDetail.batch_no != null && lineDetail.batch_no.length > 0) {
                                             param.lotNumber = lineDetail.batch_no
                                             if (lineDetail.production_date != null && storage.docTypeCode == 'IN') {
                                                 param.lotActiveDate = lineDetail.production_date
