@@ -253,7 +253,7 @@ function process(input) {
                 return transferRes.message;
             } else {
                 // 更新委外单据状态为 已完成
-                storage.docStatusCode = 'PUSH_SUCCESS'
+                storage.docStatusCode = 'EXECUTE_SUCCESS'
                 storage.syncStatus = null
                 storage.syncMsg = null
                 H0.ModelerHelper.updateByPrimaryKey(storageModeler, tenantId, storage, true)

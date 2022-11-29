@@ -123,10 +123,10 @@ function process(input) {
                                         }
                                         if (lineDetail.batch_no != null && lineDetail.batch_no.length > 0) {
                                             param.lotNumber = lineDetail.batch_no
-                                            if (lineDetail.production_date != null && storage.docTypeCode == 'IN') {
+                                            if (lineDetail.production_date != null && lineDetail.production_date != '0000-00-00 00:00:00' && storage.docTypeCode == 'IN') {
                                                 param.lotActiveDate = lineDetail.production_date
                                             }
-                                            if (lineDetail.expire_date != null && storage.docTypeCode == 'IN') {
+                                            if (lineDetail.expire_date != null && lineDetail.expire_date != '0000-00-00 00:00:00' && storage.docTypeCode == 'IN') {
                                                 param.lotExpireDate = lineDetail.expire_date
                                             }
                                         }
