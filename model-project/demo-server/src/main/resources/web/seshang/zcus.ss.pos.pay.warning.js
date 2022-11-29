@@ -93,9 +93,9 @@ function process(input) {
             let dateDifference = 0;
             const sourceTxTime = new Date(posLine.sourceTxTime);
             if (supplier.attributeString1 != null) {
-                dateDifference = Number(supplier.attributeString1) - Number(earlyDate.value)
+                dateDifference = Number(supplier.attributeString1) - Number(earlyDate.description)
             } else {
-                dateDifference = dateDifference - Number(earlyDate.value)
+                dateDifference = dateDifference - Number(earlyDate.description)
             }
             const warningTimestamp = sourceTxTime.getTime() + 24 * 60 * 60 * 1000 * dateDifference
             const nowTimestamp = new Date().getTime() + 8 * 60 * 60 * 1000
