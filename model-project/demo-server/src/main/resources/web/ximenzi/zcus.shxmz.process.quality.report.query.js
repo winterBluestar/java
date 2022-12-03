@@ -1,12 +1,11 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
     const wipServiceId = "zosc-wip";
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 95;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 95;
     const operationModeler = 'zbom_operation';
     const operationMap = new Map()
-    //let sql = "select zpt.produce_tx_id,zpt.mo_id,zpt.completed_qty,zpt.creation_date,zpt.operation_id,zm.mo_num,zpt.attribute_tinyint1 from zwip_produce_tx zpt left join zwip_mo zm on zpt.mo_id = zm.mo_id where zpt.tenant_id = #{tenantId} and zpt.creation_date >= #{startTime} and zpt.creation_date <= #{endTime} and zpt.attribute_tinyint1 is null order by zpt.creation_date desc limit 2"
-    let sql = "select zpt.produce_tx_id,zpt.mo_id,zpt.completed_qty,zpt.creation_date,zpt.operation_id,zm.mo_num,zpt.attribute_tinyint1 from zwip_produce_tx zpt left join zwip_mo zm on zpt.mo_id = zm.mo_id where zpt.tenant_id = 95 and zpt.attribute_tinyint1 is null order by zpt.creation_date desc limit 2"
+    let sql = "select zpt.produce_tx_id,zpt.mo_id,zpt.completed_qty,zpt.creation_date,zpt.operation_id,zm.mo_num,zpt.attribute_tinyint1 from zwip_produce_tx zpt left join zwip_mo zm on zpt.mo_id = zm.mo_id where zpt.tenant_id = #{tenantId} and zpt.creation_date &gt;= #{startTime} and zpt.creation_date &lt;= #{endTime} and zpt.attribute_tinyint1 is null order by zpt.creation_date desc limit 2"
     const queryParamMap = {
         tenantId: tenantId
     };
@@ -16,15 +15,23 @@ function process(input) {
         for (let timeIndex = 0; timeIndex < timeRes.length; timeIndex++) {
             const time = timeRes[timeIndex];
             if (time.value == 'startTime') {
-                queryParamMap.startTime = time.meaning
+                if (time.meaning == 'null') {
+                    queryParamMap.startTime = getLocalTime(8).toLocaleDateString() + ' 00:00:00'
+                } else {
+                    queryParamMap.startTime = time.meaning
+                }
             } else {
-                queryParamMap.endTime = time.meaning
+                if (time.meaning == 'null') {
+                    queryParamMap.endTime = getLocalTime(8).toLocaleDateString() + ' 23:59:59'
+                } else {
+                    queryParamMap.endTime = time.meaning
+                }
             }
         }
     }
     // 查询数据
     BASE.Logger.debug('-------查询工序数量上报SQL参数-------{}', queryParamMap)
-    const qualityRes = H0.SqlHelper.selectList(wipServiceId, sql, queryParamMap);
+    let qualityRes = H0.SqlHelper.selectList(wipServiceId, sql, queryParamMap);
     BASE.Logger.debug('-------查询工序数量上报SQL结果-------{}', qualityRes)
     if (qualityRes != null && qualityRes.length > 0) {
         for (let qualityIndex = 0; qualityIndex < qualityRes.length; qualityIndex++) {
@@ -41,10 +48,23 @@ function process(input) {
                     quality.operationCode = operationMap.get(quality.operationId).operationCode
                 }
             }
-            quality.fileName = quality.operationCode + 'erp' + quality.moNum + quality.produceTxId
-            quality.charsetName = 'Windows-1252'
+            quality.fileName = quality.operationCode + 'erp' + quality.moNum + quality.produceTxId + '.xml'
+            //quality.charsetName = 'Windows-1252'
+            quality.directory = '/data/xmz-dev'
         }
     }
     BASE.Logger.debug('-------查询工序数量上报返回结果-------{}', qualityRes)
     return qualityRes
+}
+
+function getLocalTime(i) {
+    if (typeof i !== 'number') return;
+    const d = new Date();
+    //得到1970年一月一日到现在的秒数
+    const len = d.getTime();
+    //本地时间与GMT时间的时间偏移差(注意：GMT这是UTC的民间名称。GMT=UTC）
+    const offset = d.getTimezoneOffset() * 60000;
+    //得到现在的格林尼治时间
+    const utcTime = len + offset;
+    return new Date(utcTime + 3600000 * i);
 }
