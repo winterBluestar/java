@@ -4,7 +4,7 @@ function process(input) {
     //const tenantId = CORE.CurrentContext.getTenantId();
     const tenantId = 95;
     const customerModeler = 'zopo_customer';
-    let sql = "select zpot.customer_mo_num,zpot.creation_date,zpoto.sequence_num,zpoto.owner_operation_id,zpoto.operation_code from zwip_process_oem_task zpot left join zwip_process_oem_task_operation zpoto on zpot.process_oem_task_id = zpoto.process_oem_task_id where "
+    let sql = "select zpot.tenant_id,zpot.customer_mo_num,zpot.creation_date,zpoto.sequence_num,zpoto.owner_operation_id,zpoto.operation_code,zpoto.id from zwip_process_oem_task zpot left join zwip_process_oem_task_operation zpoto on zpot.process_oem_task_id = zpoto.process_oem_task_id where "
     const queryParamMap = {
         tenantId: tenantId
     };
@@ -31,7 +31,7 @@ function process(input) {
         if (customerIdStr != null) {
             sql = sql + " zpot.customer_id in " + '(' + customerIdStr + ')'
             sql = sql + " and zpot.tenant_id in " + '(' + supplierTenantIdStr + ')'
-            if (input.taskIdsStr != null) {
+            if (input != null && input.taskIdsStr != null && input.taskIdsStr != 'null') {
                 // 定时任务中设置了需要重新生成xml文件的任务id
                 sql = sql + " and zpot.process_oem_task_id in (" + input.taskIdsStr + ")"
             } else {

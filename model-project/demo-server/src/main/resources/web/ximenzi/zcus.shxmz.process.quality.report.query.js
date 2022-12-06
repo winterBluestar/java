@@ -9,7 +9,7 @@ function process(input) {
     const queryParamMap = {
         tenantId: tenantId
     };
-    if (input.txIdsStr != null) {
+    if (input != null && input.txIdsStr != null && input.txIdsStr != 'null') {
         sql = sql + " and zpt.produce_tx_id in (" + input.txIdsStr + ")"
     } else {
         sql = sql + " and zpt.attribute_tinyint1 is null order by zpt.creation_date desc"

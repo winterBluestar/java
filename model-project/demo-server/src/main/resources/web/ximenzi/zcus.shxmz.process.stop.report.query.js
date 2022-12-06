@@ -10,7 +10,7 @@ function process(input) {
     const queryParamMap = {
         tenantId: tenantId
     };
-    if (input != null && input.expandIdListStr != null) {
+    if (input != null && input.expandIdListStr != null && input.expandIdListStr != 'null') {
         taskExpandSql = taskExpandSql + "and id in (" + input.expandIdListStr + ") ";
     } else {
         taskExpandSql = taskExpandSql + "and JUDGMENT_EXP_FLAG = 0 and judgment_result is not null order by CREATION_DATE "
