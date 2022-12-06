@@ -1,18 +1,19 @@
 function process(input) {
     BASE.Logger.debug('-------上海西门子工序终止上报: input-------{}', input)
     //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 96;
+    const tenantId = 95;
     const secondServiceId = "zosc-second-service";
     const wipServiceId = "zosc-wip";
+    const customerModeler = 'zopo_customer';
     let taskExpandSql = "select tenant_id, id, process_oem_task_id from zcus_shxmz_process_oem_task_expand where tenant_id = #{tenantId} "
     let taskSql = "select zpot.process_oem_task_id,zpot.customer_mo_num,zpot.creation_date,zpoto.id,zpoto.operation_code,zpoto.sequence_num from zwip_process_oem_task zpot left join zwip_process_oem_task_operation zpoto on zpot.process_oem_task_id = zpoto.process_oem_task_id where "
     const queryParamMap = {
         tenantId: tenantId
     };
     if (input != null && input.expandIdListStr != null) {
-        taskExpandSql = taskExpandSql + "and id in (" + input.expandIdListStr + ") order by CREATION_DATE desc limit 2";
+        taskExpandSql = taskExpandSql + "and id in (" + input.expandIdListStr + ") ";
     } else {
-        taskExpandSql = taskExpandSql + "and JUDGMENT_EXP_FLAG = 0 and judgment_result is not null order by CREATION_DATE desc limit 2"
+        taskExpandSql = taskExpandSql + "and JUDGMENT_EXP_FLAG = 0 and judgment_result is not null order by CREATION_DATE "
     }
     // 查询task-expand数据
     BASE.Logger.debug('-------查询工序终止上报task-expand-SQL参数-------{}', queryParamMap)
@@ -33,7 +34,32 @@ function process(input) {
     }
     // 查询task数据
     if (taskIdStr != null && taskIdStr !== '') {
-        const concatStr = "zpot.process_oem_task_id in (" + taskIdStr + ") order by zpot.creation_date desc limit 2"
+        // 查询客户id
+        let customerCodeRes = H0.LovHelper.queryLovValue('ZCUS.SHXMZ.PROCESS.START.CUSTOMER', tenantId, 'zh_CN');
+        if (customerCodeRes != null && customerCodeRes.length > 0) {
+            let customerIdStr = ''
+            let supplierTenantIdStr = ''
+            for (let customerCodeIndex = 0; customerCodeIndex < customerCodeRes.length; customerCodeIndex++) {
+                const customerCode = customerCodeRes[customerCodeIndex]
+                let customer = H0.ModelerHelper.selectOne(customerModeler, customerCode.meaning, {
+                    "customerCode": '30S1'
+                });
+                if (customer != null) {
+                    if (customerCodeIndex != customerCodeRes.length - 1) {
+                        customerIdStr = customerIdStr + customer.customerId + ','
+                        supplierTenantIdStr = supplierTenantIdStr + customerCode.meaning + ','
+                    } else {
+                        customerIdStr = customerIdStr + customer.customerId
+                        supplierTenantIdStr = supplierTenantIdStr + customerCode.meaning
+                    }
+                }
+            }
+            if (customerIdStr != null) {
+                taskSql = taskSql + " zpot.customer_id in " + '(' + customerIdStr + ')'
+                taskSql = taskSql + " and zpot.tenant_id in " + '(' + supplierTenantIdStr + ')'
+            }
+        }
+        const concatStr = " and zpot.process_oem_task_id in (" + taskIdStr + ") order by zpot.creation_date desc limit 2"
         taskSql = taskSql + concatStr
         BASE.Logger.debug('-------查询工序终止上报task-SQL-------{}', taskSql)
         let qualityRes = H0.SqlHelper.selectList(wipServiceId, taskSql, {});
