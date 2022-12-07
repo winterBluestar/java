@@ -1,7 +1,7 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
     const tenantId = CORE.CurrentContext.getTenantId();
-    //const tenantId = 76;
+    //const tenantId = 81;
     const stockModeler = 'zinv_stock';
     const storageModeler = 'zcus_ss_outsource_storage';
     const storageLineModeler = 'zcus_ss_outsource_storage_line';
@@ -62,7 +62,9 @@ function process(input) {
         "docNum": input.docNum
     });
     if (exitStorage != null) {
-        input.objectVersionNumber = Number(exitStorage.objectVersionNumber) + 1
+        input.objectVersionNumber = Number(exitStorage.objectVersionNumber)
+        input._status = 'update'
+        input.docId = exitStorage.docId
     }
     if (input._status == 'create') {
         if (exitStorage != null) {
@@ -88,7 +90,9 @@ function process(input) {
                 "lineNumber": value.lineNumber
             });
             if (exitStorageLine != null) {
-                value.objectVersionNumber = Number(exitStorageLine.objectVersionNumber) + 1
+                value.objectVersionNumber = Number(exitStorageLine.objectVersionNumber)
+                value._status = 'update'
+                value.lineId = exitStorageLine.lineId
             }
             if (value._status === 'create') {
                 H0.ModelerHelper.insert(storageLineModeler, tenantId, value, true);
