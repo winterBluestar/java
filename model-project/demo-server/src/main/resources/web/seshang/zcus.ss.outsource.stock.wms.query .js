@@ -1,7 +1,7 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 76;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 76;
     const secondServiceId = 'zosc-second-service';
     const serverId = "hzero-interface";
     const storageModeler = 'zcus_ss_outsource_storage';
@@ -130,7 +130,7 @@ function process(input) {
                                                 param.lotExpireDate = lineDetail.expire_date
                                             }
                                         }
-                                        if (lineDetail.goods_unit != null) {
+                                        if (lineDetail.goods_unit != null && lineDetail.goods_unit != '') {
                                             param.uomName = lineDetail.goods_unit
                                         } else {
                                             param.uomName = '件'
