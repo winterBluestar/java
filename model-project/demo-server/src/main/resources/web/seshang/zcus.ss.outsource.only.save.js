@@ -58,16 +58,19 @@ function process(input) {
     }
     // 保存头数据
     let resHead;
+    const exitStorage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
+        "docNum": input.docNum
+    });
+    if (exitStorage != null) {
+        input.objectVersionNumber = Number(exitStorage.objectVersionNumber) + 1
+    }
     if (input._status == 'create') {
-        const exitStorage = H0.ModelerHelper.selectOne(storageModeler, tenantId, {
-            "docNum": input.docNum
-        });
         if (exitStorage != null) {
             if (input.isSubmit != null && input.isSubmit) {
-                errorContent.msg = '委外出入库订单号：'+input.docNum+ '已存在'
+                errorContent.msg = '委外出入库订单号：' + input.docNum + '已存在'
                 return errorContent;
             } else {
-                H0.ExceptionHelper.throwCommonException('委外出入库订单号：'+input.docNum+ '已存在')
+                H0.ExceptionHelper.throwCommonException('委外出入库订单号：' + input.docNum + '已存在')
             }
         }
         resHead = H0.ModelerHelper.insert(storageModeler, tenantId, input, true);
@@ -80,6 +83,13 @@ function process(input) {
             value.docId = resHead.docId
             value.docNum = resHead.docNum
             value.docTypeCode = resHead.docTypeCode
+            const exitStorageLine = H0.ModelerHelper.selectOne(storageLineModeler, tenantId, {
+                "docNum": value.docNum,
+                "lineNumber": value.lineNumber
+            });
+            if (exitStorageLine != null) {
+                value.objectVersionNumber = Number(exitStorageLine.objectVersionNumber) + 1
+            }
             if (value._status === 'create') {
                 H0.ModelerHelper.insert(storageLineModeler, tenantId, value, true);
             } else if (value._status === 'update') {
