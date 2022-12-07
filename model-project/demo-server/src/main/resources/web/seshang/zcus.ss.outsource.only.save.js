@@ -1,38 +1,42 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 76;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 76;
     const stockModeler = 'zinv_stock';
     const storageModeler = 'zcus_ss_outsource_storage';
     const storageLineModeler = 'zcus_ss_outsource_storage_line';
     let errorContent = {};
     // 校验单据类型为“委外出库”时库存量是否大于用户填写的数量
-    if (input.docTypeCode === 'OUT') {
-        if (input.outsourceLineList != null && input.outsourceLineList.length > 0) {
-            for (let i = 0; i < input.outsourceLineList.length; i++) {
-                const value = input.outsourceLineList[i]
-                let stockRes = null
-                const stockParam = {
-                    organizationId: input.organizationId,
-                    itemId: value.itemId,
-                    itemSkuId: value.itemSkuId
-                }
-                if(value.lotId != null){
-                    stockParam.lotId = value.lotId
-                }
-                if (input.targetWarehouseCode != null) {
-                    stockParam.warehouseId = value.targetWarehouseId
-                } else {
-                    stockParam.warehouseId = value.warehouseId
-                }
-                stockRes = H0.ModelerHelper.selectOne(stockModeler, tenantId, stockParam);
-                if (stockRes == null || (value.quantity > stockRes.quantity)) {
-                    errorContent.msg = value.lineNumber + "行当前仓库库存数量小于执行数量！请确认后重新提交！"
-                    return errorContent;
-                }
-            }
-        }
-    }
+    //if (input.docTypeCode === 'OUT') {
+    //    if (input.outsourceLineList != null && input.outsourceLineList.length > 0) {
+    //        for (let i = 0; i < input.outsourceLineList.length; i++) {
+    //            const value = input.outsourceLineList[i]
+    //            let stockRes = null
+    //            const stockParam = {
+    //                organizationId: input.organizationId,
+    //                itemId: value.itemId,
+    //                itemSkuId: value.itemSkuId
+    //            }
+    //            if(value.lotId != null){
+    //                stockParam.lotId = value.lotId
+    //            }
+    //            if (input.targetWarehouseCode != null) {
+    //                stockParam.warehouseId = value.targetWarehouseId
+    //            } else {
+    //                stockParam.warehouseId = value.warehouseId
+    //            }
+    //            stockRes = H0.ModelerHelper.selectOne(stockModeler, tenantId, stockParam);
+    //            if (stockRes == null || (value.quantity > stockRes.quantity)) {
+    //                if (input.isSubmit != null && input.isSubmit) {
+    //                    errorContent.msg = value.lineNumber + "行当前仓库库存数量小于执行数量！请确认后重新提交！"
+    //                    return errorContent;
+    //                } else {
+    //                    H0.ExceptionHelper.throwCommonException(value.lineNumber + "行当前仓库库存数量小于执行数量！请确认后重新提交！")
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
     if (input.outsourceLineList != null && input.outsourceLineList.length > 1) {
         for (let i = 0; i < input.outsourceLineList.length; i++) {
             const compareLine = input.outsourceLineList[i];
@@ -41,8 +45,12 @@ function process(input) {
                     const compareToLine = input.outsourceLineList[j];
                     if (i !== j && compareToLine._status != 'delete' && compareLine.itemId === compareToLine.itemId
                         && compareLine.itemSkuId === compareToLine.itemSkuId) {
-                        errorContent.msg = "委外出入库订单物料SKU不能重复"
-                        return errorContent;
+                        if (input.isSubmit != null && input.isSubmit) {
+                            errorContent.msg = "委外出入库订单物料SKU不能重复"
+                            return errorContent;
+                        } else {
+                            H0.ExceptionHelper.throwCommonException("委外出入库订单物料SKU不能重复")
+                        }
                     }
                 }
             }
@@ -55,8 +63,12 @@ function process(input) {
             "docNum": input.docNum
         });
         if (exitStorage != null) {
-            errorContent.msg = '委外出入库订单号：'+input.docNum+ '已存在'
-            return errorContent;
+            if (input.isSubmit != null && input.isSubmit) {
+                errorContent.msg = '委外出入库订单号：'+input.docNum+ '已存在'
+                return errorContent;
+            } else {
+                H0.ExceptionHelper.throwCommonException('委外出入库订单号：'+input.docNum+ '已存在')
+            }
         }
         resHead = H0.ModelerHelper.insert(storageModeler, tenantId, input, true);
     } else if (input._status == 'update') {
