@@ -35,7 +35,7 @@ function process(input) {
                 // 定时任务中设置了需要重新生成xml文件的任务id
                 sql = sql + " and zpot.process_oem_task_id in (" + input.taskIdsStr + ")"
             } else {
-                sql = sql + " and zpoto.attribute_tinyint1 is null order by zpot.creation_date desc limit 2"
+                sql = sql + " and zpoto.attribute_tinyint1 is null order by zpot.creation_date desc"
             }
         }
     } else {

@@ -1,7 +1,7 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 76;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 76;
     const regionModeler = 'zpfm_region';
     const locatorModeler = 'zpfm_locator';
     const lotModeler = 'zinv_lot';
