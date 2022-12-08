@@ -155,11 +155,14 @@ function process(input) {
                         warehouseName: value.warehouseName,
                         locatorCode: locator.locatorCode,
                         itemCode: value.itemCode,
-                        itemSkuCode: value.itemSkuCode,
+                        //itemSkuCode: value.itemSkuCode,
                         uomName: value.uomName,
                         miscInQty: value.quantity,
                         executeTime: getDateTimeStr(),
                         remark: value.docNum
+                    }
+                    if (value.skuEnabledFlag == 1) {
+                        param.itemSkuCode = value.itemSkuCode
                     }
                     if (codeValueMap.size > 0) {
                         param.businessReasonCode = codeValueMap.get(storage.invBusinessReasonId).valueCode
