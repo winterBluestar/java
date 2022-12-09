@@ -7,11 +7,13 @@ function process(input) {
     const supplierModeler = 'zopo_supplier'
     const itemModeler = 'zpdt_item'
     const operationModeler = 'zbom_operation'
+    const supplierContactsModeler = 'zopo_supplier_contacts'
     const supplierIdMap = new Map()
     const zmoGroupMap = new Map()
     const itemMap = new Map()
     const operationMap = new Map()
-    let sql = "select zm.tenant_id, zm.organization_id, zm.MO_ID, zm.MO_NUM, zm.ITEM_ID, zm.ITEM_SKU_ID, zmt.MO_TYPE_NAME, zmo.MO_OPERATION_ID, zmo.SEQUENCE_NUM, zmo.OPERATION_ID, zm.UOM_ID, zmo.SUPPLIER_ID, zmo.PROCESS_OEM_TASK_CODE, zm.MO_COOPERATE_STATUS from zwip_mo_operation zmo inner join zwip_mo zm on zm.MO_ID = zmo.MO_ID inner join zwip_mo_type zmt on zmt.MO_TYPE_ID = zm.MO_TYPE_ID where zmo.TENANT_ID = #{tenantId} and zmo.OUTSOURCE_FLAG = 1 and zm.MO_STATUS in ('RELEASED') and zm.ORGANIZATION_ID = #{organizationId} "
+    const keyMap = new Map()
+    let sql = "select zm.tenant_id, zm.organization_id, zm.MO_ID, zm.MO_NUM, zm.ITEM_ID, zm.ITEM_SKU_ID, zmt.MO_TYPE_NAME, zmo.MO_OPERATION_ID, zmo.SEQUENCE_NUM, zmo.OPERATION_ID, zm.UOM_ID, zmo.SUPPLIER_ID, zmo.PROCESS_OEM_TASK_CODE, zmo.supplier_address_id from zwip_mo_operation zmo inner join zwip_mo zm on zm.MO_ID = zmo.MO_ID inner join zwip_mo_type zmt on zmt.MO_TYPE_ID = zm.MO_TYPE_ID where zmo.TENANT_ID = #{tenantId} and zmo.OUTSOURCE_FLAG = 1 and zm.MO_STATUS in ('RELEASED') and zm.ORGANIZATION_ID = #{organizationId} "
     const queryZmoParam = {
         tenantId: tenantId
     }
@@ -91,25 +93,40 @@ function process(input) {
                 zmo.workCenterName = operationMap.get(zmo.operationId).workCenterName
             }
         }
-        const supplierId = zmo.supplierId;
+        const supplierId = zmo.supplierId
         if (supplierIdMap.get(supplierId) == null) {
             const supplier = H0.ModelerHelper.selectOne(supplierModeler, tenantId, {supplierId: supplierId});
             supplierIdMap.set(supplierId, supplier)
         }
-        if (zmoGroupMap.get(supplierId) == null) {
-            zmoGroupMap.set(supplierId, [zmo])
+        const zmoKey = zmo.supplierId + '_' + zmo.supplierAddressId
+        if (keyMap.get(zmoKey) == null) {
+            keyMap.set(zmoKey, zmoKey)
+        }
+        if (zmoGroupMap.get(zmoKey) == null) {
+            zmoGroupMap.set(zmoKey, [zmo])
         } else {
-            zmoGroupMap.get(supplierId).push.apply(zmoGroupMap.get(supplierId), [zmo])
-            //zmoGroupMap.get(supplierId).concat([zmo])
+            zmoGroupMap.get(zmoKey).push.apply(zmoGroupMap.get(zmoKey), [zmo])
         }
     }
     let zmoGroupArr = []
-    for (let i = 0; i < supplierList.length; i++) {
-        const supplier = supplierList[i]
-        const supplierId = supplier.supplierId
-        const sendInfo = {supplierId: supplierId, zmoGroup: zmoGroupMap.get(supplierId), email:supplier.email}
+    keyMap.forEach((value, key, map) => {
+        const supplierAddressId = key.split('_')[1]
+        const supplierContactsList = H0.ModelerHelper.selectList(supplierContactsModeler, tenantId, {supplierAddressId: supplierAddressId});
+        const emailArr = []
+        if (supplierContactsList != null && supplierContactsList.length > 0) {
+            for (let contactIndex = 0; contactIndex < supplierContactsList.length; contactIndex++) {
+                const supplierContact = supplierContactsList[contactIndex]
+                if (supplierContact.email != null) {
+                    emailArr.push(supplierContact.email)
+                }
+            }
+        }
+        const sendInfo = {zmoKey: key, zmoGroup: zmoGroupMap.get(key)}
+        if (emailArr.length > 0) {
+            sendInfo.emailList = emailArr
+        }
         zmoGroupArr.push(sendInfo)
-    }
+    })
     return zmoGroupArr
 }
 

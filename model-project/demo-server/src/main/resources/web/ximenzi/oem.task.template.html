@@ -1,0 +1,38 @@
+<div class="zosc-hmsg-message-template">
+    <h3>【工序代工任务】生成已下发数据，请知悉！</h3>
+    <p>您好：</p>
+    <p>&nbsp; &nbsp; &nbsp; 您有本次生成已下发的工序代工任务，如下：</p>
+    <p>#foreach( $elem in $zmoInfoList)#end</p>
+    <table border="1" cellpadding="0" cellspacing="0">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>客户名称</th>
+            <th>客户工单号</th>
+            <th>代工任务单号</th>
+            <th>工序</th>
+            <th>工序描述</th>
+            <th>工作中心</th>
+            <th>工作中心描述</th>
+            <th>物料编码</th>
+            <th>数量</th>
+            <th>单位</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>${elem.sortNum}</td>
+            <td>${elem.customerName}</td>
+            <td>${elem.moNum}</td>
+            <td>${elem.processOemTaskCode}</td>
+            <td>${elem.operationCode}</td>
+            <td>${elem.operationName}</td>
+            <td>${elem.workCenterCode}</td>
+            <td>${elem.workCenterName}</td>
+            <td>${elem.itemCode}</td>
+            <td>${elem.planCompletedQty}</td>
+            <td>${elem.uomName}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
