@@ -5,6 +5,7 @@ function process(input) {
     const regionModeler = 'zpfm_region';
     const locatorModeler = 'zpfm_locator';
     const lotModeler = 'zinv_lot';
+    const stockModeler = 'zinv_stock';
     const storageModeler = 'zcus_ss_outsource_storage';
     const storageLineModeler = 'zcus_ss_outsource_storage_line';
     const codeValueModeler = 'zpfm_business_code_value';
@@ -26,6 +27,40 @@ function process(input) {
             }
             if (storage.docStatusCode != 'NEW' && storage.docStatusCode != 'PUSH_FAIL' && storage.docStatusCode != 'EXECUTE_FAIL') {
                 return "委外出入库订单" + value.docNum + "状态不为新建，请确认后重试！";
+            }
+            // 查询是否有库存
+            if (storage.docTypeCode === 'OUT') {
+                const outsourceLineList = H0.ModelerHelper.selectList(storageLineModeler, tenantId, {
+                    "docId": value.docId
+                });
+                if (outsourceLineList != null && outsourceLineList.length > 0) {
+                    for (let i = 0; i < outsourceLineList.length; i++) {
+                        const value = outsourceLineList[i]
+                        let stockRes = null
+                        const stockParam = {
+                            organizationId: input.organizationId,
+                            itemId: value.itemId,
+                            itemSkuId: value.itemSkuId
+                        }
+                        if (value.lotId != null) {
+                            stockParam.lotId = value.lotId
+                        }
+                        if (storage.targetWarehouseCode != null) {
+                            stockParam.warehouseId = storage.targetWarehouseId
+                        } else {
+                            stockParam.warehouseId = value.warehouseId
+                        }
+                        stockRes = H0.ModelerHelper.selectOne(stockModeler, tenantId, stockParam);
+                        if (stockRes == null || (value.quantity > stockRes.quantity)) {
+                            // if (input.isSubmit != null && input.isSubmit) {
+                            //     errorContent.msg = value.lineNumber + "行当前仓库库存数量小于执行数量！请确认后重新提交！"
+                            //     return errorContent;
+                            // } else {
+                            H0.ExceptionHelper.throwCommonException("订单号:【" + storage.docNum + "】" + value.lineNumber + "行当前仓库库存数量小于执行数量！请确认后重新提交！")
+                            // }
+                        }
+                    }
+                }
             }
             if (storage.invType !== 'SCC') {
                 if (storage.invType === 'WDT' && storage.targetWarehouseCode != null) {
