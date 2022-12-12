@@ -1,33 +1,34 @@
-<h3>【工序代工任务】生成已下发数据，请知悉！</h3>
-<p>您好：${cxd}</p>
+<h5>【工序代工任务】生成已下发数据，请知悉！</h5>
+<p>您好：</p>
 <p>&nbsp; &nbsp; &nbsp; 您有本次生成已下发的工序代工任务，如下：</p>
+<p style="text-align: left">*******This email is automatically sent by the SAP. Please don't reply.*******</p>
 <table border="1" cellpadding="0" cellspacing="0" width="100%">
     <tr>
-        <th>序号</th>
-        <th>客户名称</th>
-        <th>客户工单号</th>
-        <th>代工任务单号</th>
-        <th>工序</th>
-        <th>工序描述</th>
-        <th>工作中心</th>
-        <th>工作中心描述</th>
-        <th>物料编码</th>
-        <th>数量</th>
-        <th>单位</th>
+        <th style="text-align: center;width: auto">序号</th>
+        <th style="text-align: center;width: auto">客户名称</th>
+        <th style="text-align: center;width: auto">客户工单号</th>
+        <th style="text-align: center;width: auto">代工任务单号</th>
+        <th style="text-align: center;width: auto">工序</th>
+        <th style="text-align: center;width: auto">工序描述</th>
+        <th style="text-align: center;width: auto">工作中心</th>
+        <th style="text-align: center;width: auto">工作中心描述</th>
+        <th style="text-align: center;width: auto">物料编码</th>
+        <th style="text-align: center;width: auto">数量</th>
+        <th style="text-align: center;width: auto">单位</th>
     </tr>
     #foreach( $elem in $zmoInfoList)
     <tr>
-        <td>${elem.sortNum}</td>
-        <td>${elem.customerName}</td>
-        <td>${elem.moNum}</td>
-        <td>${elem.processOemTaskCode}</td>
-        <td>${elem.operationCode}</td>
-        <td>${elem.operationName}</td>
-        <td>${elem.workCenterCode}</td>
-        <td>${elem.workCenterName}</td>
-        <td>${elem.itemCode}</td>
-        <td>${elem.planCompletedQty}</td>
-        <td>${elem.uomName}</td>
+        <td style="text-align: center;width: auto">${elem.sortNum}</td>
+        <td style="text-align: center;width: auto">${elem.customerName}</td>
+        <td style="text-align: center;width: auto">${elem.moNum}</td>
+        <td style="text-align: center;width: auto">${elem.processOemTaskCode}</td>
+        <td style="text-align: center;width: auto">${elem.operationCode}</td>
+        <td style="text-align: center;width: auto">${elem.operationName}</td>
+        <td style="text-align: center;width: auto">${elem.workCenterCode}</td>
+        <td style="text-align: center;width: auto">${elem.workCenterName}</td>
+        <td style="text-align: center;width: auto">${elem.itemCode}</td>
+        <td style="text-align: center;width: auto">${elem.planCompletedQty}</td>
+        <td style="text-align: center;width: auto">${elem.uomName}</td>
     </tr>
     #end
 </table>
