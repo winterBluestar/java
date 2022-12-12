@@ -2,22 +2,24 @@ function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
     //const tenantId = CORE.CurrentContext.getTenantId();
     const tenantId = 95;
-    const messageServerId = 'hzero-message';
+    const messageServerId = 'zosc-cdm';
     const wipServerId = 'zosc-wip'
     const organizationModeler = 'zpfm_organization'
     const supplierModeler = 'zopo_supplier'
     const itemModeler = 'zpdt_item'
     const operationModeler = 'zbom_operation'
-    const supplierContactsModeler = 'zopo_supplier_contacts'
     const userModeler = 'SYS_USER'
+    const supplierContactsModeler = 'zopo_supplier_contacts'
     const supplierIdMap = new Map()
     const zmoGroupMap = new Map()
     const itemMap = new Map()
     const operationMap = new Map()
     const keyMap = new Map()
-    const sendMessagePath = '/v1/' + tenantId + '/message/relevance/with-receipt';
+    const sendMessagePath = '/v1/' + tenantId + '/message-receiving-items/sendMessage';
+    //const messageServerId1 = 'hzero-message';
+    //const sendMessagePath1 = '/v1/' + tenantId + '/message/relevance/with-receipt';
 
-    let sql = "select zm.tenant_id, zm.organization_id, zm.MO_ID, zm.MO_NUM, zm.ITEM_ID, zm.ITEM_SKU_ID, zmt.MO_TYPE_NAME, zmo.MO_OPERATION_ID, zmo.SEQUENCE_NUM, zmo.OPERATION_ID, zm.UOM_ID, zmo.SUPPLIER_ID, zmo.PROCESS_OEM_TASK_CODE, zmo.supplier_address_id from zwip_mo_operation zmo inner join zwip_mo zm on zm.MO_ID = zmo.MO_ID inner join zwip_mo_type zmt on zmt.MO_TYPE_ID = zm.MO_TYPE_ID where zmo.TENANT_ID = #{tenantId} and zmo.OUTSOURCE_FLAG = 1 and zm.MO_STATUS in ('RELEASED') and zm.ORGANIZATION_ID = #{organizationId} "
+    let sql = "select zm.tenant_id, zm.organization_id, zm.MO_ID, zm.MO_NUM, zm.plan_completed_qty, zm.ITEM_ID, zm.ITEM_SKU_ID, zmt.MO_TYPE_NAME, zmo.MO_OPERATION_ID, zmo.SEQUENCE_NUM, zmo.OPERATION_ID, zm.UOM_ID, zmo.SUPPLIER_ID, zmo.PROCESS_OEM_TASK_CODE, zmo.supplier_address_id from zwip_mo_operation zmo inner join zwip_mo zm on zm.MO_ID = zmo.MO_ID inner join zwip_mo_type zmt on zmt.MO_TYPE_ID = zm.MO_TYPE_ID where zmo.TENANT_ID = #{tenantId} and zmo.OUTSOURCE_FLAG = 1 and zm.MO_STATUS in ('RELEASED') and zm.ORGANIZATION_ID = #{organizationId} "
     const queryZmoParam = {
         tenantId: tenantId
     }
@@ -90,19 +92,29 @@ function process(input) {
             zmo.uomName = itemMap.get(zmo.itemId).uomName
         }
         if (operationMap.get(zmo.operationId) == null) {
-            const operation = H0.ModelerHelper.selectOne(operationModeler, tenantId, {operationId: zmo.operationId});
-            if (operation != null) {
-                zmo.operationName = operation.operationName
-                zmo.operationCode = operation.operationCode
-                zmo.workCenterName = operation.workCenterName
-                zmo.workCenterCode = operation.workCenterCode
-                operationMap.set(zmo.operationId, operation)
+            if (zmo.operationId != null) {
+                const operation = H0.ModelerHelper.selectOne(operationModeler, tenantId, {operationId: zmo.operationId});
+                if (operation != null) {
+                    zmo.operationName = operation.operationName
+                    zmo.operationCode = operation.operationCode
+                    zmo.workCenterName = operation.workCenterName
+                    zmo.workCenterCode = operation.workCenterCode
+                    operationMap.set(zmo.operationId, operation)
+                }
             } else {
-                zmo.operationName = operationMap.get(zmo.operationId).operationName
-                zmo.operationCode = operationMap.get(zmo.operationId).operationCode
-                zmo.workCenterName = operationMap.get(zmo.operationId).workCenterName
-                zmo.workCenterCode = operationMap.get(zmo.operationId).workCenterCode
+                zmo.operationName = ''
+                zmo.operationCode = ''
+                zmo.workCenterName = ''
+                zmo.workCenterCode = ''
             }
+        } else {
+            zmo.operationName = operationMap.get(zmo.operationId).operationName
+            zmo.operationCode = operationMap.get(zmo.operationId).operationCode
+            zmo.workCenterName = operationMap.get(zmo.operationId).workCenterName
+            zmo.workCenterCode = operationMap.get(zmo.operationId).workCenterCode
+        }
+        if (zmo.planCompletedQty == null) {
+            zmo.planCompletedQty = 200
         }
         const supplierId = zmo.supplierId
         if (supplierIdMap.get(supplierId) == null) {
@@ -148,37 +160,49 @@ function process(input) {
     if (zmoGroupArr.length > 0) {
         for (let zmoGroupIndex = 0; zmoGroupIndex < zmoGroupArr.length; zmoGroupIndex++) {
             const zmoInfo = zmoGroupArr[zmoGroupIndex]
-            const emailSender = {
-                messageCode: 'TEST_EXCEL',
-                messageServerCode: 'ZONE-ONESTEP-CLOUD',
+            //const emailSender = {
+            //    messageCode: 'TEST_EXCEL',
+            //    messageServerCode: 'ZONE-ONESTEP-CLOUD',
+            //    tenantId: tenantId,
+            //    typeCodeList: ['EMAIL']
+            //}
+            //const receiverAddressList = []
+            //if (zmoInfo.emailList != null && zmoInfo.emailList.length > 0) {
+            //    for (let emailIndex = 0; emailIndex < zmoInfo.emailList.length; emailIndex++) {
+            //        const email = zmoInfo.emailList[emailIndex]
+            //        const userList = H0.ModelerHelper.selectList(userModeler, 95, {email: email});
+            //        if (userList != null && userList.length > 0) {
+            //            const receiver = {
+            //                userId: userList[0].id,
+            //                targetUserTenantId: 95,
+            //                email: email
+            //            }
+            //            receiverAddressList.push(receiver)
+            //        } else {
+            //            BASE.Logger.debug('-------通过邮箱和供应商租户id查询不到用户数据-------租户编码{}----邮箱{}----', zmoInfo.supplierTenantId, email)
+            //        }
+            //    }
+            //}
+            //emailSender.receiverAddressList = receiverAddressList
+            //emailSender.objectArgs = {}
+            //emailSender.objectArgs.zmoInfoList = zmoInfo.zmoGroup
+            //emailSender.objectArgs.cxd = "陈旭东"
+            //if (emailSender.receiverAddressList != null && emailSender.receiverAddressList.length > 0) {
+            //    BASE.Logger.debug("-----------工序任务发送邮件参数emailSender: {}---------", emailSender)
+            //    return H0.FeignClient.selectClient(messageServerId1).doPost(sendMessagePath1, emailSender)
+            //}
+
+            const sendMessageDTOList = []
+            const sendMessageDTO = {
                 tenantId: tenantId,
-                typeCodeList: ['EMAIL']
+                messageItemCode: "test",
+                messageParam: {zmoInfoList: zmoInfo.zmoGroup},
+                mailboxList: ['xudong.chen@zone-cloud.com']
             }
-            const receiverAddressList = []
-            if (zmoInfo.emailList != null && zmoInfo.emailList.length > 0) {
-                for (let emailIndex = 0; emailIndex < zmoInfo.emailList.length; emailIndex++) {
-                    const email = zmoInfo.emailList[emailIndex]
-                    const userList = H0.ModelerHelper.selectList(userModeler, 95, {email: email});
-                    if (userList != null && userList.length > 0) {
-                        const receiver = {
-                            userId: userList[0].id,
-                            targetUserTenantId: 95,
-                            email: email
-                        }
-                        receiverAddressList.push(receiver)
-                    } else {
-                        BASE.Logger.debug('-------通过邮箱和供应商租户id查询不到用户数据-------租户编码{}----邮箱{}----', zmoInfo.supplierTenantId, email)
-                    }
-                }
-            }
-            emailSender.receiverAddressList = receiverAddressList
-            emailSender.objectArgs = {}
-            emailSender.objectArgs.zmoInfoList = zmoInfo.zmoGroup
-            emailSender.objectArgs.cxd = "陈旭东"
-            //return emailSender
-            if (emailSender.receiverAddressList != null && emailSender.receiverAddressList.length > 0) {
-                BASE.Logger.debug("-----------工序任务发送邮件参数emailSender: {}---------", emailSender)
-                return H0.FeignClient.selectClient(messageServerId).doPost(sendMessagePath, emailSender)
+            sendMessageDTOList.push(sendMessageDTO)
+            if (sendMessageDTOList.length > 0) {
+                BASE.Logger.debug("-----------工序任务发送邮件参数emailSender: {}---------", sendMessageDTOList)
+                return H0.FeignClient.selectClient(messageServerId).doPost(sendMessagePath, sendMessageDTOList)
             }
         }
     }
