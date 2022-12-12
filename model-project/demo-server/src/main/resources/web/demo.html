@@ -1,0 +1,33 @@
+<div class="zosc-hmsg-message-template">
+    <div onClick="window.top.dvaApp._history.push('/hmsg/user-message/list')">
+        <h3>【工序外协对账】生成结果${result}，请知悉！</h3>
+        <p>提交时间：${dateNow}</p>
+        <p>您好：</p>
+        <p>#foreach( $elem in $errorLineList)#end</p>
+        <table border="1" cellpadding="0" cellspacing="0">
+            <thead>
+            <tr>
+                <th>报工记录编号</th>
+                <th>物料编码</th>
+                <th>物料名称</th>
+                <th>工序编码</th>
+                <th>工序名称</th>
+                <th>报工日期</th>
+                <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>${elem.produceTxId}</td>
+                <td>${elem.itemCode}</td>
+                <td>${elem.itemDesc}</td>
+                <td>${elem.operationCode}</td>
+                <td>${elem.operationName}</td>
+                <td>${elem.dayDateStr}</td>
+                <td>${elem.dealMsg}</td>
+            </tr>
+            </tbody>
+        </table>
+        <p>对账生成异常，如下：${settlementErrMsg}</p>
+    </div>
+</div>
