@@ -1,8 +1,8 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    //const tenantId = CORE.CurrentContext.getTenantId();
+    const tenantId = CORE.CurrentContext.getTenantId();
     //const tenantId = 95;
-    const tenantId = 47;
+    //const tenantId = 47;
     const wipServerId = 'zosc-wip'
     const lovModeler = 'hpfm_lov_value'
     const customerAddressModeler = 'zoso_customer_address'
@@ -44,7 +44,7 @@ function process(input) {
         const head = headRes[headIndex]
         // 根据code查询单据名称
         if (lovMap.get(head.osoAsnType) == null) {
-            const lov = H0.ModelerHelper.selectOne(lovModeler, tenantId, {
+            const lov = H0.ModelerHelper.selectOne(lovModeler, 0, {
                 lovCode: lovCode,
                 value: head.osoAsnType
             });
@@ -73,13 +73,14 @@ function process(input) {
                 addressId: head.relatedPartyAddressId
             });
             if (address != null) {
-                head.addressDetail = address.regionName2 + address.regionName + address.regionName1
+                head.addressDetail = address.regionName2 + address.regionName + address.regionName1 + address.addressDetail
                 addressMap.set(head.relatedPartyAddressId, address)
             }
         } else {
             head.addressDetail = addressMap.get(head.relatedPartyAddressId).regionName2
                 + addressMap.get(head.relatedPartyAddressId).regionName
                 + addressMap.get(head.relatedPartyAddressId).regionName1
+                + addressMap.get(head.relatedPartyAddressId).addressDetail
         }
         // 给头分配行
         if (lineRes != null && lineRes.length > 0) {

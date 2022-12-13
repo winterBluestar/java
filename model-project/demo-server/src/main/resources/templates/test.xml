@@ -11,11 +11,12 @@
         <osoCompReturnCode>OCRI202211150001</osoCompReturnCode>
         <rcvContactsMobile>18615701902</rcvContactsMobile>
         <osoAsnRcvParty>上海隆升金属表面处理有限公司</osoAsnRcvParty>
-        <addressDetail>城区上海宝山区</addressDetail>
+        <addressDetail>上海宝山区城区沪太路9088号3号楼A-1028</addressDetail>
         <createdBy>486</createdBy>
         <tenantId>95</tenantId>
         <osoAsnShippingParty>上海西门子开关有限公司</osoAsnShippingParty>
         <rcvContactsName>上海隆升CRP用户</rcvContactsName>
+        <osoAsnTypeName>工序代工完工退回送货通知</osoAsnTypeName>
         <osoCompReturnLineList>
             <shippingQty>10</shippingQty>
             <sequenceNum>10</sequenceNum>
@@ -45,11 +46,12 @@
         <osoCompReturnCode>OCRI202211150002</osoCompReturnCode>
         <rcvContactsMobile>18615701902</rcvContactsMobile>
         <osoAsnRcvParty>上海隆升金属表面处理有限公司</osoAsnRcvParty>
-        <addressDetail>城区上海宝山区</addressDetail>
+        <addressDetail>上海宝山区城区沪太路9088号3号楼A-1028</addressDetail>
         <createdBy>486</createdBy>
         <tenantId>95</tenantId>
         <osoAsnShippingParty>上海西门子开关有限公司</osoAsnShippingParty>
         <rcvContactsName>上海隆升CRP用户</rcvContactsName>
+        <osoAsnTypeName>工序代工完工退回送货通知</osoAsnTypeName>
         <osoCompReturnLineList>
             <shippingQty>90</shippingQty>
             <sequenceNum>10</sequenceNum>
@@ -78,11 +80,12 @@
         <osoAsnType>OSO_COMPLETE_RETURN_ASN</osoAsnType>
         <osoCompReturnCode>OCRI202212020002</osoCompReturnCode>
         <osoAsnRcvParty>上海隆升金属表面处理有限公司</osoAsnRcvParty>
-        <addressDetail>城区上海宝山区</addressDetail>
+        <addressDetail>上海宝山区城区沪太路9088号3号楼A-1028</addressDetail>
         <createdBy>481</createdBy>
         <tenantId>95</tenantId>
         <osoAsnShippingParty>上海西门子开关有限公司</osoAsnShippingParty>
         <rcvContactsName>隆升销售部</rcvContactsName>
+        <osoAsnTypeName>工序代工完工退回送货通知</osoAsnTypeName>
         <osoCompReturnLineList>
             <shippingQty>8</shippingQty>
             <sequenceNum>10</sequenceNum>
