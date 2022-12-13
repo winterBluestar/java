@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DATA>
+    <QR_CODE_URL>https://zoscua.onestep-cloud.com/hrpt/v1/codes?text=</QR_CODE_URL>
+    <ROW>
+        <createdByName>西门子开关CRP用户</createdByName>
+        <osoCompReturnId>380405132792709120</osoCompReturnId>
+        <osoAsnCode>OA380405132876595200</osoAsnCode>
+        <relatedPartyAddressId>380386413176344576</relatedPartyAddressId>
+        <issuedTime>2022-11-15 17:14:13</issuedTime>
+        <osoAsnType>OSO_COMPLETE_RETURN_ASN</osoAsnType>
+        <osoCompReturnCode>OCRI202211150001</osoCompReturnCode>
+        <rcvContactsMobile>18615701902</rcvContactsMobile>
+        <osoAsnRcvParty>上海隆升金属表面处理有限公司</osoAsnRcvParty>
+        <addressDetail>城区上海宝山区</addressDetail>
+        <createdBy>486</createdBy>
+        <tenantId>95</tenantId>
+        <osoAsnShippingParty>上海西门子开关有限公司</osoAsnShippingParty>
+        <rcvContactsName>上海隆升CRP用户</rcvContactsName>
+        <osoCompReturnLineList>
+            <shippingQty>10</shippingQty>
+            <sequenceNum>10</sequenceNum>
+            <osoCompReturnId>380405132792709120</osoCompReturnId>
+            <itemCode>A7E0019063350_00</itemCode>
+            <operationCode>5623AG4</operationCode>
+            <uomId>380366986461245442</uomId>
+            <operationName>$协 局部镀银(4u)19063350</operationName>
+            <itemDesc>BC BR up. bar 10x80D1350 A</itemDesc>
+            <planCompletedQty>100</planCompletedQty>
+            <moId>380393915055357952</moId>
+            <itemId>380389118599692288</itemId>
+            <processOemTaskCode>OEM20221115000001</processOemTaskCode>
+            <moOperationId>380394511175008264</moOperationId>
+            <moNum>800028579467</moNum>
+            <operationId>380390489675284480</operationId>
+            <uomName>个</uomName>
+        </osoCompReturnLineList>
+    </ROW>
+    <ROW>
+        <createdByName>西门子开关CRP用户</createdByName>
+        <osoCompReturnId>380406332535619584</osoCompReturnId>
+        <osoAsnCode>OA380406332585951232</osoAsnCode>
+        <relatedPartyAddressId>380386413176344576</relatedPartyAddressId>
+        <issuedTime>2022-11-15 17:18:58</issuedTime>
+        <osoAsnType>OSO_COMPLETE_RETURN_ASN</osoAsnType>
+        <osoCompReturnCode>OCRI202211150002</osoCompReturnCode>
+        <rcvContactsMobile>18615701902</rcvContactsMobile>
+        <osoAsnRcvParty>上海隆升金属表面处理有限公司</osoAsnRcvParty>
+        <addressDetail>城区上海宝山区</addressDetail>
+        <createdBy>486</createdBy>
+        <tenantId>95</tenantId>
+        <osoAsnShippingParty>上海西门子开关有限公司</osoAsnShippingParty>
+        <rcvContactsName>上海隆升CRP用户</rcvContactsName>
+        <osoCompReturnLineList>
+            <shippingQty>90</shippingQty>
+            <sequenceNum>10</sequenceNum>
+            <osoCompReturnId>380406332535619584</osoCompReturnId>
+            <itemCode>A7E0019063350_00</itemCode>
+            <operationCode>5623AG4</operationCode>
+            <uomId>380366986461245442</uomId>
+            <operationName>$协 局部镀银(4u)19063350</operationName>
+            <itemDesc>BC BR up. bar 10x80D1350 A</itemDesc>
+            <planCompletedQty>100</planCompletedQty>
+            <moId>380393915055357952</moId>
+            <itemId>380389118599692288</itemId>
+            <processOemTaskCode>OEM20221115000001</processOemTaskCode>
+            <moOperationId>380394511175008264</moOperationId>
+            <moNum>800028579467</moNum>
+            <operationId>380390489675284480</operationId>
+            <uomName>个</uomName>
+        </osoCompReturnLineList>
+    </ROW>
+    <ROW>
+        <createdByName>上海西门子开关有限公司</createdByName>
+        <osoCompReturnId>386577572879241216</osoCompReturnId>
+        <osoAsnCode>OA386577572916989952</osoAsnCode>
+        <relatedPartyAddressId>380386413176344576</relatedPartyAddressId>
+        <issuedTime>2022-12-02 18:01:19</issuedTime>
+        <osoAsnType>OSO_COMPLETE_RETURN_ASN</osoAsnType>
+        <osoCompReturnCode>OCRI202212020002</osoCompReturnCode>
+        <osoAsnRcvParty>上海隆升金属表面处理有限公司</osoAsnRcvParty>
+        <addressDetail>城区上海宝山区</addressDetail>
+        <createdBy>481</createdBy>
+        <tenantId>95</tenantId>
+        <osoAsnShippingParty>上海西门子开关有限公司</osoAsnShippingParty>
+        <rcvContactsName>隆升销售部</rcvContactsName>
+        <osoCompReturnLineList>
+            <shippingQty>8</shippingQty>
+            <sequenceNum>10</sequenceNum>
+            <osoCompReturnId>386577572879241216</osoCompReturnId>
+            <itemCode>A7E0019063350_00</itemCode>
+            <operationCode>5623ZINC</operationCode>
+            <uomId>380366986461245442</uomId>
+            <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+            <itemDesc>BC BR up. bar 10x80D1350 A</itemDesc>
+            <planCompletedQty>10</planCompletedQty>
+            <moId>386567911769739264</moId>
+            <itemId>380389118599692288</itemId>
+            <processOemTaskCode>OEM20221202000006</processOemTaskCode>
+            <moOperationId>386568066044628996</moOperationId>
+            <moNum>80020387020</moNum>
+            <operationId>380399408871133184</operationId>
+            <uomName>个</uomName>
+        </osoCompReturnLineList>
+    </ROW>
+</DATA>
