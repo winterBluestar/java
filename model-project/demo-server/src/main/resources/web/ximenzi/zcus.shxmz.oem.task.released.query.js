@@ -1,7 +1,7 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 95;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 95;
     const messageServerId = 'zosc-cdm';
     const wipServerId = 'zosc-wip'
     const organizationModeler = 'zpfm_organization'
@@ -46,10 +46,10 @@ function process(input) {
         }
         if (tenantStr != null && tenantStr != '') {
             taskSql = taskSql + ' tenant_id in (' + tenantStr + ')'
-            //const startTime = getLocalTime(8).toLocaleDateString() + ' 00:00:00'
-            //const endTime = getLocalTime(8).toLocaleDateString() + ' 23:59:59'
-            const startTime = '2022-12-08 00:00:00'
-            const endTime = '2022-12-08 23:59:59'
+            const startTime = getLocalTime(8).toLocaleDateString() + ' 00:00:00'
+            const endTime = getLocalTime(8).toLocaleDateString() + ' 23:59:59'
+            //const startTime = '2022-12-08 00:00:00'
+            //const endTime = '2022-12-08 23:59:59'
             taskSql = taskSql + " and creation_date &gt;= #{startTime} and creation_date &lt;= #{endTime}"
             const queryTaskParam = {startTime: startTime, endTime: endTime, tenantStr: tenantStr}
             let taskRes = H0.SqlHelper.selectList(wipServerId, taskSql, queryTaskParam)
@@ -114,7 +114,7 @@ function process(input) {
             zmo.workCenterCode = operationMap.get(zmo.operationId).workCenterCode
         }
         if (zmo.planCompletedQty == null) {
-            zmo.planCompletedQty = 200
+            zmo.planCompletedQty = ''
         }
         const supplierId = zmo.supplierId
         if (supplierIdMap.get(supplierId) == null) {
@@ -195,13 +195,13 @@ function process(input) {
             const sendMessageDTOList = []
             const sendMessageDTO = {
                 tenantId: tenantId,
-                messageItemCode: "test",
+                messageItemCode: "SHXMZ_OEM_TASK_RELEASED",
                 messageParam: {zmoInfoList: zmoInfo.zmoGroup},
-                mailboxList: ['xudong.chen@zone-cloud.com']
+                mailboxList: zmoInfo.emailList
             }
             sendMessageDTOList.push(sendMessageDTO)
             if (sendMessageDTOList.length > 0) {
-                BASE.Logger.debug("-----------工序任务发送邮件参数emailSender: {}---------", sendMessageDTOList)
+                BASE.Logger.debug("-----------工序任务发送邮件参数sendMessageDTOList: {}---------", sendMessageDTOList)
                 return H0.FeignClient.selectClient(messageServerId).doPost(sendMessagePath, sendMessageDTOList)
             }
         }
