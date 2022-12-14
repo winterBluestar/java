@@ -2,83 +2,13 @@
 <DATA>
     <QR_CODE_URL>https://zoscua.onestep-cloud.com/hrpt/v1/codes?text=</QR_CODE_URL>
     <ROW>
-        <createdByName>西门子开关CRP用户</createdByName>
-        <osoCompReturnId>380405132792709120</osoCompReturnId>
-        <osoAsnCode>OA380405132876595200</osoAsnCode>
-        <relatedPartyAddressId>380386413176344576</relatedPartyAddressId>
-        <issuedTime>2022-11-15 17:14:13</issuedTime>
-        <osoAsnType>OSO_COMPLETE_RETURN_ASN</osoAsnType>
-        <osoCompReturnCode>OCRI202211150001</osoCompReturnCode>
-        <rcvContactsMobile>18615701902</rcvContactsMobile>
-        <osoAsnRcvParty>上海隆升金属表面处理有限公司</osoAsnRcvParty>
-        <addressDetail>上海宝山区城区沪太路9088号3号楼A-1028</addressDetail>
-        <createdBy>486</createdBy>
-        <tenantId>95</tenantId>
-        <osoAsnShippingParty>上海西门子开关有限公司</osoAsnShippingParty>
-        <rcvContactsName>上海隆升CRP用户</rcvContactsName>
-        <osoAsnTypeName>工序代工完工退回送货通知</osoAsnTypeName>
-        <osoCompReturnLineList>
-            <shippingQty>10</shippingQty>
-            <sequenceNum>10</sequenceNum>
-            <osoCompReturnId>380405132792709120</osoCompReturnId>
-            <itemCode>A7E0019063350_00</itemCode>
-            <operationCode>5623AG4</operationCode>
-            <uomId>380366986461245442</uomId>
-            <operationName>$协 局部镀银(4u)19063350</operationName>
-            <itemDesc>BC BR up. bar 10x80D1350 A</itemDesc>
-            <planCompletedQty>100</planCompletedQty>
-            <moId>380393915055357952</moId>
-            <itemId>380389118599692288</itemId>
-            <processOemTaskCode>OEM20221115000001</processOemTaskCode>
-            <moOperationId>380394511175008264</moOperationId>
-            <moNum>800028579467</moNum>
-            <operationId>380390489675284480</operationId>
-            <uomName>个</uomName>
-        </osoCompReturnLineList>
-    </ROW>
-    <ROW>
-        <createdByName>西门子开关CRP用户</createdByName>
-        <osoCompReturnId>380406332535619584</osoCompReturnId>
-        <osoAsnCode>OA380406332585951232</osoAsnCode>
-        <relatedPartyAddressId>380386413176344576</relatedPartyAddressId>
-        <issuedTime>2022-11-15 17:18:58</issuedTime>
-        <osoAsnType>OSO_COMPLETE_RETURN_ASN</osoAsnType>
-        <osoCompReturnCode>OCRI202211150002</osoCompReturnCode>
-        <rcvContactsMobile>18615701902</rcvContactsMobile>
-        <osoAsnRcvParty>上海隆升金属表面处理有限公司</osoAsnRcvParty>
-        <addressDetail>上海宝山区城区沪太路9088号3号楼A-1028</addressDetail>
-        <createdBy>486</createdBy>
-        <tenantId>95</tenantId>
-        <osoAsnShippingParty>上海西门子开关有限公司</osoAsnShippingParty>
-        <rcvContactsName>上海隆升CRP用户</rcvContactsName>
-        <osoAsnTypeName>工序代工完工退回送货通知</osoAsnTypeName>
-        <osoCompReturnLineList>
-            <shippingQty>90</shippingQty>
-            <sequenceNum>10</sequenceNum>
-            <osoCompReturnId>380406332535619584</osoCompReturnId>
-            <itemCode>A7E0019063350_00</itemCode>
-            <operationCode>5623AG4</operationCode>
-            <uomId>380366986461245442</uomId>
-            <operationName>$协 局部镀银(4u)19063350</operationName>
-            <itemDesc>BC BR up. bar 10x80D1350 A</itemDesc>
-            <planCompletedQty>100</planCompletedQty>
-            <moId>380393915055357952</moId>
-            <itemId>380389118599692288</itemId>
-            <processOemTaskCode>OEM20221115000001</processOemTaskCode>
-            <moOperationId>380394511175008264</moOperationId>
-            <moNum>800028579467</moNum>
-            <operationId>380390489675284480</operationId>
-            <uomName>个</uomName>
-        </osoCompReturnLineList>
-    </ROW>
-    <ROW>
         <createdByName>上海西门子开关有限公司</createdByName>
-        <osoCompReturnId>386577572879241216</osoCompReturnId>
-        <osoAsnCode>OA386577572916989952</osoAsnCode>
+        <osoCompReturnId>387654501724180480</osoCompReturnId>
+        <osoAsnCode>OA387654501791289344</osoAsnCode>
         <relatedPartyAddressId>380386413176344576</relatedPartyAddressId>
-        <issuedTime>2022-12-02 18:01:19</issuedTime>
+        <issuedTime>2022-12-05 17:20:38</issuedTime>
         <osoAsnType>OSO_COMPLETE_RETURN_ASN</osoAsnType>
-        <osoCompReturnCode>OCRI202212020002</osoCompReturnCode>
+        <osoCompReturnCode>OCRI202212050002</osoCompReturnCode>
         <osoAsnRcvParty>上海隆升金属表面处理有限公司</osoAsnRcvParty>
         <addressDetail>上海宝山区城区沪太路9088号3号楼A-1028</addressDetail>
         <createdBy>481</createdBy>
@@ -87,21 +17,21 @@
         <rcvContactsName>隆升销售部</rcvContactsName>
         <osoAsnTypeName>工序代工完工退回送货通知</osoAsnTypeName>
         <osoCompReturnLineList>
-            <shippingQty>8</shippingQty>
+            <shippingQty>2</shippingQty>
             <sequenceNum>10</sequenceNum>
-            <osoCompReturnId>386577572879241216</osoCompReturnId>
+            <osoCompReturnId>387654501724180480</osoCompReturnId>
             <itemCode>A7E0019063350_00</itemCode>
-            <operationCode>5623ZINC</operationCode>
+            <operationCode>5623MACH</operationCode>
             <uomId>380366986461245442</uomId>
-            <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+            <operationName>$协 上海隆升铜排套管遮蔽防止镀银残留液</operationName>
             <itemDesc>BC BR up. bar 10x80D1350 A</itemDesc>
-            <planCompletedQty>10</planCompletedQty>
-            <moId>386567911769739264</moId>
+            <planCompletedQty>20</planCompletedQty>
+            <moId>387632202992177152</moId>
             <itemId>380389118599692288</itemId>
-            <processOemTaskCode>OEM20221202000006</processOemTaskCode>
-            <moOperationId>386568066044628996</moOperationId>
-            <moNum>80020387020</moNum>
-            <operationId>380399408871133184</operationId>
+            <processOemTaskCode>OEM20221205000003</processOemTaskCode>
+            <moOperationId>387632345934057474</moOperationId>
+            <moNum>80020387027</moNum>
+            <operationId>380390420846759936</operationId>
             <uomName>个</uomName>
         </osoCompReturnLineList>
     </ROW>
