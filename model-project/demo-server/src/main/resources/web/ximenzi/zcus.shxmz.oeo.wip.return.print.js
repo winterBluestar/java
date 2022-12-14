@@ -1,8 +1,7 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
     const tenantId = CORE.CurrentContext.getTenantId();
-    //const tenantId = 95;
-    //const tenantId = 47;
+    //const tenantId = 96;
     const wipServerId = 'zosc-wip'
     const lovModeler = 'hpfm_lov_value'
     const customerAddressModeler = 'zoso_customer_address'

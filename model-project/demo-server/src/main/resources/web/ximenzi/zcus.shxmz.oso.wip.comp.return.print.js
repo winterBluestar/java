@@ -1,7 +1,7 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 95;
+    const tenantId = CORE.CurrentContext.getTenantId();
+    //const tenantId = 95;
     const wipServerId = 'zosc-wip'
     const lovModeler = 'hpfm_lov_value'
     const supplierAddressModeler = 'zopo_supplier_address'
@@ -15,7 +15,7 @@ function process(input) {
     const operationMap = new Map()
     const lovCode = 'ZWIP.OSO_ASN_TYPE'
 
-    // 校验工序代工在制退回头id不能为空
+    // 校验委外完工退回发出头id不能为空
     if (input.osoCompReturnIdList == null || input.osoCompReturnIdList.length <= 0) {
         H0.ExceptionHelper.throwCommonException("工序委外完工退回发出头ID不能为空！")
     }
