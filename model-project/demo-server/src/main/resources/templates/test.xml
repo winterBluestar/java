@@ -2,56 +2,39 @@
 <DATA>
     <QR_CODE_URL>https://zoscua.onestep-cloud.com/hrpt/v1/codes?text=</QR_CODE_URL>
     <ROW>
-        <objectVersionNumber>4</objectVersionNumber>
-        <createdByName>隆升销售部</createdByName>
-        <osoAsnRcvTenantId>95</osoAsnRcvTenantId>
-        <lastUpdateDate>2022-12-12 14:27:33</lastUpdateDate>
-        <companyName>上海隆升金属表面处理有限公司</companyName>
-        <relatedPartyName>上海西门子开关有限公司</relatedPartyName>
-        <osoAsnTypeMeaning>工序委外完工送货通知</osoAsnTypeMeaning>
-        <printLinDTOS>
-            <processOemTaskId>390101928225865728</processOemTaskId>
+        <createdByName>上海隆升CRP用户</createdByName>
+        <osoAsnCode>OA381092579469979649</osoAsnCode>
+        <relatedPartyAddressId>380386981199245312</relatedPartyAddressId>
+        <oeoWipReturnCode>OWRI202211170002</oeoWipReturnCode>
+        <oeoWipReturnId>381092579469979648</oeoWipReturnId>
+        <osoAsnType>OEO_WIP_RETURN_ASN</osoAsnType>
+        <osoAsnRcvParty>上海西门子开关有限公司</osoAsnRcvParty>
+        <addressDetail>上海闵行区城区仓库天宁路298号</addressDetail>
+        <createdBy>487</createdBy>
+        <tenantId>96</tenantId>
+        <oeoWipReturnLineList>
+            <shippingQty>10</shippingQty>
             <sequenceNum>10</sequenceNum>
-            <shippingQty>2</shippingQty>
-            <itemCode>A7E0019063350</itemCode>
-            <operationCode>5623AG4</operationCode>
-            <operationName>$协 局部镀银(4u)19063350</operationName>
-            <uomId>380367127998038018</uomId>
-            <attributeString4>否</attributeString4>
-            <itemDesc>BC BR up. bar 10x80D1350 A</itemDesc>
-            <attributeString1>Siemens01SPPO221207000008</attributeString1>
-            <itemId>385469726476722176</itemId>
-            <processOemTaskCode>OEM20221212000001</processOemTaskCode>
-            <customerDemandQty>2</customerDemandQty>
+            <processOemTaskId>380414179927408640</processOemTaskId>
+            <operationCode>5623ZINC</operationCode>
+            <customerUomName>个</customerUomName>
+            <customerInfo>
+                {"customerMoId":380410436037132288,"customerOrganizationId":380380612307623936,"customerTenantId":95,"customerUomName":"个","planCompletedQty":1400.000000}
+            </customerInfo>
+            <oeoWipReturnId>381092579469979648</oeoWipReturnId>
+            <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+            <oeoWipReturnLineId>381092579730026496</oeoWipReturnLineId>
+            <customerItemDesc>板</customerItemDesc>
+            <processOemTaskCode>OEM20221115000003</processOemTaskCode>
+            <customerItemCode>A7E32500075001_0B</customerItemCode>
+            <customerDemandQty>1400</customerDemandQty>
             <qrCodeUrl>https://developer-api.onestep-cloud.com/hrpt/v1/codes?text=</qrCodeUrl>
-            <oeoCompleteIssueLineId>390146792271446016</oeoCompleteIssueLineId>
-            <moNum>80020387041</moNum>
-            <oeoCompleteIssueId>390146792229502976</oeoCompleteIssueId>
-            <uomName>个</uomName>
-            <processOemTaskOperationId>390101929026977792</processOemTaskOperationId>
-        </printLinDTOS>
-        <attributeTinyint1>1</attributeTinyint1>
-        <organizationId>380384761237643264</organizationId>
-        <attributeString1Meaning>物流部收</attributeString1Meaning>
-        <oeoCompleteIssueId>390146792229502976</oeoCompleteIssueId>
-        <shippingTime>2022-12-12 14:16:51</shippingTime>
-        <rcvContactsName>PAN LEIYI</rcvContactsName>
-        <actualRcvAddress>上海闵行区城区仓库天宁路298号</actualRcvAddress>
-        <lastUpdatedBy>482</lastUpdatedBy>
-        <attributeDatetime1>2022-12-14 00:00:00</attributeDatetime1>
-        <attributeString6>保存刷新</attributeString6>
-        <organizationName>上海隆升金属表面处理有限公司</organizationName>
-        <osoAsnCode>Siemens01SPPO221207000008</osoAsnCode>
-        <oeoCompleteIssueCode>OCI20221212000013</oeoCompleteIssueCode>
-        <osoAsnType>OSO_COMPLETE_RECEIVE_ASN</osoAsnType>
-        <rcvContactsMobile>13818901926</rcvContactsMobile>
-        <creationDate>2022-12-12 14:24:04</creationDate>
-        <attributeString2>物流部收</attributeString2>
-        <attributeString1>WMS</attributeString1>
-        <companyId>380384550373199872</companyId>
-        <createdBy>482</createdBy>
-        <qrCodeUrl>https://developer-api.onestep-cloud.com/hrpt/v1/codes?text=</qrCodeUrl>
-        <relatedPartyId>380385730986278912</relatedPartyId>
+            <processOemTaskOperationId>380414179956768768</processOemTaskOperationId>
+            <id>380414179956768768</id>
+            <customerMoNum>800029056383</customerMoNum>
+        </oeoWipReturnLineList>
         <osoAsnShippingParty>上海隆升金属表面处理有限公司</osoAsnShippingParty>
+        <shippingTime>2022-11-17 14:45:39</shippingTime>
+        <osoAsnTypeName>工序代工在制退回发出送货通知</osoAsnTypeName>
     </ROW>
 </DATA>
