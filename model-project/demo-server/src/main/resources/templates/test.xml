@@ -2,39 +2,990 @@
 <DATA>
     <QR_CODE_URL>https://zoscua.onestep-cloud.com/hrpt/v1/codes?text=</QR_CODE_URL>
     <ROW>
-        <createdByName>上海隆升CRP用户</createdByName>
-        <osoAsnCode>OA381092579469979649</osoAsnCode>
-        <relatedPartyAddressId>380386981199245312</relatedPartyAddressId>
-        <oeoWipReturnCode>OWRI202211170002</oeoWipReturnCode>
-        <oeoWipReturnId>381092579469979648</oeoWipReturnId>
-        <osoAsnType>OEO_WIP_RETURN_ASN</osoAsnType>
-        <osoAsnRcvParty>上海西门子开关有限公司</osoAsnRcvParty>
-        <addressDetail>上海闵行区城区仓库天宁路298号</addressDetail>
-        <createdBy>487</createdBy>
-        <tenantId>96</tenantId>
-        <oeoWipReturnLineList>
-            <shippingQty>10</shippingQty>
-            <sequenceNum>10</sequenceNum>
-            <processOemTaskId>380414179927408640</processOemTaskId>
-            <operationCode>5623ZINC</operationCode>
-            <customerUomName>个</customerUomName>
-            <customerInfo>
-                {"customerMoId":380410436037132288,"customerOrganizationId":380380612307623936,"customerTenantId":95,"customerUomName":"个","planCompletedQty":1400.000000}
-            </customerInfo>
-            <oeoWipReturnId>381092579469979648</oeoWipReturnId>
-            <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
-            <oeoWipReturnLineId>381092579730026496</oeoWipReturnLineId>
-            <customerItemDesc>板</customerItemDesc>
-            <processOemTaskCode>OEM20221115000003</processOemTaskCode>
-            <customerItemCode>A7E32500075001_0B</customerItemCode>
-            <customerDemandQty>1400</customerDemandQty>
-            <qrCodeUrl>https://developer-api.onestep-cloud.com/hrpt/v1/codes?text=</qrCodeUrl>
-            <processOemTaskOperationId>380414179956768768</processOemTaskOperationId>
-            <id>380414179956768768</id>
-            <customerMoNum>800029056383</customerMoNum>
-        </oeoWipReturnLineList>
-        <osoAsnShippingParty>上海隆升金属表面处理有限公司</osoAsnShippingParty>
-        <shippingTime>2022-11-17 14:45:39</shippingTime>
-        <osoAsnTypeName>工序代工在制退回发出送货通知</osoAsnTypeName>
+        <supplierId>380385893216866304</supplierId>
+        <sequenceNum>30</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>391224077888106496</processOemTaskId>
+        <endDate>2023-01-15 00:00:00</endDate>
+        <itemCode>A7E0017570140_00</itemCode>
+        <operationCode>5623MACH</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221215000002</processOemTaskCode>
+        <toOsoWipIssuedQty>1000</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>1000</toOsoCompletedReceivedQty>
+        <operationId>380390420846759936</operationId>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <opScrappedQty>0</opScrappedQty>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>确认中</moCooperateStatusMeaning>
+        <attributeString12>隆升销售部</attributeString12>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>$协 上海隆升铜排套管遮蔽防止镀银残留液</operationName>
+        <attributeString4>待在制交接</attributeString4>
+        <itemDesc>母线A</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>仓库收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <planCompletedQty>1000</planCompletedQty>
+        <attributeString2>2022-12-15 13:44:49</attributeString2>
+        <attributeString1>SO0001/01</attributeString1>
+        <itemId>390871723690348544</itemId>
+        <moIdList>391223677910884352</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>390871723694542848</itemSkuId>
+        <moNum>MO20221215002</moNum>
+        <moCooperateStatus>IN_PROCESS</moCooperateStatus>
+        <uomName>个</uomName>
+        <startDate>2022-12-26 00:00:00</startDate>
+    </ROW>
+    <ROW>
+        <supplierId>380385893216866304</supplierId>
+        <sequenceNum>20</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>391224077888106496</processOemTaskId>
+        <endDate>2022-12-26 00:00:00</endDate>
+        <itemCode>A7E0017570140_00</itemCode>
+        <operationCode>5623ZINC</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221215000002</processOemTaskCode>
+        <toOsoWipIssuedQty>1000</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>1000</toOsoCompletedReceivedQty>
+        <operationId>380399408871133184</operationId>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <opScrappedQty>0</opScrappedQty>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>确认中</moCooperateStatusMeaning>
+        <attributeString12>隆升销售部</attributeString12>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+        <attributeString4>待在制交接</attributeString4>
+        <itemDesc>母线A</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>外协商收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <planCompletedQty>1000</planCompletedQty>
+        <attributeString2>2022-12-15 13:44:49</attributeString2>
+        <attributeString1>SO0001/01</attributeString1>
+        <itemId>390871723690348544</itemId>
+        <moIdList>391223677910884352</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>390871723694542848</itemSkuId>
+        <moNum>MO20221215002</moNum>
+        <moCooperateStatus>IN_PROCESS</moCooperateStatus>
+        <uomName>个</uomName>
+        <startDate>2022-12-20 00:00:00</startDate>
+    </ROW>
+    <ROW>
+        <supplierId>380385893216866304</supplierId>
+        <sequenceNum>30</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>391223284225122304</processOemTaskId>
+        <endDate>2022-12-31 00:00:00</endDate>
+        <itemCode>A7E0017570140_00</itemCode>
+        <operationCode>5623MACH</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221215000001</processOemTaskCode>
+        <toOsoWipIssuedQty>1000</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>1000</toOsoCompletedReceivedQty>
+        <operationId>380390420846759936</operationId>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <opScrappedQty>0</opScrappedQty>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>确认中</moCooperateStatusMeaning>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>$协 上海隆升铜排套管遮蔽防止镀银残留液</operationName>
+        <attributeString4>待在制交接</attributeString4>
+        <itemDesc>母线A</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>仓库收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <planCompletedQty>1000</planCompletedQty>
+        <attributeString2>2022-12-15 13:41:40</attributeString2>
+        <itemId>390871723690348544</itemId>
+        <moIdList>391222894075158528</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>390871723694542848</itemSkuId>
+        <moNum>MO20221215001</moNum>
+        <moCooperateStatus>IN_PROCESS</moCooperateStatus>
+        <uomName>个</uomName>
+        <startDate>2022-12-21 00:00:00</startDate>
+    </ROW>
+    <ROW>
+        <supplierId>380385893216866304</supplierId>
+        <sequenceNum>20</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>391223284225122304</processOemTaskId>
+        <endDate>2022-12-21 00:00:00</endDate>
+        <itemCode>A7E0017570140_00</itemCode>
+        <operationCode>5623ZINC</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221215000001</processOemTaskCode>
+        <toOsoWipIssuedQty>1000</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>1000</toOsoCompletedReceivedQty>
+        <operationId>380399408871133184</operationId>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <opScrappedQty>0</opScrappedQty>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>确认中</moCooperateStatusMeaning>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+        <attributeString4>待在制交接</attributeString4>
+        <itemDesc>母线A</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>外协商收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <planCompletedQty>1000</planCompletedQty>
+        <attributeString2>2022-12-15 13:41:40</attributeString2>
+        <itemId>390871723690348544</itemId>
+        <moIdList>391222894075158528</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>390871723694542848</itemSkuId>
+        <moNum>MO20221215001</moNum>
+        <moCooperateStatus>IN_PROCESS</moCooperateStatus>
+        <uomName>个</uomName>
+        <startDate>2022-12-17 00:00:00</startDate>
+    </ROW>
+    <ROW>
+        <supplierId>380385893216866304</supplierId>
+        <sequenceNum>10</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390814660357087232</processOemTaskId>
+        <endDate>2022-12-17 00:00:00</endDate>
+        <itemCode>A7E0017567560_00</itemCode>
+        <operationCode>5623ZINC</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221214000001</processOemTaskCode>
+        <toOsoWipIssuedQty>100</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>100</toOsoCompletedReceivedQty>
+        <operationId>380399408871133184</operationId>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <opScrappedQty>0</opScrappedQty>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+        <attributeString4>待在制交接</attributeString4>
+        <itemDesc>上分支排 B 1250A</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>仓库收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <planCompletedQty>100</planCompletedQty>
+        <attributeString2>2022-12-14 10:37:56</attributeString2>
+        <itemId>390596648890191872</itemId>
+        <moIdList>390814291799400448</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>390596648890191873</itemSkuId>
+        <moNum>MO20221214001</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <uomName>个</uomName>
+        <startDate>2022-12-14 00:00:00</startDate>
+    </ROW>
+    <ROW>
+        <supplierId>380385893216866304</supplierId>
+        <sequenceNum>10</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390585666189737984</processOemTaskId>
+        <endDate>2022-12-13 19:27:26</endDate>
+        <itemCode>A7E32500096003_0B</itemCode>
+        <operationCode>5623TEST</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <attributeTinyint1>0</attributeTinyint1>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221213000005</processOemTaskCode>
+        <toOsoWipIssuedQty>100</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>0</toOsoCompletedReceivedQty>
+        <operationId>390170214543228928</operationId>
+        <oeoCompletedIssuedQty>100</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <attributeString8>上海西门子开关有限公司</attributeString8>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <opScrappedQty>0</opScrappedQty>
+        <attributeString6>否</attributeString6>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <osoCompletedReceivedQty>100</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>测试对账单位</operationName>
+        <attributeString4>已提交结算</attributeString4>
+        <itemDesc>支架</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>生产部收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <planCompletedQty>100</planCompletedQty>
+        <attributeString2>2022-12-13 19:28:00</attributeString2>
+        <itemId>388710915006963712</itemId>
+        <moIdList>390585554411536384</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>100</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388710915011158016</itemSkuId>
+        <moNum>MO20221213009</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <uomName>个</uomName>
+        <startDate>2022-12-13 19:27:26</startDate>
+    </ROW>
+    <ROW>
+        <supplierId>380385893216866304</supplierId>
+        <sequenceNum>10</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390585314384101376</processOemTaskId>
+        <endDate>2022-12-13 19:26:01</endDate>
+        <itemCode>A7E32500096003_0B</itemCode>
+        <operationCode>5623TEST</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221213000004</processOemTaskCode>
+        <toOsoWipIssuedQty>100</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>100</toOsoCompletedReceivedQty>
+        <operationId>390170214543228928</operationId>
+        <attributeString15Meaning>西门子责任</attributeString15Meaning>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <opScrappedQty>100</opScrappedQty>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <attributeString12>隆升销售部</attributeString12>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>测试对账单位</operationName>
+        <attributeString4>交付缺件锁定</attributeString4>
+        <itemDesc>支架</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>仓库收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <planCompletedQty>100</planCompletedQty>
+        <attributeString2>2022-12-13 19:26:36</attributeString2>
+        <itemId>388710915006963712</itemId>
+        <moIdList>390585215989923840</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388710915011158016</itemSkuId>
+        <moNum>MO20221213008</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <attributeString15>SSLS</attributeString15>
+        <uomName>个</uomName>
+        <startDate>2022-12-13 19:26:00</startDate>
+    </ROW>
+    <ROW>
+        <sequenceNum>20</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390562681584173056</processOemTaskId>
+        <endDate>2022-12-13 17:56:14</endDate>
+        <itemCode>A7E32500096003_0B</itemCode>
+        <operationCode>0564QUTE</operationCode>
+        <organizationId>380380612307623936</organizationId>
+        <attributeString15Meaning>西门子责任</attributeString15Meaning>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <supplierAddress>上海闵行区城区颛兴东路1277弄57号4层</supplierAddress>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <attributeString10>上海先锋辐照制品厂有限公司</attributeString10>
+        <osoWipIssuedQty>100</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <uomId>380366986461245442</uomId>
+        <oeoWipReceivedQty>100</oeoWipReceivedQty>
+        <planCompletedQty>100</planCompletedQty>
+        <itemId>388710915006963712</itemId>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <moNum>MO20221213007</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <attributeString15>SSLS</attributeString15>
+        <startDate>2022-12-13 17:56:13</startDate>
+        <supplierId>380390916692824064</supplierId>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <processOemTaskCode>OEM20221213000001</processOemTaskCode>
+        <toOsoWipIssuedQty>0</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>100</toOsoCompletedReceivedQty>
+        <operationId>380399231246553088</operationId>
+        <moTypeName>标准生产工单</moTypeName>
+        <attributeString8>上海先锋辐照制品厂有限公司</attributeString8>
+        <supplierName>上海先锋辐照制品厂有限公司</supplierName>
+        <opScrappedQty>100</opScrappedQty>
+        <attributeDatetime1>2022-12-13 17:58:40</attributeDatetime1>
+        <attributeDatetime2>2022-12-13 17:59:33</attributeDatetime2>
+        <supplierEmail>2471083358@qq.com</supplierEmail>
+        <attributeString9>隆升销售部</attributeString9>
+        <supplierAddressId>380391027376316416</supplierAddressId>
+        <operationName>$外协 调质HRC35~39</operationName>
+        <attributeString4>对账中</attributeString4>
+        <itemDesc>支架</itemDesc>
+        <attributeString3>仓库收货</attributeString3>
+        <attributeString2>2022-12-13 17:56:40</attributeString2>
+        <moIdList>390562605994426368</moIdList>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388710915011158016</itemSkuId>
+        <uomName>个</uomName>
+    </ROW>
+    <ROW>
+        <sequenceNum>10</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390562681227657216</processOemTaskId>
+        <endDate>2022-12-13 17:56:13</endDate>
+        <itemCode>A7E32500096003_0B</itemCode>
+        <operationCode>5623ZINC</operationCode>
+        <organizationId>380380612307623936</organizationId>
+        <oeoCompletedIssuedQty>100</oeoCompletedIssuedQty>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <osoCompletedReceivedQty>100</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <attributeString10>隆升销售部</attributeString10>
+        <osoWipIssuedQty>100</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <uomId>380366986461245442</uomId>
+        <oeoWipReceivedQty>100</oeoWipReceivedQty>
+        <planCompletedQty>100</planCompletedQty>
+        <itemId>388710915006963712</itemId>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>100</opCompletedQty>
+        <moNum>MO20221213007</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <startDate>2022-12-13 17:56:13</startDate>
+        <supplierId>380385893216866304</supplierId>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <attributeTinyint1>0</attributeTinyint1>
+        <processOemTaskCode>OEM20221213000003</processOemTaskCode>
+        <toOsoWipIssuedQty>0</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>0</toOsoCompletedReceivedQty>
+        <operationId>380399408871133184</operationId>
+        <moTypeName>标准生产工单</moTypeName>
+        <attributeString8>隆升销售部</attributeString8>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <opScrappedQty>0</opScrappedQty>
+        <attributeDatetime1>2022-12-13 17:57:22</attributeDatetime1>
+        <attributeString6>否</attributeString6>
+        <attributeDatetime2>2022-12-13 17:57:41</attributeDatetime2>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <attributeString9>上海西门子开关有限公司</attributeString9>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+        <attributeString4>全部收货</attributeString4>
+        <itemDesc>支架</itemDesc>
+        <attributeString3>外协商收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <attributeString2>2022-12-13 17:56:40</attributeString2>
+        <moIdList>390562605994426368</moIdList>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388710915011158016</itemSkuId>
+        <uomName>个</uomName>
+    </ROW>
+    <ROW>
+        <sequenceNum>10</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390561021176659968</processOemTaskId>
+        <endDate>2022-12-13 17:49:10</endDate>
+        <itemCode>A7E32500096003_0B</itemCode>
+        <operationCode>5623ZINC</operationCode>
+        <organizationId>380380612307623936</organizationId>
+        <attributeString15Meaning>供应商责任</attributeString15Meaning>
+        <oeoCompletedIssuedQty>100</oeoCompletedIssuedQty>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <osoCompletedReceivedQty>3</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <attributeString10>隆升销售部</attributeString10>
+        <osoWipIssuedQty>100</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <uomId>380366986461245442</uomId>
+        <oeoWipReceivedQty>100</oeoWipReceivedQty>
+        <planCompletedQty>100</planCompletedQty>
+        <itemId>388710915006963712</itemId>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>3</opCompletedQty>
+        <moNum>MO20221213006</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <attributeString15>SUPPLIER</attributeString15>
+        <startDate>2022-12-13 17:49:10</startDate>
+        <supplierId>380385893216866304</supplierId>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <attributeTinyint1>0</attributeTinyint1>
+        <processOemTaskCode>OEM20221213000002</processOemTaskCode>
+        <toOsoWipIssuedQty>0</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>97</toOsoCompletedReceivedQty>
+        <operationId>380399408871133184</operationId>
+        <moTypeName>标准生产工单</moTypeName>
+        <attributeString8>上海西门子开关有限公司</attributeString8>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <opScrappedQty>97</opScrappedQty>
+        <attributeDatetime1>2022-12-13 17:52:36</attributeDatetime1>
+        <attributeString6>否</attributeString6>
+        <attributeDatetime2>2022-12-13 17:52:56</attributeDatetime2>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <attributeString9>上海西门子开关有限公司</attributeString9>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+        <attributeString4>全部收货</attributeString4>
+        <itemDesc>支架</itemDesc>
+        <attributeString3>生产部收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <attributeString2>2022-12-13 17:50:04</attributeString2>
+        <moIdList>390560853329002496</moIdList>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388710915011158016</itemSkuId>
+        <uomName>个</uomName>
+    </ROW>
+    <ROW>
+        <supplierId>380385893216866304</supplierId>
+        <sequenceNum>10</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390551868047704064</processOemTaskId>
+        <endDate>2022-12-13 17:13:09</endDate>
+        <itemCode>A7E32500096003_0B</itemCode>
+        <operationCode>5623ZINC</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <attributeTinyint1>0</attributeTinyint1>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221213000001</processOemTaskCode>
+        <toOsoWipIssuedQty>100</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>98</toOsoCompletedReceivedQty>
+        <operationId>380399408871133184</operationId>
+        <attributeString15Meaning>西门子责任</attributeString15Meaning>
+        <oeoCompletedIssuedQty>100</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <attributeString8>上海西门子开关有限公司</attributeString8>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <opScrappedQty>98</opScrappedQty>
+        <attributeString6>否</attributeString6>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <osoCompletedReceivedQty>2</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+        <attributeString4>交付缺件锁定</attributeString4>
+        <itemDesc>支架</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>生产部收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <planCompletedQty>100</planCompletedQty>
+        <attributeString2>2022-12-13 17:13:42</attributeString2>
+        <itemId>388710915006963712</itemId>
+        <moIdList>390551769531891712</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>2</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388710915011158016</itemSkuId>
+        <moNum>MO20221213005</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <attributeString15>SSLS</attributeString15>
+        <uomName>个</uomName>
+        <startDate>2022-12-13 17:13:09</startDate>
+    </ROW>
+    <ROW>
+        <sequenceNum>10</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390274922848010240</processOemTaskId>
+        <endDate>2022-12-16 00:00:00</endDate>
+        <itemCode>A7E32500096003_0B</itemCode>
+        <operationCode>5623ZINC</operationCode>
+        <organizationId>380380612307623936</organizationId>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <attributeString11>上海西门子开关有限公司</attributeString11>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <attributeString10>隆升销售部</attributeString10>
+        <osoWipIssuedQty>100</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <attributeString12>上海隆升金属表面处理有限公司</attributeString12>
+        <uomId>380366986461245442</uomId>
+        <oeoWipReceivedQty>21</oeoWipReceivedQty>
+        <planCompletedQty>100</planCompletedQty>
+        <itemId>388710915006963712</itemId>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <moNum>MO20221212018</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <startDate>2022-12-08 00:00:00</startDate>
+        <supplierId>380385893216866304</supplierId>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <processOemTaskCode>OEM20221212000016</processOemTaskCode>
+        <toOsoWipIssuedQty>0</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>100</toOsoCompletedReceivedQty>
+        <operationId>380399408871133184</operationId>
+        <moTypeName>标准生产工单</moTypeName>
+        <attributeString8>隆升销售部</attributeString8>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <opScrappedQty>0</opScrappedQty>
+        <attributeDatetime2>2022-12-13 15:41:46</attributeDatetime2>
+        <attributeString5>121313</attributeString5>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <attributeDatetime3>2022-12-13 00:13:47</attributeDatetime3>
+        <attributeString9>上海西门子开关有限公司</attributeString9>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+        <attributeString4>供应商部分接收</attributeString4>
+        <itemDesc>支架</itemDesc>
+        <attributeString3>仓库收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <attributeString2>2022-12-12 22:53:13</attributeString2>
+        <attributeString1>S</attributeString1>
+        <moIdList>390274763556732928</moIdList>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388710915011158016</itemSkuId>
+        <uomName>个</uomName>
+        <attributeDecimal1>10</attributeDecimal1>
+    </ROW>
+    <ROW>
+        <sequenceNum>20</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390237575561412608</processOemTaskId>
+        <endDate>2022-12-14 00:00:00</endDate>
+        <itemCode>202212080009</itemCode>
+        <operationCode>5623ZINC</operationCode>
+        <organizationId>380380612307623936</organizationId>
+        <oeoCompletedIssuedQty>100</oeoCompletedIssuedQty>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <osoCompletedReceivedQty>100</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <attributeString10>隆升销售部</attributeString10>
+        <osoWipIssuedQty>100</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <uomId>380366986461245442</uomId>
+        <oeoWipReceivedQty>100</oeoWipReceivedQty>
+        <planCompletedQty>100</planCompletedQty>
+        <itemId>388644578612125696</itemId>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>100</opCompletedQty>
+        <moNum>800020387004</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <startDate>2022-12-13 10:00:00</startDate>
+        <supplierId>380385893216866304</supplierId>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <attributeTinyint1>0</attributeTinyint1>
+        <processOemTaskCode>OEM20221212000014</processOemTaskCode>
+        <toOsoWipIssuedQty>0</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>0</toOsoCompletedReceivedQty>
+        <operationId>380399408871133184</operationId>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <opScrappedQty>0</opScrappedQty>
+        <attributeDatetime1>2022-12-12 20:26:48</attributeDatetime1>
+        <attributeString6>否</attributeString6>
+        <attributeDatetime2>2022-12-12 20:36:07</attributeDatetime2>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <attributeDatetime5>2022-12-13 00:00:00</attributeDatetime5>
+        <attributeString9>上海西门子开关有限公司</attributeString9>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+        <attributeString4>已提交结算</attributeString4>
+        <itemDesc>测试物料0009</itemDesc>
+        <attributeString3>生产部收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <attributeString2>2022-12-12 20:24:48</attributeString2>
+        <attributeString1>SO20221212001/10</attributeString1>
+        <moIdList>390236368218423296</moIdList>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388644578612125697</itemSkuId>
+        <uomName>个</uomName>
+    </ROW>
+    <ROW>
+        <sequenceNum>40</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390237575762739200</processOemTaskId>
+        <endDate>2022-12-15 21:00:00</endDate>
+        <itemCode>202212080009</itemCode>
+        <operationCode>5623TEST</operationCode>
+        <organizationId>380380612307623936</organizationId>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <attributeString10>隆升销售部</attributeString10>
+        <osoWipIssuedQty>100</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <uomId>380366986461245442</uomId>
+        <oeoWipReceivedQty>100</oeoWipReceivedQty>
+        <planCompletedQty>100</planCompletedQty>
+        <itemId>388644578612125696</itemId>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>100</opCompletedQty>
+        <moNum>800020387004</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <startDate>2022-12-15 06:00:00</startDate>
+        <supplierId>380385893216866304</supplierId>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <attributeTinyint1>0</attributeTinyint1>
+        <processOemTaskCode>OEM20221212000015</processOemTaskCode>
+        <toOsoWipIssuedQty>0</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>100</toOsoCompletedReceivedQty>
+        <operationId>390170214543228928</operationId>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <opScrappedQty>0</opScrappedQty>
+        <attributeDatetime1>2022-12-12 20:54:40</attributeDatetime1>
+        <attributeString6>否</attributeString6>
+        <attributeDatetime2>2022-12-12 20:55:22</attributeDatetime2>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <attributeString9>上海西门子开关有限公司</attributeString9>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <operationName>测试对账单位</operationName>
+        <attributeString4>对账中</attributeString4>
+        <itemDesc>测试物料0009</itemDesc>
+        <attributeString3>外协商收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <attributeString2>2022-12-12 20:24:49</attributeString2>
+        <attributeString1>SO20221212001/10</attributeString1>
+        <moIdList>390236368218423296</moIdList>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388644578612125697</itemSkuId>
+        <uomName>个</uomName>
+    </ROW>
+    <ROW>
+        <sequenceNum>50</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390237575762739200</processOemTaskId>
+        <endDate>2022-12-16 04:00:00</endDate>
+        <itemCode>202212080009</itemCode>
+        <operationCode>5623AG4</operationCode>
+        <organizationId>380380612307623936</organizationId>
+        <oeoCompletedIssuedQty>200</oeoCompletedIssuedQty>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <osoCompletedReceivedQty>100</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <attributeString10>隆升销售部</attributeString10>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <uomId>380366986461245442</uomId>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <planCompletedQty>100</planCompletedQty>
+        <itemId>388644578612125696</itemId>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>100</opCompletedQty>
+        <moNum>800020387004</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <startDate>2022-12-16 00:00:00</startDate>
+        <supplierId>380385893216866304</supplierId>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <attributeTinyint1>0</attributeTinyint1>
+        <processOemTaskCode>OEM20221212000015</processOemTaskCode>
+        <toOsoWipIssuedQty>100</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>0</toOsoCompletedReceivedQty>
+        <operationId>380390489675284480</operationId>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <opScrappedQty>0</opScrappedQty>
+        <attributeDatetime1>2022-12-12 20:54:40</attributeDatetime1>
+        <attributeString6>否</attributeString6>
+        <attributeDatetime2>2022-12-12 20:55:22</attributeDatetime2>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <attributeString9>上海西门子开关有限公司</attributeString9>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <operationName>$协 局部镀银(4u)19063350</operationName>
+        <attributeString4>对账中</attributeString4>
+        <itemDesc>测试物料0009</itemDesc>
+        <attributeString3>外协商收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <attributeString2>2022-12-12 20:24:49</attributeString2>
+        <attributeString1>SO20221212001/10</attributeString1>
+        <moIdList>390236368218423296</moIdList>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388644578612125697</itemSkuId>
+        <uomName>个</uomName>
+    </ROW>
+    <ROW>
+        <sequenceNum>60</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390237576236695552</processOemTaskId>
+        <endDate>2022-12-16 23:00:00</endDate>
+        <itemCode>202212080009</itemCode>
+        <operationCode>0564QUTE</operationCode>
+        <organizationId>380380612307623936</organizationId>
+        <attributeString15Meaning>供应商责任</attributeString15Meaning>
+        <oeoCompletedIssuedQty>90</oeoCompletedIssuedQty>
+        <supplierAddress>上海闵行区城区颛兴东路1277弄57号4层</supplierAddress>
+        <osoCompletedReceivedQty>90</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <attributeString10>上海先锋辐照制品厂有限公司</attributeString10>
+        <attributeString13>2022-12-12 13:35:15</attributeString13>
+        <osoWipIssuedQty>100</osoWipIssuedQty>
+        <moCooperateStatusMeaning>已确认</moCooperateStatusMeaning>
+        <uomId>380366986461245442</uomId>
+        <oeoWipReceivedQty>100</oeoWipReceivedQty>
+        <planCompletedQty>100</planCompletedQty>
+        <itemId>388644578612125696</itemId>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>90</opCompletedQty>
+        <moNum>800020387004</moNum>
+        <moCooperateStatus>CONFIRMED</moCooperateStatus>
+        <attributeString15>SUPPLIER</attributeString15>
+        <attributeString14>2022-12-09 14:45:33</attributeString14>
+        <startDate>2022-12-16 10:00:00</startDate>
+        <supplierId>380390916692824064</supplierId>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <attributeTinyint1>1</attributeTinyint1>
+        <processOemTaskCode>OEM20221212000002</processOemTaskCode>
+        <toOsoWipIssuedQty>0</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>10</toOsoCompletedReceivedQty>
+        <operationId>380399231246553088</operationId>
+        <moTypeName>标准生产工单</moTypeName>
+        <attributeString8>收货员</attributeString8>
+        <supplierName>上海先锋辐照制品厂有限公司</supplierName>
+        <attributeString7>2022121205</attributeString7>
+        <opScrappedQty>10</opScrappedQty>
+        <attributeDatetime1>2022-12-13 16:53:39</attributeDatetime1>
+        <attributeString6>是</attributeString6>
+        <attributeDatetime2>2022-12-12 21:04:15</attributeDatetime2>
+        <supplierEmail>2471083358@qq.com</supplierEmail>
+        <attributeDatetime5>2022-12-31 00:00:00</attributeDatetime5>
+        <attributeString9>隆升销售部</attributeString9>
+        <supplierAddressId>380391027376316416</supplierAddressId>
+        <operationName>$外协 调质HRC35~39</operationName>
+        <attributeString4>对账中</attributeString4>
+        <itemDesc>测试物料0009</itemDesc>
+        <attributeString3>仓库收货</attributeString3>
+        <attributeString2>2022-12-12 20:24:49</attributeString2>
+        <attributeString1>SO20221212001/10</attributeString1>
+        <moIdList>390236368218423296</moIdList>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388644578612125697</itemSkuId>
+        <uomName>个</uomName>
+    </ROW>
+    <ROW>
+        <supplierId>380385893216866304</supplierId>
+        <sequenceNum>40</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390223528942174208</processOemTaskId>
+        <endDate>2022-12-15 06:04:14</endDate>
+        <itemCode>202212080009</itemCode>
+        <operationCode>5623TEST</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221212000013</processOemTaskCode>
+        <toOsoWipIssuedQty>100</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>100</toOsoCompletedReceivedQty>
+        <operationId>390170214543228928</operationId>
+        <attributeString15Meaning>供应商责任</attributeString15Meaning>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <opScrappedQty>100</opScrappedQty>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>确认中</moCooperateStatusMeaning>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>测试对账单位</operationName>
+        <attributeString4>全部收货</attributeString4>
+        <itemDesc>测试物料0009</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>外协商收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <planCompletedQty>100</planCompletedQty>
+        <attributeString2>2022-12-12 19:29:00</attributeString2>
+        <itemId>388644578612125696</itemId>
+        <moIdList>390219543699062784</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388644578612125697</itemSkuId>
+        <moNum>800020387003</moNum>
+        <moCooperateStatus>IN_PROCESS</moCooperateStatus>
+        <attributeString15>SUPPLIER</attributeString15>
+        <uomName>个</uomName>
+        <startDate>2022-12-14 18:04:14</startDate>
+    </ROW>
+    <ROW>
+        <supplierId>380385893216866304</supplierId>
+        <sequenceNum>20</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390223528724070400</processOemTaskId>
+        <endDate>2022-12-13 22:04:14</endDate>
+        <itemCode>202212080009</itemCode>
+        <operationCode>5623ZINC</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221212000012</processOemTaskCode>
+        <toOsoWipIssuedQty>100</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>100</toOsoCompletedReceivedQty>
+        <operationId>380399408871133184</operationId>
+        <attributeString15Meaning>供应商责任</attributeString15Meaning>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <opScrappedQty>100</opScrappedQty>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>确认中</moCooperateStatusMeaning>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>$协 表面处理根据TDS 953-0077.9(去氢处理）</operationName>
+        <attributeString4>全部收货</attributeString4>
+        <itemDesc>测试物料0009</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>生产部收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <planCompletedQty>100</planCompletedQty>
+        <attributeString2>2022-12-12 19:29:00</attributeString2>
+        <itemId>388644578612125696</itemId>
+        <moIdList>390219543699062784</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388644578612125697</itemSkuId>
+        <moNum>800020387003</moNum>
+        <moCooperateStatus>IN_PROCESS</moCooperateStatus>
+        <attributeString15>SUPPLIER</attributeString15>
+        <uomName>个</uomName>
+        <startDate>2022-12-13 10:04:14</startDate>
+    </ROW>
+    <ROW>
+        <supplierId>380390916692824064</supplierId>
+        <sequenceNum>60</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390223529579708416</processOemTaskId>
+        <endDate>2022-12-16 18:04:14</endDate>
+        <itemCode>202212080009</itemCode>
+        <operationCode>6040MACH</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221212000001</processOemTaskCode>
+        <toOsoWipIssuedQty>100</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>100</toOsoCompletedReceivedQty>
+        <operationId>380409313673887744</operationId>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海先锋辐照制品厂有限公司</supplierName>
+        <supplierAddress>上海闵行区城区颛兴东路1277弄57号4层</supplierAddress>
+        <opScrappedQty>0</opScrappedQty>
+        <supplierEmail>2471083358@qq.com</supplierEmail>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>确认中</moCooperateStatusMeaning>
+        <supplierAddressId>380391027376316416</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>$协 铜排包热缩套管16702293</operationName>
+        <attributeString4>待在制交接</attributeString4>
+        <itemDesc>测试物料0009</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>仓库收货</attributeString3>
+        <planCompletedQty>100</planCompletedQty>
+        <attributeString2>2022-12-12 19:29:00</attributeString2>
+        <itemId>388644578612125696</itemId>
+        <moIdList>390219543699062784</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388644578612125697</itemSkuId>
+        <moNum>800020387003</moNum>
+        <moCooperateStatus>IN_PROCESS</moCooperateStatus>
+        <uomName>个</uomName>
+        <startDate>2022-12-16 14:04:14</startDate>
+    </ROW>
+    <ROW>
+        <supplierId>380385893216866304</supplierId>
+        <sequenceNum>50</sequenceNum>
+        <processStatus>HEALTHY</processStatus>
+        <processOemTaskId>390223528942174208</processOemTaskId>
+        <endDate>2022-12-15 20:04:14</endDate>
+        <itemCode>202212080009</itemCode>
+        <operationCode>5623AG4</operationCode>
+        <_token>o4iOCi+UtbspdtpfB+VN7w2wsEDJjCgMX4aB5svnRDvsfk9ZVxuxyFdVvxkerJfWL1vz9ftnvwZudppNh2upyg==</_token>
+        <organizationId>380380612307623936</organizationId>
+        <processOemTaskCode>OEM20221212000013</processOemTaskCode>
+        <toOsoWipIssuedQty>100</toOsoWipIssuedQty>
+        <toOsoCompletedReceivedQty>100</toOsoCompletedReceivedQty>
+        <operationId>380390489675284480</operationId>
+        <attributeString15Meaning>供应商责任</attributeString15Meaning>
+        <oeoCompletedIssuedQty>0</oeoCompletedIssuedQty>
+        <moTypeName>标准生产工单</moTypeName>
+        <supplierName>上海隆升金属表面处理有限公司</supplierName>
+        <supplierAddress>上海宝山区城区沪太路9088号3号楼A-1028</supplierAddress>
+        <opScrappedQty>100</opScrappedQty>
+        <supplierEmail>jie.xiao@zone-cloud.com</supplierEmail>
+        <osoCompletedReceivedQty>0</osoCompletedReceivedQty>
+        <processStatusMeaning>正常</processStatusMeaning>
+        <osoWipIssuedQty>0</osoWipIssuedQty>
+        <moCooperateStatusMeaning>确认中</moCooperateStatusMeaning>
+        <supplierAddressId>380386413176344576</supplierAddressId>
+        <uomId>380366986461245442</uomId>
+        <operationName>$协 局部镀银(4u)19063350</operationName>
+        <attributeString4>全部收货</attributeString4>
+        <itemDesc>测试物料0009</itemDesc>
+        <oeoWipReceivedQty>0</oeoWipReceivedQty>
+        <attributeString3>外协商收货</attributeString3>
+        <supplierMobile>18468215347</supplierMobile>
+        <planCompletedQty>100</planCompletedQty>
+        <attributeString2>2022-12-12 19:29:00</attributeString2>
+        <itemId>388644578612125696</itemId>
+        <moIdList>390219543699062784</moIdList>
+        <companyId>380379469850513408</companyId>
+        <opCompletedQty>0</opCompletedQty>
+        <createdBy>-1</createdBy>
+        <itemSkuId>388644578612125697</itemSkuId>
+        <moNum>800020387003</moNum>
+        <moCooperateStatus>IN_PROCESS</moCooperateStatus>
+        <attributeString15>SUPPLIER</attributeString15>
+        <uomName>个</uomName>
+        <startDate>2022-12-15 13:04:14</startDate>
     </ROW>
 </DATA>
