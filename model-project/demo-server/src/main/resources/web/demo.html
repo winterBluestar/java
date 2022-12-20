@@ -1,33 +1,41 @@
-<div class="zosc-hmsg-message-template">
-    <div onClick="window.top.dvaApp._history.push('/hmsg/user-message/list')">
-        <h3>【工序外协对账】生成结果${result}，请知悉！</h3>
-        <p>提交时间：${dateNow}</p>
-        <p>您好：</p>
-        <p>#foreach( $elem in $errorLineList)#end</p>
-        <table border="1" cellpadding="0" cellspacing="0">
-            <thead>
-            <tr>
-                <th>报工记录编号</th>
-                <th>物料编码</th>
-                <th>物料名称</th>
-                <th>工序编码</th>
-                <th>工序名称</th>
-                <th>报工日期</th>
-                <th>备注</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>${elem.produceTxId}</td>
-                <td>${elem.itemCode}</td>
-                <td>${elem.itemDesc}</td>
-                <td>${elem.operationCode}</td>
-                <td>${elem.operationName}</td>
-                <td>${elem.dayDateStr}</td>
-                <td>${elem.dealMsg}</td>
-            </tr>
-            </tbody>
-        </table>
-        <p>对账生成异常，如下：${settlementErrMsg}</p>
-    </div>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <p>亲爱的用户，您好！</p>
+    <p>&nbsp;&nbsp;&nbsp;您有一份来自上海西门子开关有限公司的工序代工任务清单，请登录外协平台及时处理，外协平台登陆地址：<a href="https://developer.one-cloud.com/">https://developer.one-cloud.com/</a>
+    </p>
+</head>
+<br/>
+<body>
+<table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <th bgcolor="#009999" style="text-align: center;width: auto">序号</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">客户名称</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">客户工单号</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">代工任务单号</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">工序</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">工序描述</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">工作中心</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">工作中心描述</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">物料编码</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">数量</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">单位</th>
+    </tr>
+    #foreach( $elem in $zmoInfoList)
+    <tr>
+        <td style="text-align: center;width: auto">${elem.sortNum}</td>
+        <td style="text-align: center;width: auto">${elem.customerName}</td>
+        <td style="text-align: center;width: auto">${elem.moNum}</td>
+        <td style="text-align: center;width: auto">${elem.processOemTaskCode}</td>
+        <td style="text-align: center;width: auto">${elem.operationCode}</td>
+        <td style="text-align: center;width: auto">${elem.operationName}</td>
+        <td style="text-align: center;width: auto">${elem.workCenterCode}</td>
+        <td style="text-align: center;width: auto">${elem.workCenterName}</td>
+        <td style="text-align: center;width: auto">${elem.itemCode}</td>
+        <td style="text-align: center;width: auto">${elem.planCompletedQty}</td>
+        <td style="text-align: center;width: auto">${elem.uomName}</td>
+    </tr>
+    #end
+</table>
+</body>
+</html>
