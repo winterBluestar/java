@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <p>亲爱的用户，您好！</p>
+    <p>&nbsp;&nbsp;&nbsp;您有一份来自上海西门子开关有限公司的缺失图纸清单，请登录外协平台及时处理，外协平台登陆地址：<a href="https://developer.one-cloud.com/">https://developer.one-cloud.com/</a>
+    </p>
+</head>
+<body>
+<table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <th bgcolor="#009999" style="text-align: center;width: auto">序号</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">缺图纸的供应商</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">工单号</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">代工任务号</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">物料编码</th>
+        <th bgcolor="#009999" style="text-align: center;width: auto">制造数量</th>
+    </tr>
+    #foreach( $elem in $taskInfoList)
+    <tr>
+        <td style="text-align: center;width: auto">${elem.sortNum}</td>
+        <td style="text-align: center;width: auto">${elem.organizationName}</td>
+        <td style="text-align: center;width: auto">${elem.customerMoNum}</td>
+        <td style="text-align: center;width: auto">${elem.processOemTaskCode}</td>
+        <td style="text-align: center;width: auto">${elem.itemCode}</td>
+        <td style="text-align: center;width: auto">${elem.customerDemandQty}</td>
+    </tr>
+    #end
+</table>
+</body>
+</html>

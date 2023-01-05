@@ -3,40 +3,38 @@ function process(input) {
     const wipServiceId = "zosc-wip";
     //const tenantId = CORE.CurrentContext.getTenantId();
     const tenantId = 95;
-    const customerModeler = 'zopo_customer';
-    let sql = "select zpot.tenant_id,zpot.customer_mo_num,zpot.creation_date,zpoto.sequence_num,zpoto.owner_operation_id,zpoto.operation_code,zpoto.id from zwip_process_oem_task zpot left join zwip_process_oem_task_operation zpoto on zpot.process_oem_task_id = zpoto.process_oem_task_id where "
+    let sql = "select zpot.tenant_id,zpot.process_oem_task_id,zpot.customer_mo_num,FROM_UNIXTIME(ROUND(UNIX_TIMESTAMP(zpot.creation_date) + zpoto.sequence_num/10 - 1)) creation_date,zpoto.sequence_num,zpoto.owner_operation_id,zpoto.operation_code,zpoto.id from zwip_process_oem_task zpot left join zwip_process_oem_task_operation zpoto on zpot.process_oem_task_id = zpoto.process_oem_task_id where "
+    let taskSql = "select zpot.process_oem_task_id from zwip_process_oem_task zpot left join zwip_process_oem_task_operation zpoto on zpot.process_oem_task_id = zpoto.process_oem_task_id where "
     const queryParamMap = {
         tenantId: tenantId
     };
-    // 查询客户id
-    let customerCodeRes = H0.LovHelper.queryLovValue('ZCUS.SHXMZ.PROCESS.START.CUSTOMER', tenantId, 'zh_CN');
-    if (customerCodeRes != null && customerCodeRes.length > 0) {
-        let customerIdStr = ''
+    // 查询供应商id
+    let supplierCodeRes = H0.LovHelper.queryLovValue('ZCUS.SHXMZ.PROCESS.START.CUSTOMER', tenantId, 'zh_CN');
+    if (supplierCodeRes != null && supplierCodeRes.length > 0) {
         let supplierTenantIdStr = ''
-        for (let customerCodeIndex = 0; customerCodeIndex < customerCodeRes.length; customerCodeIndex++) {
-            const customerCode = customerCodeRes[customerCodeIndex]
-            let customer = H0.ModelerHelper.selectOne(customerModeler, customerCode.meaning, {
-                "customerCode": '30S1'
-            });
-            if (customer != null) {
-                if (customerCodeIndex != customerCodeRes.length - 1) {
-                    customerIdStr = customerIdStr + customer.customerId + ','
-                    supplierTenantIdStr = supplierTenantIdStr + customerCode.meaning + ','
-                } else {
-                    customerIdStr = customerIdStr + customer.customerId
-                    supplierTenantIdStr = supplierTenantIdStr + customerCode.meaning
-                }
+        for (let supplierCodeIndex = 0; supplierCodeIndex < supplierCodeRes.length; supplierCodeIndex++) {
+            const supplierCode = supplierCodeRes[supplierCodeIndex]
+            if (supplierCodeIndex != supplierCodeRes.length - 1) {
+                supplierTenantIdStr = supplierTenantIdStr + supplierCode.meaning + ','
+            } else {
+                supplierTenantIdStr = supplierTenantIdStr + supplierCode.meaning
             }
         }
-        if (customerIdStr != null) {
-            sql = sql + " zpot.customer_id in " + '(' + customerIdStr + ')'
-            sql = sql + " and zpot.tenant_id in " + '(' + supplierTenantIdStr + ')'
-            if (input != null && input.taskIdsStr != null && input.taskIdsStr != 'null') {
-                // 定时任务中设置了需要重新生成xml文件的任务id
-                sql = sql + " and zpot.process_oem_task_id in (" + input.taskIdsStr + ")"
-            } else {
-                sql = sql + " and zpoto.attribute_tinyint1 is null order by zpot.creation_date desc"
+        sql = sql + " zpot.tenant_id in " + '(' + supplierTenantIdStr + ')'
+        taskSql = taskSql + " zpot.tenant_id in " + '(' + supplierTenantIdStr + ')'
+        if (input != null && input.taskIdsStr != null && input.taskIdsStr != 'null') {
+            // 定时任务中设置了需要重新生成xml文件的任务id
+            sql = sql + " and zpot.process_oem_task_id in (" + input.taskIdsStr + ")"
+        } else {
+            taskSql = taskSql + " and zpoto.oso_wip_issue_qty > 0 and zpoto.attribute_tinyint1 is null order by zpot.creation_date desc"
+            let moreThanZeroRes = H0.SqlHelper.selectList(wipServiceId, taskSql, {});
+            if (moreThanZeroRes != null && moreThanZeroRes.length > 0) {
+                const taskIdList = moreThanZeroRes.map((moreThanZeroRes) => {
+                    return moreThanZeroRes.processOemTaskId
+                })
+                sql = sql + " and zpot.process_oem_task_id in (" + taskIdList.join() + ")"
             }
+            sql = sql + " and zpoto.attribute_tinyint1 is null order by zpot.creation_date desc"
         }
     } else {
         BASE.Logger.debug('-------------------查询工序开始无客户信息则不执行后续逻辑-------------------')
@@ -49,11 +47,25 @@ function process(input) {
     if (oemRes != null && oemRes.length > 0) {
         for (let oemIndex = 0; oemIndex < oemRes.length; oemIndex++) {
             const oem = oemRes[oemIndex]
-            oem.fileName = oem.operationCode + 'erp' + oem.customerMoNum + oem.sequenceNum + '.xml'
+            const codeRule = H0.CodeRuleHelper.generateCode(tenantId, 'ZCUS.SHXMZ.OP_START', 'GLOBAL', 'GLOBAL', {})
+            oem.fileName = oem.operationCode + 'expstart' + oem.customerMoNum + codeRule + '.xml'
             //oem.charsetName = 'utf-8'
             oem.directory = '/data/xmz-dev/fab'
+            oem.backDirectory = '/data/xmz-dev/'+getLocalTime(8).toLocaleDateString().replace('-',"").substring(0,6)
         }
     }
     BASE.Logger.debug('-------查询工序开始返回结果-------{}', oemRes)
     return oemRes
+}
+
+function getLocalTime(i) {
+    if (typeof i !== 'number') return;
+    const d = new Date();
+    //得到1970年一月一日到现在的秒数
+    const len = d.getTime();
+    //本地时间与GMT时间的时间偏移差(注意：GMT这是UTC的民间名称。GMT=UTC）
+    const offset = d.getTimezoneOffset() * 60000;
+    //得到现在的格林尼治时间
+    const utcTime = len + offset;
+    return new Date(utcTime + 3600000 * i);
 }
