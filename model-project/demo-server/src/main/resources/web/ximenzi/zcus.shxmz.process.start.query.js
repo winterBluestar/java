@@ -1,10 +1,13 @@
 function process(input) {
     BASE.Logger.debug('-------input-------{}', input)
     const wipServiceId = "zosc-wip";
-    //const tenantId = CORE.CurrentContext.getTenantId();
-    const tenantId = 95;
+    //let tenantId = CORE.CurrentContext.getTenantId();
+    let tenantId = 95;
     let sql = "select zpot.tenant_id,zpot.process_oem_task_id,zpot.customer_mo_num,FROM_UNIXTIME(ROUND(UNIX_TIMESTAMP(zpot.creation_date) + zpoto.sequence_num/10 - 1)) creation_date,zpoto.sequence_num,zpoto.owner_operation_id,zpoto.operation_code,zpoto.id from zwip_process_oem_task zpot left join zwip_process_oem_task_operation zpoto on zpot.process_oem_task_id = zpoto.process_oem_task_id where "
     let taskSql = "select zpot.process_oem_task_id from zwip_process_oem_task zpot left join zwip_process_oem_task_operation zpoto on zpot.process_oem_task_id = zpoto.process_oem_task_id where "
+    if (input != null && input.tenantId != null) {
+        tenantId = input.tenantId
+    }
     const queryParamMap = {
         tenantId: tenantId
     };
@@ -51,7 +54,7 @@ function process(input) {
             oem.fileName = oem.operationCode + 'expstart' + oem.customerMoNum + codeRule + '.xml'
             //oem.charsetName = 'utf-8'
             oem.directory = '/data/xmz-dev/fab'
-            oem.backDirectory = '/data/xmz-dev/'+getLocalTime(8).toLocaleDateString().replace('-',"").substring(0,6)
+            oem.backDirectory = '/data/xmz-dev/' + getLocalTime(8).toLocaleDateString().replace('-', "").substring(0, 6)
         }
     }
     BASE.Logger.debug('-------查询工序开始返回结果-------{}', oemRes)
