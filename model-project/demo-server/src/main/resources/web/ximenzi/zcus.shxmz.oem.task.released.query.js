@@ -38,6 +38,9 @@ function process(input) {
         let tenantStr = ''
         for (let supplierIndex = 0; supplierIndex < supplierList.length; supplierIndex++) {
             const supplier = supplierList[supplierIndex]
+            if (supplier.supplierTenantId == null) {
+                supplier.supplierTenantId = -1
+            }
             if (supplierIndex != (supplierList.length - 1)) {
                 tenantStr = tenantStr + supplier.supplierTenantId + ','
             } else {
@@ -68,7 +71,10 @@ function process(input) {
     } else {
         return '没有配置供应商, 请确认后重试!'
     }
-    sql = sql + " and zmo.PROCESS_OEM_TASK_ID in(" + taskIdStr + ")" + " order by zmo.CREATION_DATE DESC"
+    if (taskIdStr != null && taskIdStr != '') {
+        sql = sql + " and zmo.PROCESS_OEM_TASK_ID in(" + taskIdStr + ")"
+    }
+    sql = sql + " order by zmo.CREATION_DATE DESC"
     BASE.Logger.debug('-------查询已下发工单工序数据入参-------{}', queryZmoParam)
     let zmoRes = H0.SqlHelper.selectList(wipServerId, sql, queryZmoParam);
     BASE.Logger.debug('-------查询已下发工单工序返回数据-------{}', zmoRes)
@@ -157,42 +163,10 @@ function process(input) {
         zmoGroupArr.push(sendInfo)
     })
     // 发送邮件
+    const sendMessageDTOList = []
     if (zmoGroupArr.length > 0) {
         for (let zmoGroupIndex = 0; zmoGroupIndex < zmoGroupArr.length; zmoGroupIndex++) {
             const zmoInfo = zmoGroupArr[zmoGroupIndex]
-            //const emailSender = {
-            //    messageCode: 'TEST_EXCEL',
-            //    messageServerCode: 'ZONE-ONESTEP-CLOUD',
-            //    tenantId: tenantId,
-            //    typeCodeList: ['EMAIL']
-            //}
-            //const receiverAddressList = []
-            //if (zmoInfo.emailList != null && zmoInfo.emailList.length > 0) {
-            //    for (let emailIndex = 0; emailIndex < zmoInfo.emailList.length; emailIndex++) {
-            //        const email = zmoInfo.emailList[emailIndex]
-            //        const userList = H0.ModelerHelper.selectList(userModeler, 95, {email: email});
-            //        if (userList != null && userList.length > 0) {
-            //            const receiver = {
-            //                userId: userList[0].id,
-            //                targetUserTenantId: 95,
-            //                email: email
-            //            }
-            //            receiverAddressList.push(receiver)
-            //        } else {
-            //            BASE.Logger.debug('-------通过邮箱和供应商租户id查询不到用户数据-------租户编码{}----邮箱{}----', zmoInfo.supplierTenantId, email)
-            //        }
-            //    }
-            //}
-            //emailSender.receiverAddressList = receiverAddressList
-            //emailSender.objectArgs = {}
-            //emailSender.objectArgs.zmoInfoList = zmoInfo.zmoGroup
-            //emailSender.objectArgs.cxd = "陈旭东"
-            //if (emailSender.receiverAddressList != null && emailSender.receiverAddressList.length > 0) {
-            //    BASE.Logger.debug("-----------工序任务发送邮件参数emailSender: {}---------", emailSender)
-            //    return H0.FeignClient.selectClient(messageServerId1).doPost(sendMessagePath1, emailSender)
-            //}
-
-            const sendMessageDTOList = []
             const sendMessageDTO = {
                 tenantId: tenantId,
                 messageItemCode: "SHXMZ_OEM_TASK_RELEASED",
@@ -200,13 +174,13 @@ function process(input) {
                 mailboxList: zmoInfo.emailList
             }
             sendMessageDTOList.push(sendMessageDTO)
-            if (sendMessageDTOList.length > 0) {
-                BASE.Logger.debug("-----------工序任务发送邮件参数sendMessageDTOList: {}---------", sendMessageDTOList)
-                return H0.FeignClient.selectClient(messageServerId).doPost(sendMessagePath, sendMessageDTOList)
-            }
+
         }
     }
-    return zmoGroupArr
+    if (sendMessageDTOList.length > 0) {
+        BASE.Logger.debug("-----------工序任务发送邮件参数sendMessageDTOList: {}---------", sendMessageDTOList)
+        return H0.FeignClient.selectClient(messageServerId).doPost(sendMessagePath, sendMessageDTOList)
+    }
 }
 
 function getLocalTime(i) {
