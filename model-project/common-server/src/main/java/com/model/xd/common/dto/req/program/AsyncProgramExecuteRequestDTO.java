@@ -8,5 +8,13 @@ import lombok.Data;
 @Data
 public class AsyncProgramExecuteRequestDTO {
 
-        private String templateCode;
+    private String templateCode;
+
+    public String getTemplateCode() {
+        return templateCode;
+    }
+
+    public void setTemplateCode(String templateCode) {
+        this.templateCode = templateCode;
+    }
 }
