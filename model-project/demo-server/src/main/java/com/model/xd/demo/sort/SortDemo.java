@@ -39,7 +39,7 @@ public class SortDemo {
         }
         int mid = partition(arrays, left, right);
         // System.out.println("left新一轮递归开始的mid值: " + mid + ",left: " + left + ", right: " + right);
-        //quickSortMethod(arrays, left, mid);
+        quickSortMethod(arrays, left, mid);
         // System.out.println("right新一轮递归开始的mid值: " + mid + ",left: " + left + ", right: " + right);
         quickSortMethod(arrays, mid + 1, right);
     }
